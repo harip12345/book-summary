@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Folio — Book Resume App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tambahan Library SheetJS untuk membaca Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        :root {
+            --bg-parchment: #FBF8F1;
+            --bg-white: #FFFFFF;
+            --bg-sepia: #F4ECD8;
+            --bg-dark: #1A1814;
+            --bg-dark-card: #25221D;
+            --bg-primary: #F7F3EE;
+            --bg-secondary: #EDE7DD;
+            --bg-card: #FFFFFF;
+            --text-parchment: #2C2416;
+            --text-white: #1A1A1A;
+            --text-sepia: #3A3020;
+            --text-dark: #D4CFC4;
+            --text-dark-secondary: #A09888;
+            --text-primary: #1C1814;
+            --text-secondary: #6B6259;
+            --text-muted: #A09488;
+            --text-light: #F7F3EE;
+            --text-light-muted: #C4BAB0;
+            --accent: #C8863A;
+            --accent-light: #E8A85A;
+            --accent-dark: #9A5E1F;
+            --accent-pale: #F5E9D8;
+            --sage: #7A8C6E;
+            --sage-light: #B5C4A8;
+            --sage-pale: #EBF0E7;
+            --border: rgba(28, 24, 20, 0.1);
+            --border-dark: rgba(247, 243, 238, 0.12);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
+            --shadow-xl: 0 24px 80px rgba(0,0,0,0.2);
+            --shadow-float: 0 8px 32px rgba(0,0,0,0.18);
+            --font-display: 'DM Serif Display', Georgia, serif;
+            --font-body: 'Lora', Georgia, serif;
+            --font-ui: 'DM Sans', system-ui, sans-serif;
+            --font-mono: 'Inter', monospace;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --radius-full: 9999px;
+            --transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+            --transition-spring: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            --transition-smooth: all 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            font-size: 15px;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.5s ease, color 0.5s ease;
+            background: #0D0C0A;
+            color: var(--text-light);
+        }
+
+        body.theme-parchment {
+            background: var(--bg-parchment);
+            color: var(--text-parchment);
+        }
+        body.theme-white {
+            background: var(--bg-white);
+            color: var(--text-white);
+        }
+        body.theme-sepia {
+            background: var(--bg-sepia);
+            color: var(--text-sepia);
+        }
+        body.theme-dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+        body.app-mode {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(150,150,150,0.3);
+            border-radius: 10px;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(200,134,58,0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(200,134,58,0); }
+        }
+        @keyframes bookmarkPop {
+            0% { transform: scale(1); }
+            35% { transform: scale(1.3) translateY(-5px); }
+            60% { transform: scale(0.9); }
+            100% { transform: scale(1.05); }
+        }
+        @keyframes highlightPulse {
+            0% { background: rgba(200,134,58,0); }
+            40% { background: rgba(200,134,58,0.25); }
+            100% { background: rgba(200,134,58,0.1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1C1814;
+            color: #F7F3EE;
+            padding: 12px 20px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-family: var(--font-ui);
+            z-index: 9999;
+            box-shadow: var(--shadow-float);
+            display: none;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            animation: fadeInUp 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .toast.show {
+            display: flex;
+        }
+
+        /* ===== DRAWER & MODAL ===== */
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            display: none;
+        }
+        .drawer-overlay.show {
+            display: block;
+        }
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 380px;
+            max-width: 100vw;
+            height: 100vh;
+            background: var(--bg-card);
+            z-index: 1001;
+            box-shadow: var(--shadow-xl);
+            border-left: 1px solid var(--border);
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        .drawer.open {
+            transform: translateX(0);
+        }
+        .drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 2;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .drawer-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            color: var(--text-primary);
+            font-style: italic;
+        }
+        .drawer-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--text-secondary);
+            transition: var(--transition-spring);
+        }
+        .drawer-close:hover {
+            background: #D45353;
+            color: #fff;
+            border-color: #D45353;
+            transform: rotate(90deg);
+        }
+        .notification-item {
+            display: flex;
+            gap: 12px;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            align-items: flex-start;
+        }
+        .notification-item:hover {
+            background: var(--accent-pale);
+        }
+        .notification-item.read {
+            opacity: 0.6;
+        }
+        .notification-dot-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+            margin-top: 4px;
+            animation: pulse 2s infinite;
+        }
+        .notification-item.read .notification-dot-indicator {
+            background: var(--sage);
+            animation: none;
+        }
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .notification-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .notification-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+        .notification-time {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            max-width: 440px;
+            width: 90%;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+            animation: scaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--text-secondary);
+            transition: var(--transition-spring);
+        }
+        .modal-close:hover {
+            background: #D45353;
+            color: #fff;
+            border-color: #D45353;
+            transform: rotate(90deg);
+        }
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        /* ===== ONBOARDING ===== */
+        .onboarding-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            background: #0D0C0A;
+            overflow: hidden;
+        }
+        .onboarding-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(ellipse at center, rgba(200,134,58,0.08) 0%, transparent 70%);
+            pointer-events: none;
+            animation: floatSlow 8s ease-in-out infinite;
+        }
+        .particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent-light);
+            border-radius: 50%;
+            opacity: 0.25;
+            animation: floatSlow 6s ease-in-out infinite;
+        }
+        .particle:nth-child(1) { top: 15%; left: 20%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 25%; left: 70%; animation-delay: 1s; width: 3px; height: 3px; }
+        .particle:nth-child(3) { top: 60%; left: 30%; animation-delay: 2s; }
+        .particle:nth-child(4) { top: 70%; left: 80%; animation-delay: 0.5s; width: 4px; height: 4px; }
+        .particle:nth-child(5) { top: 40%; left: 50%; animation-delay: 1.5s; }
+        
+        .onboarding-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--bg-dark);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            box-shadow: var(--shadow-xl), 0 0 0 1px rgba(255,255,255,0.05);
+            min-height: 640px;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition-smooth);
+        }
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 24px 24px 8px;
+        }
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            transition: var(--transition-spring);
+        }
+        .step-dot.active { background: var(--accent); width: 28px; border-radius: 4px; }
+        .step-dot.done { background: var(--sage); }
+        .step-line { width: 32px; height: 1px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+        
+        .onboarding-slides-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+        }
+        .onboarding-slide {
+            position: absolute;
+            inset: 0;
+            padding: 20px 28px 28px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateX(60px);
+            transition: var(--transition-smooth);
+            pointer-events: none;
+            overflow-y: auto;
+        }
+        .onboarding-slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+        .onboarding-slide.exit-left { opacity: 0; transform: translateX(-60px); }
+        
+        .splash-visual { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 200px; }
+        .splash-books { display: flex; gap: 8px; align-items: flex-end; justify-content: center; }
+        .splash-book { width: 32px; border-radius: 3px 6px 6px 3px; position: relative; animation: floatSlow 5s ease-in-out infinite; }
+        .splash-book:nth-child(1) { height: 70px; background: #C8863A; animation-delay: 0s; }
+        .splash-book:nth-child(2) { height: 85px; background: #7A8C6E; animation-delay: 0.2s; }
+        .splash-book:nth-child(3) { height: 60px; background: #7A5A3A; animation-delay: 0.4s; }
+        .splash-book:nth-child(4) { height: 75px; background: #5A7A8C; animation-delay: 0.6s; }
+        .splash-book:nth-child(5) { height: 65px; background: #8C5A5A; animation-delay: 0.8s; }
+        .splash-book::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: rgba(0,0,0,0.3); border-radius: 3px 0 0 3px; }
+        
+        .onboarding-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            color: var(--text-light);
+            line-height: 1.2;
+            margin-bottom: 8px;
+            font-style: italic;
+            letter-spacing: -0.01em;
+            text-align: center;
+        }
+        .onboarding-title em { color: var(--accent-light); font-style: italic; }
+        .onboarding-desc { font-family: var(--font-body); font-size: 14px; color: var(--text-light-muted); line-height: 1.7; margin-bottom: 20px; text-align: center; }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 15px 20px;
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius-md);
+            color: #fff;
+            font-family: var(--font-ui);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.01em;
+            transition: var(--transition-spring);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(200,134,58,0.4); }
+        .btn-primary:active { transform: scale(0.97); }
+        
+        .btn-ghost {
+            background: none; border: none; color: var(--text-light-muted); font-family: var(--font-ui); font-size: 13px; cursor: pointer; padding: 8px; transition: var(--transition); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(200,186,176,0.3);
+        }
+        .btn-ghost:hover { color: var(--text-light); text-decoration-color: var(--accent-light); }
+        
+        .form-group { margin-bottom: 12px; }
+        .form-label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-light-muted); margin-bottom: 6px; }
+        .form-input { width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.12); border-radius: var(--radius-sm); color: var(--text-light); font-family: var(--font-ui); font-size: 14px; transition: var(--transition); outline: none; }
+        .form-input:focus { border-color: var(--accent); background: rgba(200,134,58,0.05); box-shadow: 0 0 0 3px rgba(200,134,58,0.08); }
+        .form-input::placeholder { color: rgba(196,186,176,0.4); }
+        .form-input.error { border-color: #D45353; animation: shake 0.5s ease; }
+        
+        /* Select input dropdown styling specifically for dark modal */
+        select.form-input option {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 10px;
+        }
+
+        .form-error { font-size: 11px; color: #D45353; margin-top: 4px; display: none; }
+        .form-error.show { display: block; }
+        .form-row { display: flex; gap: 10px; }
+        .form-row .form-group { flex: 1; }
+        
+        .social-login { display: flex; gap: 10px; margin-bottom: 16px; }
+        .social-btn { flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 1.5px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-ui); font-size: 12px; font-weight: 500; color: var(--text-light); transition: var(--transition); }
+        .social-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.25); }
+        
+        .divider { display: flex; align-items: center; gap: 12px; margin: 14px 0; color: var(--text-light-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+        
+        .genre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .genre-card { padding: 16px 12px; border-radius: var(--radius-md); border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); cursor: pointer; text-align: center; transition: var(--transition-spring); display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; }
+        .genre-card.active { border-color: rgba(200,134,58,0.6); background: rgba(200,134,58,0.12); transform: scale(1.03); }
+        .genre-card .genre-icon { font-size: 32px; position: relative; z-index: 1; }
+        .genre-card .genre-name { font-family: var(--font-ui); font-size: 12px; font-weight: 500; color: var(--text-light-muted); position: relative; z-index: 1; }
+        .genre-card.active .genre-name { color: var(--accent-light); }
+        .genre-card .genre-check { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; opacity: 0; transform: scale(0); transition: var(--transition-spring); z-index: 2; }
+        .genre-card.active .genre-check { opacity: 1; transform: scale(1); }
+        
+        .welcome-visual { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; min-height: 160px; }
+        .welcome-icon { font-size: 70px; animation: bookmarkPop 1s cubic-bezier(0.34,1.56,0.64,1) infinite; }
+        .password-wrapper { position: relative; }
+        .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-light-muted); cursor: pointer; font-size: 16px; padding: 4px; }
+
+        /* ===== LIBRARY ===== */
+        .library-shell { background: var(--bg-primary); min-height: 100vh; padding-bottom: 40px; }
+        .lib-topbar { background: var(--bg-primary); padding: 24px 32px 0; position: sticky; top: 0; z-index: 10; }
+        .lib-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .lib-wordmark { font-family: var(--font-display); font-size: 22px; color: var(--text-primary); }
+        .lib-wordmark span { color: var(--accent); font-style: italic; }
+        .lib-actions { display: flex; gap: 10px; align-items: center; }
+        .icon-btn { width: 38px; height: 38px; border-radius: var(--radius-sm); background: var(--bg-secondary); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); font-size: 16px; color: var(--text-secondary); position: relative; }
+        .icon-btn:hover { background: var(--accent-pale); color: var(--accent-dark); border-color: var(--accent); transform: translateY(-1px); }
+        .notification-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg-card); animation: pulse 2s infinite; }
+        .avatar-btn { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-dark)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; transition: var(--transition); border: 2px solid transparent; }
+        .avatar-btn:hover { border-color: var(--accent-light); transform: scale(1.1); }
+        
+        .lib-search { display: flex; align-items: center; gap: 10px; background: var(--bg-secondary); border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 10px 16px; margin-bottom: 16px; position: relative; }
+        .lib-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(200,134,58,0.1); }
+        .lib-search input { background: none; border: none; outline: none; font-family: var(--font-ui); font-size: 14px; color: var(--text-primary); flex: 1; }
+        .lib-search input::placeholder { color: var(--text-muted); }
+        .search-shortcut { font-size: 11px; color: var(--text-muted); background: var(--bg-card); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; }
+        .search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); max-height: 300px; overflow-y: auto; display: none; z-index: 20; margin-top: 4px; }
+        .search-dropdown.show { display: block; }
+        .search-item { padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: var(--transition); border-bottom: 1px solid var(--border); }
+        .search-item:hover { background: var(--accent-pale); }
+        
+        .lib-filter-row { display: flex; gap: 8px; padding-bottom: 16px; overflow-x: auto; }
+        .filter-chip { padding: 7px 18px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; transition: var(--transition); white-space: nowrap; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-secondary); }
+        .filter-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .filter-chip:hover:not(.active) { border-color: var(--accent); color: var(--accent-dark); background: var(--accent-pale); }
+        
+        .lib-body { padding: 24px 32px; }
+        .lib-section-title { font-family: var(--font-display); font-size: 20px; color: var(--text-primary); margin-bottom: 16px; }
+        
+        .lib-featured { background: var(--bg-dark); border-radius: var(--radius-xl); padding: 28px; display: grid; grid-template-columns: 90px 1fr; gap: 20px; align-items: center; margin-bottom: 32px; cursor: pointer; transition: var(--transition-spring); position: relative; overflow: hidden; }
+        .lib-featured:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+        .feat-cover { width: 90px; height: 130px; border-radius: 6px 10px 10px 6px; overflow: hidden; box-shadow: 6px 6px 20px rgba(0,0,0,0.4); position: relative; }
+        .feat-cover-inner { width: 100%; height: 100%; background: linear-gradient(160deg, #C8863A 0%, #7A5A3A 100%); display: flex; align-items: center; justify-content: center; padding: 8px; position: relative; }
+        .feat-cover-inner::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: rgba(0,0,0,0.3); }
+        .feat-cover-title { font-family: var(--font-display); font-size: 9px; color: rgba(255,255,255,0.9); text-align: center; font-style: italic; }
+        .feat-meta { display: flex; flex-direction: column; gap: 6px; }
+        .feat-badge { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-light); }
+        .feat-title { font-family: var(--font-display); font-size: 20px; color: var(--text-light); line-height: 1.2; font-style: italic; }
+        .feat-author { font-size: 13px; color: var(--text-light-muted); }
+        .progress-label { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .progress-label span { font-size: 11px; color: var(--text-light-muted); }
+        .progress-label strong { font-size: 11px; color: var(--accent-light); font-weight: 500; }
+        .progress-track { height: 4px; background: rgba(247,243,238,0.15); border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.8s ease; position: relative; }
+        .progress-fill::after { content: ''; position: absolute; right: -2px; top: -3px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+        .feat-read-btn { margin-top: 14px; padding: 10px 20px; background: var(--accent); border: none; border-radius: var(--radius-sm); color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--transition-spring); font-family: var(--font-ui); width: fit-content; }
+        .feat-read-btn:hover { background: var(--accent-light); }
+        
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
+        .book-card { cursor: pointer; transition: var(--transition-spring); }
+        .book-card:hover { transform: translateY(-4px); }
+        .book-cover { aspect-ratio: 2/3; border-radius: 4px 8px 8px 4px; margin-bottom: 10px; box-shadow: var(--shadow-md); overflow: hidden; position: relative; }
+        .book-cover-inner { width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px 12px; justify-content: space-between; position: relative; }
+        .book-cover-inner::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: rgba(0,0,0,0.25); }
+        .bc1 { background: linear-gradient(160deg, #7A8C6E 0%, #4A5A40 100%); }
+        .bc2 { background: linear-gradient(160deg, #5A7A8C 0%, #2A4A5C 100%); }
+        .bc3 { background: linear-gradient(160deg, #8C7A5A 0%, #5C4A2A 100%); }
+        .bc4 { background: linear-gradient(160deg, #7A5A8C 0%, #4A2A5C 100%); }
+        .bc5 { background: linear-gradient(160deg, #8C5A5A 0%, #5C2A2A 100%); }
+        .bc6 { background: linear-gradient(160deg, #5A8C7A 0%, #2A5C4A 100%); }
+        .book-cover-text { font-family: var(--font-display); font-size: 10px; color: rgba(255,255,255,0.85); font-style: italic; }
+        .book-cover-author { font-size: 8px; color: rgba(255,255,255,0.55); }
+        .book-progress-mini { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.15); }
+        .book-progress-mini-fill { height: 100%; background: rgba(255,255,255,0.6); }
+        .book-title { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+        .book-author-name { font-size: 11px; color: var(--text-muted); }
+        .book-tag { display: inline-block; margin-top: 4px; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 500; background: var(--sage-pale); color: var(--sage); }
+        .book-tag.unread { background: var(--accent-pale); color: var(--accent-dark); }
+        
+        .app-footer { text-align: center; padding: 24px; color: var(--text-muted); font-size: 11px; border-top: 1px solid var(--border); }
+
+        /* ===== READER & INSIGHTS SCROLL ===== */
+        .reader-progress-top { position: fixed; top: 0; left: 0; right: 0; height: 2.5px; background: rgba(128,128,128,0.1); z-index: 100; }
+        .reader-progress-fill { height: 100%; background: var(--accent); width: 0%; border-radius: 0 2px 2px 0; transition: width 0.15s linear; }
+        .reader-topbar { position: fixed; top: 3px; left: 0; right: 0; z-index: 99; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; transition: transform 0.4s ease, opacity 0.4s ease; }
+        .reader-topbar.visible { transform: translateY(0); opacity: 1; pointer-events: all; }
+        .reader-topbar.hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+        .reader-back-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: var(--radius-full); background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.06); cursor: pointer; font-size: 12px; font-weight: 500; color: #333; font-family: var(--font-ui); transition: var(--transition); box-shadow: var(--shadow-sm); }
+        .reader-back-btn:hover { background: rgba(255,255,255,0.9); transform: translateX(-2px); }
+        .reader-top-actions { display: flex; gap: 8px; }
+        .reader-top-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.06); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); box-shadow: var(--shadow-sm); color: #333; }
+        .reader-top-btn:hover { background: rgba(255,255,255,0.9); transform: translateY(-1px); }
+        body.theme-dark .reader-back-btn, body.theme-dark .reader-top-btn { background: rgba(40,40,40,0.8); border-color: rgba(255,255,255,0.1); color: #D4CFC4; }
+        .reader-container { max-width: 680px; margin: 0 auto; padding: 60px 32px 160px; transition: padding 0.3s ease; }
+        .reader-chapter-number { font-family: var(--font-ui); font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+        .reader-chapter-title { font-family: var(--font-display); font-size: 36px; line-height: 1.15; margin-bottom: 40px; font-style: italic; letter-spacing: -0.01em; }
+        .reader-body { font-family: var(--font-body); font-size: 18px; line-height: 1.9; text-align: left; word-spacing: 0.02em; transition: font-size 0.3s ease, line-height 0.3s ease; }
+        .reader-body p { margin-bottom: 1.6em; }
+        .reader-body .drop-cap::first-letter { float: left; font-family: var(--font-display); font-size: 4.2em; line-height: 0.75; padding-right: 10px; padding-top: 4px; color: var(--accent); font-style: italic; }
+        .reader-quote-block { margin: 32px 0; padding: 24px 28px; border-left: 3px solid var(--accent); background: rgba(200,134,58,0.06); border-radius: 0 var(--radius-md) var(--radius-md) 0; font-style: italic; position: relative; cursor: pointer; transition: var(--transition); }
+        .reader-quote-block::before { content: '"'; position: absolute; top: -14px; left: 14px; font-family: var(--font-display); font-size: 60px; color: var(--accent); opacity: 0.2; line-height: 1; }
+        .reader-quote-block:hover { background: rgba(200,134,58,0.12); border-left-color: var(--accent-dark); }
+        .reader-quote-block.highlighted { animation: highlightPulse 1.2s ease; background: rgba(200,134,58,0.15); border-left-color: var(--accent-dark); }
+        .quote-action-hint { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 11px; font-style: normal; color: var(--accent-dark); font-family: var(--font-ui); opacity: 0; transition: opacity 0.3s; }
+        .reader-quote-block:hover .quote-action-hint { opacity: 1; }
+        .chapter-nav-inline { display: flex; justify-content: space-between; margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(128,128,128,0.15); }
+        .chapter-nav-btn-inline { display: flex; flex-direction: column; gap: 4px; cursor: pointer; padding: 14px 18px; border-radius: var(--radius-md); transition: var(--transition); max-width: 48%; background: none; border: none; font-family: var(--font-ui); text-align: left; color: inherit; }
+        .chapter-nav-btn-inline:hover { background: rgba(128,128,128,0.06); }
+        .chapter-nav-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; }
+        .chapter-nav-title { font-family: var(--font-body); font-size: 14px; font-style: italic; opacity: 0.8; }
+        .reader-bottom-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 90; background: rgba(255,255,255,0.75); backdrop-filter: blur(24px); border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-full); padding: 8px 12px; display: flex; align-items: center; gap: 4px; box-shadow: var(--shadow-float); transition: transform 0.4s ease, opacity 0.4s ease; margin-bottom: 20px; max-width: 95vw; }
+        .reader-bottom-bar.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .reader-bottom-bar.hidden { transform: translateX(-50%) translateY(120%); opacity: 0; }
+        body.theme-dark .reader-bottom-bar { background: rgba(40,40,40,0.8); border-color: rgba(255,255,255,0.1); }
+        .bottom-bar-btn { width: 42px; height: 42px; border-radius: 50%; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: var(--transition); color: #555; position: relative; }
+        body.theme-dark .bottom-bar-btn { color: #BBB; }
+        .bottom-bar-btn:hover { background: rgba(0,0,0,0.06); transform: scale(1.08); }
+        .bottom-bar-btn:active { transform: scale(0.9); }
+        .bottom-bar-btn.active { color: var(--accent); }
+        .bottom-bar-divider { width: 1px; height: 20px; background: rgba(0,0,0,0.1); margin: 0 4px; }
+        body.theme-dark .bottom-bar-divider { background: rgba(255,255,255,0.15); }
+        .bottom-bar-page-indicator { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: #777; padding: 0 8px; white-space: nowrap; }
+        .settings-popover { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.9); backdrop-filter: blur(24px); border: 1px solid rgba(0,0,0,0.08); border-radius: var(--radius-lg); padding: 20px 24px; z-index: 89; box-shadow: var(--shadow-lg); display: none; flex-direction: column; gap: 16px; min-width: 300px; animation: fadeInUp 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+        .settings-popover.show { display: flex; }
+        body.theme-dark .settings-popover { background: rgba(40,40,40,0.9); border-color: rgba(255,255,255,0.1); }
+        .settings-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .settings-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.6; font-family: var(--font-ui); min-width: 80px; }
+        .font-size-group { display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.04); border-radius: var(--radius-full); padding: 4px; }
+        body.theme-dark .font-size-group { background: rgba(255,255,255,0.06); }
+        .font-size-option { width: 34px; height: 34px; border-radius: 50%; border: none; background: transparent; cursor: pointer; font-family: var(--font-body); font-weight: 500; transition: var(--transition); color: inherit; display: flex; align-items: center; justify-content: center; }
+        .font-size-option.active { background: var(--accent); color: #fff; }
+        .theme-dots { display: flex; gap: 8px; }
+        .theme-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; transition: var(--transition-spring); border: 2px solid transparent; position: relative; }
+        .theme-dot:hover { transform: scale(1.15); }
+        .theme-dot.active { border-color: var(--accent); }
+        .theme-dot.active::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; }
+        .td-parchment { background: #FBF8F1; border: 2px solid #DDD; }
+        .td-white { background: #FFF; border: 2px solid #DDD; }
+        .td-sepia { background: #F4ECD8; border: 2px solid #DDD; }
+        .td-dark { background: #1A1814; border: 2px solid #555; }
+        
+        .insight-page { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+        .insight-back { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: var(--radius-full); cursor: pointer; font-size: 13px; font-family: var(--font-ui); margin-bottom: 24px; transition: var(--transition); background: rgba(0,0,0,0.03); border: 1px solid var(--border); color: inherit; }
+        .insight-back:hover { background: rgba(0,0,0,0.06); transform: translateX(-3px); }
+        .insight-book-title { font-family: var(--font-display); font-size: 30px; font-style: italic; margin-bottom: 4px; }
+        .insight-subtitle { font-size: 13px; opacity: 0.6; }
+        .ai-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-full); background: var(--sage-pale); border: 1px solid var(--sage-light); font-size: 11px; font-weight: 500; color: var(--sage); margin-top: 8px; }
+        .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .insight-card { background: rgba(255,255,255,0.5); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
+        body.theme-dark .insight-card { background: rgba(255,255,255,0.03); border-color: var(--border-dark); }
+        .insight-card-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; margin-bottom: 12px; }
+        .insight-list { display: flex; flex-direction: column; gap: 8px; }
+        .insight-item { display: flex; gap: 8px; font-size: 13px; line-height: 1.5; padding: 6px 0; }
+        .insight-num { width: 20px; height: 20px; border-radius: 50%; background: var(--accent-pale); color: var(--accent-dark); font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .ai-quote-card { background: #1C1814; border-radius: var(--radius-md); padding: 20px; color: #F7F3EE; margin-top: 16px; }
+        .ai-quote-text { font-family: var(--font-body); font-size: 14px; font-style: italic; line-height: 1.6; margin-bottom: 8px; }
+        .ai-quote-source { font-size: 11px; opacity: 0.6; }
+        .btn-regen { width: 100%; padding: 10px; margin-top: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-sm); cursor: pointer; font-family: var(--font-ui); font-size: 12px; transition: var(--transition); color: #F7F3EE; }
+        .btn-regen:hover { background: rgba(200,134,58,0.2); border-color: var(--accent); }
+        .screen { display: none; min-height: 100vh; }
+        .screen.active { display: block; }
+
+        @media (max-width: 768px) {
+            .onboarding-card { border-radius: 24px; min-height: auto; }
+            .onboarding-slide { padding: 16px 20px 24px; }
+            .onboarding-title { font-size: 22px; }
+            .reader-container { padding: 40px 20px 160px; max-width: 100%; }
+            .reader-chapter-title { font-size: 26px; }
+            .reader-body { font-size: 16px; line-height: 1.8; }
+            .reader-bottom-bar { padding: 6px 10px; gap: 2px; }
+            .bottom-bar-btn { width: 36px; height: 36px; font-size: 15px; }
+            .insight-grid { grid-template-columns: 1fr; }
+            .settings-popover { min-width: auto; width: 90vw; }
+            .lib-body { padding: 16px; }
+            .lib-topbar { padding: 16px 16px 0; }
+            .drawer { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"><span id="toastIcon">📖</span><span id="toastMessage"></span></div>
+
+    <!-- Notification Drawer -->
+    <div class="drawer-overlay" id="notifOverlay" onclick="closeDrawer()"></div>
+    <div class="drawer" id="notifDrawer">
+        <div class="drawer-header">
+            <div class="drawer-title">Notifikasi</div>
+            <button class="drawer-close" onclick="closeDrawer()">✕</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+            <div class="filter-chip active" onclick="filterNotif(this)" style="font-size:11px;">Semua</div>
+            <div class="filter-chip" onclick="filterNotif(this)" style="font-size:11px;">Baru</div>
+            <div class="filter-chip" onclick="filterNotif(this)" style="font-size:11px;">Dibaca</div>
+        </div>
+        <div id="notifList" style="display:flex;flex-direction:column;gap:8px;">
+            <div class="notification-item" onclick="markRead(this);showToast('Beralih ke Thinking, Fast and Slow')">
+                <div class="notification-dot-indicator"></div>
+                <div class="notification-content">
+                    <div class="notification-title">Lanjutkan membaca</div>
+                    <div class="notification-desc">Thinking, Fast and Slow — Bab 3 menunggu</div>
+                    <div class="notification-time">10 menit yang lalu</div>
+                </div>
+            </div>
+            <div class="notification-item" onclick="markRead(this);showToast('Insight AI baru tersedia!')">
+                <div class="notification-dot-indicator"></div>
+                <div class="notification-content">
+                    <div class="notification-title">Insight AI baru</div>
+                    <div class="notification-desc">Atomic Habits telah dianalisis</div>
+                    <div class="notification-time">2 jam yang lalu</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('profileModal')">✕</button>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+                <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-dark));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;color:#fff;" id="profileAvatar">A</div>
+                <div>
+                    <div class="modal-title" id="profileName">Andi Pratama</div>
+                    <div class="modal-subtitle" style="margin-bottom:0;" id="profileEmail">andi@email.com</div>
+                </div>
+            </div>
+            <button class="btn-primary" style="margin-top:16px;" onclick="closeModal('profileModal');showToast('Profil diperbarui!')">Edit Profil</button>
+            <button class="btn-ghost" style="width:100%;margin-top:8px;color:#D45353;text-decoration-color:#D45353;" onclick="handleLogout()">Keluar</button>
+        </div>
+    </div>
+
+    <!-- ===== MODAL TAMBAH BUKU (EXCEL) ===== -->
+    <div class="modal-overlay" id="addBookModal">
+        <div class="modal-content" style="background: var(--bg-dark); color: var(--text-light); border-color: rgba(255,255,255,0.1);">
+            <button class="modal-close" onclick="closeModal('addBookModal')" style="background: rgba(255,255,255,0.05); color: #fff;">✕</button>
+            <div class="modal-title" style="color: #fff;">Upload Buku (Excel)</div>
+            <div class="modal-subtitle" style="color: var(--text-light-muted);">Unggah file .xlsx untuk menambahkan buku beserta isinya sekaligus.</div>
+            
+            <div style="background: rgba(200,134,58,0.1); border: 1px dashed rgba(200,134,58,0.4); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+                <div style="font-size: 11px; color: var(--accent-light); margin-bottom: 8px; font-weight: bold;">FORMAT KOLOM EXCEL (Baris 1):</div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace;">Judul | Penulis | Kategori | Kesimpulan | Key Points | Judul Bab | Isi Bab</div>
+                <div style="font-size: 10px; color: var(--text-light-muted); margin-top: 8px; font-style: italic;">*Gunakan tanda titik koma (;) atau Enter untuk memisahkan Key Points.</div>
+            </div>
+
+            <form id="addBookForm">
+                <div class="form-group">
+                    <label class="form-label" style="color: var(--text-light-muted);">Pilih File Excel (.xlsx)</label>
+                    <input type="file" class="form-input" id="excelFileInput" accept=".xlsx, .xls" required style="background: rgba(255,255,255,0.05); color: #fff; padding: 10px;">
+                </div>
+                <button type="submit" id="btnSubmitBook" class="btn-primary" style="margin-top:24px;">Proses & Simpan ke Firebase</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== ONBOARDING SCREEN ==================== -->
+    <div class="screen active" id="screen-onboarding">
+        <div class="onboarding-wrapper">
+            <div class="particles">
+                <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                <div class="particle"></div><div class="particle"></div>
+            </div>
+            <div class="onboarding-card" id="onboardingCard">
+                <div class="step-indicator" id="stepIndicator">
+                    <div class="step-dot active" data-step="0"></div><div class="step-line"></div>
+                    <div class="step-dot" data-step="1"></div><div class="step-line"></div>
+                    <div class="step-dot" data-step="2"></div><div class="step-line"></div>
+                    <div class="step-dot" data-step="3"></div><div class="step-line"></div>
+                    <div class="step-dot" data-step="4"></div>
+                </div>
+                <div class="onboarding-slides-container" id="onboardingSlidesContainer">
+                    <div class="onboarding-slide active" data-slide="0">
+                        <div class="splash-visual">
+                            <div class="splash-books">
+                                <div class="splash-book"></div><div class="splash-book"></div>
+                                <div class="splash-book"></div><div class="splash-book"></div>
+                                <div class="splash-book"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="onboarding-title">Baca lebih banyak,<br><em>ingat segalanya.</em></div>
+                            <div class="onboarding-desc">Folio menyaring intisari ratusan buku menjadi ringkasan elegan yang bisa kamu baca dalam 15 menit.</div>
+                        </div>
+                        <button class="btn-primary" onclick="goToSlide(1)">Mulai Perjalanan →</button>
+                        <button class="btn-ghost" style="margin-top:8px;width:100%;" onclick="skipToLibrary()">Lewati, langsung ke Library</button>
+                    </div>
+                    <div class="onboarding-slide" data-slide="1">
+                        <div style="margin-bottom:12px;">
+                            <div class="onboarding-title" style="font-size:22px;">Gabung dengan<br><em>Folio</em></div>
+                            <div class="onboarding-desc" style="font-size:13px;margin-bottom:12px;">Simpan progress dan dapatkan rekomendasi personal.</div>
+                        </div>
+                        <div class="social-login">
+                            <button class="social-btn" onclick="socialLogin('Google')">G Google</button>
+                            <button class="social-btn" onclick="socialLogin('Apple')"> Apple</button>
+                        </div>
+                        <div class="divider">atau</div>
+                        <div style="display:flex;gap:0;margin-bottom:12px;background:rgba(255,255,255,0.03);border-radius:10px;padding:4px;">
+                            <button class="btn-ghost" id="tabLogin" onclick="switchAuthTab('login')" style="flex:1;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-weight:500;background:rgba(200,134,58,0.15);color:var(--accent-light);">Masuk</button>
+                            <button class="btn-ghost" id="tabRegister" onclick="switchAuthTab('register')" style="flex:1;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-weight:500;">Daftar</button>
+                        </div>
+                        <div id="loginForm">
+                            <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="nama@email.com" id="loginEmail"></div>
+                            <div class="form-group"><label class="form-label">Password</label><div class="password-wrapper"><input type="password" class="form-input" placeholder="••••••••" id="loginPassword"><button class="password-toggle" onclick="togglePassword('loginPassword',this)">👁️</button></div></div>
+                            <button class="btn-primary" id="btnLogin" onclick="handleLogin()">Masuk</button>
+                        </div>
+                        <!-- TAMBAHAN: Form Daftar/Register -->
+                        <div id="registerForm" style="display:none;">
+                            <div class="form-group"><label class="form-label">Nama Lengkap</label><input type="text" class="form-input" placeholder="Andi Pratama" id="regName"></div>
+                            <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="nama@email.com" id="regEmail"></div>
+                            <div class="form-group"><label class="form-label">Password</label><div class="password-wrapper"><input type="password" class="form-input" placeholder="Min. 6 karakter" id="regPassword"><button class="password-toggle" onclick="togglePassword('regPassword',this)">👁️</button></div></div>
+                            <button class="btn-primary" id="btnRegister" onclick="handleRegister()">Daftar</button>
+                        </div>
+                    </div>
+                    <div class="onboarding-slide" data-slide="2">
+                        <div style="margin-bottom:12px;">
+                            <div class="onboarding-title" style="font-size:22px;">Pilih topik<br><em>favoritmu</em></div>
+                            <div class="onboarding-desc" style="font-size:13px;margin-bottom:12px;">Kami akan merekomendasikan buku sesuai minatmu.</div>
+                        </div>
+                        <div class="genre-grid" id="genreGrid">
+                            <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check">✓</div><div class="genre-icon">🧠</div><div class="genre-name">Psikologi</div></div>
+                            <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check">✓</div><div class="genre-icon">💼</div><div class="genre-name">Bisnis & Karir</div></div>
+                            <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check">✓</div><div class="genre-icon">🌍</div><div class="genre-name">Sejarah</div></div>
+                            <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check">✓</div><div class="genre-icon">🔬</div><div class="genre-name">Sains & Teknologi</div></div>
+                        </div>
+                        <button class="btn-primary" onclick="goToSlide(3)">Lanjutkan →</button>
+                        <button class="btn-ghost" style="margin-top:4px;width:100%;" onclick="goToSlide(3)">Nanti saja</button>
+                    </div>
+                    <div class="onboarding-slide" data-slide="3">
+                        <div style="text-align:center;margin-bottom:12px;">
+                            <div class="onboarding-title" style="font-size:22px;">Target membaca<br><em>harianmu?</em></div>
+                            <div class="onboarding-desc" style="font-size:13px;margin-bottom:12px;">Konsistensi adalah kunci.</div>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;" id="goalOptions">
+                            <div class="genre-card" onclick="selectGoal(this,10)" style="flex-direction:row;justify-content:space-between;padding:14px 16px;"><span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--text-light);">🌱 Ringan</span><span style="font-size:13px;color:var(--text-light-muted);">10 mnt/hari</span><div class="genre-check" style="position:relative;top:auto;right:auto;">✓</div></div>
+                            <div class="genre-card active" onclick="selectGoal(this,15)" style="flex-direction:row;justify-content:space-between;padding:14px 16px;"><span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--accent-light);">📚 Sedang</span><span style="font-size:13px;color:var(--accent-light);">15 mnt/hari</span><div class="genre-check" style="position:relative;top:auto;right:auto;opacity:1;transform:scale(1);">✓</div></div>
+                            <div class="genre-card" onclick="selectGoal(this,30)" style="flex-direction:row;justify-content:space-between;padding:14px 16px;"><span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--text-light);">🔥 Serius</span><span style="font-size:13px;color:var(--text-light-muted);">30 mnt/hari</span><div class="genre-check" style="position:relative;top:auto;right:auto;">✓</div></div>
+                        </div>
+                        <button class="btn-primary" onclick="goToSlide(4)">Lanjutkan →</button>
+                    </div>
+                    <div class="onboarding-slide" data-slide="4">
+                        <div class="welcome-visual"><div class="welcome-icon">📖</div><div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:rgba(122,140,110,0.15);border:1px solid rgba(122,140,110,0.3);font-size:12px;font-weight:500;color:var(--sage-light);">✨ Siap Membaca</div></div>
+                        <div style="text-align:center;">
+                            <div class="onboarding-title">Kamu sudah<br><em>siap!</em></div>
+                            <div class="onboarding-desc">Library personalmu sudah disiapkan.</div>
+                        </div>
+                        <button class="btn-primary" onclick="finishOnboarding()">Masuk ke Library →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== LIBRARY SCREEN ==================== -->
+    <div class="screen" id="screen-library">
+        <div class="library-shell">
+            <div class="lib-topbar">
+                <div class="lib-header">
+                    <div class="lib-wordmark">F<span>olio</span></div>
+                    <div class="lib-actions">
+                        <!-- TOMBOL TAMBAH BUKU -->
+                        <div class="icon-btn" onclick="openModal('addBookModal')" title="Upload Excel" style="background: var(--accent); color: white; border-color: var(--accent);">+</div>
+                        <div class="icon-btn" onclick="focusSearch()">🔍</div>
+                        <div class="icon-btn" onclick="openDrawer()" style="position:relative;">🔔<div class="notification-dot"></div></div>
+                        <div class="avatar-btn" onclick="openModal('profileModal')" id="headerAvatar">A</div>
+                    </div>
+                </div>
+                <div class="lib-search" id="searchContainer">
+                    <span>🔍</span>
+                    <input type="text" id="searchInput" placeholder="Cari judul, penulis, atau topik…" oninput="handleSearch(this.value)" onfocus="handleSearch(this.value)" onblur="setTimeout(()=>document.getElementById('searchDropdown').classList.remove('show'),200)">
+                    <span class="search-shortcut" onclick="focusSearch()">⌘K</span>
+                    <div class="search-dropdown" id="searchDropdown"></div>
+                </div>
+                <div class="lib-filter-row">
+                    <div class="filter-chip active" onclick="filterBooks(this)">Semua</div>
+                    <div class="filter-chip" onclick="filterBooks(this)">Sedang Dibaca</div>
+                    <div class="filter-chip" onclick="filterBooks(this)">Selesai</div>
+                    <div class="filter-chip" onclick="filterBooks(this)">Bisnis</div>
+                    <div class="filter-chip" onclick="filterBooks(this)">Psikologi</div>
+                </div>
+            </div>
+            <div class="lib-body">
+                <div class="lib-section-title">Lanjutkan Membaca</div>
+                <div class="lib-featured" onclick="openReader('d1')">
+                    <div class="feat-cover"><div class="feat-cover-inner"><div class="feat-cover-title">Atomic Habits</div></div></div>
+                    <div class="feat-meta">
+                        <div class="feat-badge">✦ BUKU SOROTAN</div>
+                        <div class="feat-title">Atomic Habits</div>
+                        <div class="feat-author">James Clear</div>
+                        <div class="progress-label"><span>Mulai Membaca</span><strong>0%</strong></div>
+                        <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+                        <button class="feat-read-btn">Buka Buku →</button>
+                    </div>
+                </div>
+                <div class="lib-section-title">Perpustakaan Kamu</div>
+                <div class="book-grid" id="bookGrid"></div>
+                <div class="app-footer">Folio — Book Resume App v1.0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== READER SCREEN ==================== -->
+    <div class="screen" id="screen-reader">
+        <div class="reader-progress-top"><div class="reader-progress-fill" id="readerProgressFill"></div></div>
+        <div class="reader-topbar visible" id="readerTopBar">
+            <button class="reader-back-btn" onclick="switchScreen('library')">← Library</button>
+            <div class="reader-top-actions">
+                <!-- TOMBOL HAPUS BUKU (Hanya muncul saat membaca) -->
+                <button class="reader-top-btn" onclick="deleteActiveBook()" style="color: #D45353;" title="Hapus Buku">🗑️</button>
+                <button class="reader-top-btn" onclick="openInsights()" title="Lihat Kesimpulan & Key Points">◈</button>
+                <button class="reader-top-btn" onclick="toggleSettings()" title="Pengaturan Layar">Aa</button>
+            </div>
+        </div>
+        <div class="reader-container" id="readerScrollContainer">
+            <div class="reader-chapter-number" id="readerChapterNumber">BAB X</div>
+            <div class="reader-chapter-title" id="readerChapterTitle">Memuat Buku...</div>
+            <div class="reader-body" id="readerBody">
+                <!-- Isi akan diisi Javascript -->
+            </div>
+        </div>
+        <div class="reader-bottom-bar visible" id="readerBottomBar">
+            <button class="bottom-bar-btn" id="btnPrevChapter" onclick="navigateChapter('prev')">←</button>
+            <span class="bottom-bar-page-indicator" id="pageIndicator">0%</span>
+            <button class="bottom-bar-btn" id="btnNextChapter" onclick="navigateChapter('next')">→</button>
+            <div class="bottom-bar-divider"></div>
+            <button class="bottom-bar-btn" id="btnHighlight" onclick="toggleHighlightMode()">🖊️</button>
+            <button class="bottom-bar-btn" id="btnBookmark" onclick="saveBookmark()">🔖</button>
+            <button class="bottom-bar-btn" onclick="toggleSettings()">Aa</button>
+            <button class="bottom-bar-btn" onclick="openInsights()">◈</button>
+        </div>
+        
+        <!-- PENGATURAN READER -->
+        <div class="settings-popover" id="settingsPopover">
+            <div class="settings-row"><span class="settings-label">Ukuran Font</span><div class="font-size-group"><button class="font-size-option" onclick="setFontSize('small',this)" style="font-size:13px;">A</button><button class="font-size-option active" onclick="setFontSize('medium',this)" style="font-size:16px;">A</button><button class="font-size-option" onclick="setFontSize('large',this)" style="font-size:20px;">A</button></div></div>
+            <div class="settings-row"><span class="settings-label">Tema</span><div class="theme-dots"><div class="theme-dot td-parchment active" onclick="setTheme('parchment',this)"></div><div class="theme-dot td-white" onclick="setTheme('white',this)"></div><div class="theme-dot td-sepia" onclick="setTheme('sepia',this)"></div><div class="theme-dot td-dark" onclick="setTheme('dark',this)"></div></div></div>
+            <button class="btn-regen" onclick="closeSettings()" style="color:inherit;background:rgba(0,0,0,0.03);border:1px solid var(--border);">Tutup</button>
+        </div>
+    </div>
+
+    <!-- ==================== AI INSIGHTS SCREEN ==================== -->
+    <div class="screen" id="screen-insights">
+        <div class="insight-page">
+            <button class="insight-back" onclick="switchScreen('reader')">← Kembali Membaca</button>
+            <div class="insight-book-title" id="insightBookTitle">Memuat Judul...</div>
+            <div class="insight-subtitle" id="insightSubtitle">Analisis Data · Selesai 0%</div>
+            <div class="ai-badge">◈ Ringkasan & Insights</div>
+            
+            <div class="insight-grid" style="margin-top:20px;">
+                <!-- KOTAK KEY POINTS -->
+                <div class="insight-card">
+                    <div class="insight-card-label">🔑 Key Points Utama</div>
+                    <div class="insight-list" id="insightKeyPoints">
+                        <!-- Key points dari Excel akan masuk ke sini -->
+                    </div>
+                </div>
+                
+                <!-- KOTAK KESIMPULAN -->
+                <div class="insight-card">
+                    <div class="insight-card-label">🎯 Kesimpulan Menyeluruh</div>
+                    <div style="font-size: 14px; line-height: 1.8; color: var(--text-primary);" id="insightKesimpulan">
+                        <!-- Kesimpulan dari Excel akan masuk ke sini -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ai-quote-card">
+                <div class="ai-quote-text" id="aiQuoteText">"Ide yang bagus menjadi luar biasa ketika dieksekusi dengan kebiasaan kecil setiap hari."</div>
+                <div class="ai-quote-source">— Folio AI Generator</div>
+                <button class="btn-regen" onclick="regenQuote()">↻ Kutipan Acak Lainnya</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GLOBAL JAVASCRIPT -->
+    <script>
+        // Data Default (Offline) sebagai contoh agar aplikasi tidak kosong saat belum login/upload
+        const defaultBooksData = [
+            { id: "d1", title: "Atomic Habits", author: "James Clear", cover: "bc1", progress: 0, tag: "Belum Dibaca", category: "psikologi", 
+              kesimpulan: "Kesuksesan bukan tentang transformasi drastis semalam, melainkan akumulasi dari perubahan kecil yang dilakukan secara konsisten setiap hari. Dengan berfokus pada sistem bukan sekadar tujuan akhir, kita dapat mengubah identitas diri menuju arah yang lebih baik.", 
+              keyPoints: "Sistem lebih penting dari tujuan akhir;Fokus pada perubahan identitas, bukan sekadar hasil;Aturan 1 persen lebih baik setiap hari akan memberi hasil eksponensial;Jadikan kebiasaan baik terlihat, menarik, mudah, dan memuaskan", 
+              chapters: [
+                  {title: "Bab 1: Kekuatan Mengejutkan dari Kebiasaan Atomik", content: "Sukses adalah produk dari kebiasaan sehari-hari, bukan transformasi yang terjadi sekali seumur hidup.\n\nBanyak orang berpikir bahwa mereka harus membuat perubahan besar untuk meraih kesuksesan besar. Padahal, peningkatan 1% setiap hari akan membuat Anda 37 kali lipat lebih baik dalam setahun.\n\nHasil kita adalah ukuran tertunda dari kebiasaan kita. Kekayaan, berat badan, bahkan pengetahuan, adalah hasil dari apa yang kita ulangi secara konsisten. Waktu memperbesar margin antara kesuksesan dan kegagalan."}
+              ] 
+            },
+            { id: "d2", title: "Sapiens", author: "Yuval Noah Harari", cover: "bc2", progress: 0, tag: "Belum Dibaca", category: "sejarah", 
+              kesimpulan: "Kekuatan utama umat manusia (Homo Sapiens) terletak pada kemampuannya yang unik untuk mempercayai fiksi kolektif (seperti uang, agama, hukum, dan negara) yang memungkinkan kolaborasi dan kerjasama dalam skala massal yang tidak bisa dilakukan spesies lain.", 
+              keyPoints: "Revolusi Kognitif menciptakan kemampuan berbahasa yang kompleks;Fiksi dan mitos adalah lem yang mengikat jutaan manusia untuk bekerja sama;Revolusi Pertanian sering dianggap sebagai kemajuan, namun sebenarnya adalah jebakan yang membuat hidup individu lebih keras;Uang adalah sistem kepercayaan mutual paling universal yang pernah diciptakan", 
+              chapters: [
+                  {title: "Bab 1: Hewan yang Tidak Penting", content: "Tiga revolusi penting yang membentuk jalannya sejarah umat manusia: Revolusi Kognitif, Revolusi Pertanian, dan Revolusi Ilmiah.\n\nHomo sapiens berhasil menaklukkan dunia bukan karena kekuatan fisik, melainkan berkat kemampuan unik bahasa kita yang memungkinkan kita membicarakan hal-hal yang sebenarnya tidak ada (fiksi).\n\nKemampuan bergosip dan menciptakan mitos bersama inilah yang memungkinkan Homo Sapiens berkolaborasi dalam jumlah yang tak terbatas, mengalahkan spesies manusia purba lainnya seperti Neanderthal."}
+              ] 
+            }
+        ];
+
+        let currentBooksToDisplay = [...defaultBooksData];
+        
+        // State Reader Aktif
+        let activeBook = null;
+        let activeChapterIdx = 0;
+
+        window.APP_STATE = {
+            currentSlide: 0,
+            totalSlides: 5,
+            email: localStorage.getItem('folio-user-email') || '',
+            userName: localStorage.getItem('folio-user-name') || 'Andi Pratama',
+            isLoggedIn: localStorage.getItem('folio-user-logged-in') === 'true',
+            selectedGenres: JSON.parse(localStorage.getItem('folio-genres') || '[]'),
+            readingGoal: parseInt(localStorage.getItem('folio-reading-goal') || '15'),
+            onboardingComplete: localStorage.getItem('folio-onboarding-complete') === 'true',
+            readerFontSize: localStorage.getItem('folio-reader-fontSize') || 'medium',
+            readerTheme: localStorage.getItem('folio-reader-theme') || 'parchment',
+            highlightMode: false,
+            settingsOpen: false,
+            toastTimeout: null,
+        };
+
+        const fontSizes = { small: 15, medium: 18, large: 22 };
+        const lineHeights = { small: 1.7, medium: 1.9, large: 2.1 };
+        const aiQuotes = [
+            { text: "Buku yang tidak kamu baca tidak akan bisa membantumu.", chapter: "" },
+            { text: "Satu-satunya batas yang jelas antara Sistem 1 dan Sistem 2 adalah bahwa Sistem 1 tidak bisa dihentikan.", chapter: "" },
+            { text: "Kita cenderung melebih-lebihkan pemahaman kita tentang dunia.", chapter: "" },
+        ];
+        let currentQuoteIdx = 0;
+
+        function initApp() {
+            updateProfileDisplay();
+            if (window.APP_STATE.onboardingComplete) { showScreen('library'); } else { showScreen('onboarding'); resetOnboardingSlides(); }
+            renderBooks(currentBooksToDisplay);
+            if (window.APP_STATE.onboardingComplete) initReader();
+        }
+
+        function updateProfileDisplay() {
+            const initial = window.APP_STATE.userName.charAt(0).toUpperCase();
+            document.getElementById('headerAvatar').textContent = initial;
+            document.getElementById('profileAvatar').textContent = initial;
+            document.getElementById('profileName').textContent = window.APP_STATE.userName;
+            document.getElementById('profileEmail').textContent = window.APP_STATE.email || 'user@folio.app';
+        }
+
+        function showScreen(name) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('screen-' + name);
+            if (target) target.classList.add('active');
+            document.body.className = '';
+            
+            if (name === 'reader') {
+                applyReaderTheme(window.APP_STATE.readerTheme);
+                applyReaderFontSize(window.APP_STATE.readerFontSize);
+            }
+            if (name === 'library') {
+                document.body.classList.add('app-mode');
+                renderBooks(currentBooksToDisplay);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchScreen(name) { showScreen(name); }
+
+        window.showToast = function(message, icon = '📖') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastIcon').textContent = icon;
+            document.getElementById('toastMessage').textContent = message;
+            clearTimeout(window.APP_STATE.toastTimeout);
+            toast.classList.add('show');
+            window.APP_STATE.toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        function openDrawer() { document.getElementById('notifOverlay').classList.add('show'); document.getElementById('notifDrawer').classList.add('open'); }
+        function closeDrawer() { document.getElementById('notifDrawer').classList.remove('open'); setTimeout(() => document.getElementById('notifOverlay').classList.remove('show'), 400); }
+        window.openModal = function(id) { document.getElementById(id).classList.add('show'); }
+        window.closeModal = function(id) { document.getElementById(id).classList.remove('show'); }
+        function markRead(el) { el.classList.add('read'); }
+
+        // Fitur UI untuk Login/Register Form
+        window.switchAuthTab = function(tab) {
+            if(tab === 'login') {
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('tabLogin').style.background = 'rgba(200,134,58,0.15)';
+                document.getElementById('tabLogin').style.color = 'var(--accent-light)';
+                document.getElementById('tabRegister').style.background = 'none';
+                document.getElementById('tabRegister').style.color = 'var(--text-light-muted)';
+            } else {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'block';
+                document.getElementById('tabRegister').style.background = 'rgba(200,134,58,0.15)';
+                document.getElementById('tabRegister').style.color = 'var(--accent-light)';
+                document.getElementById('tabLogin').style.background = 'none';
+                document.getElementById('tabLogin').style.color = 'var(--text-light-muted)';
+            }
+        }
+
+        window.togglePassword = function(id, btn) {
+            const input = document.getElementById(id);
+            if(input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🔒';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
+
+        // Eksposur Global ke window agar bisa dipanggil dari modul Firebase
+        window.goToSlide = goToSlide;
+        window.showScreen = showScreen;
+        window.resetOnboardingSlides = resetOnboardingSlides;
+        window.updateProfileDisplay = updateProfileDisplay;
+
+        // ===== ONBOARDING =====
+        function goToSlide(index) {
+            const slides = document.querySelectorAll('.onboarding-slide');
+            if (slides[APP_STATE.currentSlide]) {
+                slides[APP_STATE.currentSlide].classList.remove('active');
+                slides[APP_STATE.currentSlide].classList.add('exit-left');
+            }
+            if (slides[index]) {
+                slides[index].classList.remove('exit-left');
+                slides[index].classList.add('active');
+            }
+            APP_STATE.currentSlide = index;
+            document.querySelectorAll('.step-dot').forEach((dot, i) => {
+                dot.classList.remove('active', 'done');
+                if (i < index) dot.classList.add('done');
+                if (i === index) dot.classList.add('active');
+            });
+        }
+        function resetOnboardingSlides() { goToSlide(0); }
+        function skipToLibrary() { window.showToast('📚 Langsung ke Library...'); setTimeout(() => showScreen('library'), 500); }
+        function finishOnboarding() {
+            APP_STATE.onboardingComplete = true; localStorage.setItem('folio-onboarding-complete', 'true');
+            window.showToast('📚 Library siap!'); setTimeout(() => showScreen('library'), 600);
+        }
+
+        // ===== LIBRARY RENDERING & FILTER =====
+        window.renderBooks = function(books) {
+            currentBooksToDisplay = books;
+            const grid = document.getElementById('bookGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = books.map(b => `
+            <div class="book-card" onclick="openReader('${b.id}')">
+              <div class="book-cover ${b.cover}">
+                <div class="book-cover-inner">
+                  <div class="book-cover-text">${b.title}</div>
+                  <div class="book-cover-author">${b.author}</div>
+                </div>
+                <div class="book-progress-mini">
+                  <div class="book-progress-mini-fill" style="width:${b.progress}%"></div>
+                </div>
+              </div>
+              <div class="book-title">${b.title}</div>
+              <div class="book-author-name">${b.author}</div>
+              <span class="book-tag ${b.progress===0?'unread':''}">${b.tag}</span>
+            </div>`).join('');
+        }
+
+        function filterBooks(chip) {
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            
+            const f = chip.textContent.trim().toLowerCase();
+            let filtered = currentBooksToDisplay;
+            
+            if (f === 'sedang dibaca') {
+                filtered = currentBooksToDisplay.filter(b => b.progress > 0 && b.progress < 100);
+            } else if (f === 'selesai') {
+                filtered = currentBooksToDisplay.filter(b => b.progress === 100);
+            } else if (f !== 'semua') {
+                filtered = currentBooksToDisplay.filter(b => b.category.toLowerCase() === f);
+            }
+            
+            // Cukup panggil render ulang secara manual menggunakan variabel `filtered`
+            const grid = document.getElementById('bookGrid');
+            grid.innerHTML = filtered.map(b => `
+            <div class="book-card" onclick="openReader('${b.id}')">
+              <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
+              <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.tag}</span>
+            </div>`).join('');
+        }
+
+        function focusSearch() { document.getElementById('searchInput')?.focus(); }
+        function handleSearch(query) {
+            const dd = document.getElementById('searchDropdown');
+            if (!query.trim()) { dd.classList.remove('show'); renderBooks(currentBooksToDisplay); return; }
+            const results = currentBooksToDisplay.filter(b => b.title.toLowerCase().includes(query.toLowerCase()) || b.author.toLowerCase().includes(query.toLowerCase()));
+            dd.innerHTML = results.length > 0 ? results.map(b => `
+            <div class="search-item" onclick="document.getElementById('searchInput').value=''; document.getElementById('searchDropdown').classList.remove('show'); openReader('${b.id}');">
+              <div class="book-cover ${b.cover}" style="width:28px;height:42px;border-radius:2px 4px 4px 2px;flex-shrink:0;"></div>
+              <div><div style="font-size:13px;font-weight:500;">${b.title}</div><div style="font-size:11px;color:var(--text-muted);">${b.author}</div></div>
+            </div>`).join('') : '<div style="padding:16px;text-align:center;color:var(--text-muted);">📚 Tidak ditemukan</div>';
+            dd.classList.add('show');
+        }
+
+        // ===== PENGATURAN READER ======
+        function initReader() { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); }
+        function applyReaderTheme(theme) { document.body.className = 'theme-' + theme; document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active')); const ad = document.querySelector(`.theme-dot.td-${theme}`); if (ad) ad.classList.add('active'); window.APP_STATE.readerTheme = theme; localStorage.setItem('folio-reader-theme', theme); }
+        function applyReaderFontSize(size) { const body = document.getElementById('readerBody'); if (!body) return; body.style.fontSize = fontSizes[size] + 'px'; body.style.lineHeight = lineHeights[size]; document.querySelectorAll('.font-size-option').forEach((btn, i) => { const sizes = ['small', 'medium', 'large']; btn.classList.toggle('active', sizes[i] === size); }); window.APP_STATE.readerFontSize = size; localStorage.setItem('folio-reader-fontSize', size); }
+        function toggleSettings() { window.APP_STATE.settingsOpen = !window.APP_STATE.settingsOpen; const pop = document.getElementById('settingsPopover'); if (window.APP_STATE.settingsOpen) { pop.classList.add('show'); } else { pop.classList.remove('show'); } }
+        function closeSettings() { document.getElementById('settingsPopover')?.classList.remove('show'); window.APP_STATE.settingsOpen = false; }
+        function setFontSize(size, btn) { applyReaderFontSize(size); window.showToast('Font: ' + size); }
+        function setTheme(theme, dot) { applyReaderTheme(theme); closeSettings(); window.showToast('Tema: ' + theme); }
+        function toggleHighlightMode() { window.APP_STATE.highlightMode = !window.APP_STATE.highlightMode; document.getElementById('btnHighlight')?.classList.toggle('active', window.APP_STATE.highlightMode); window.showToast(window.APP_STATE.highlightMode ? 'Mode highlight aktif' : 'Mode highlight nonaktif'); }
+        function highlightQuote(el) { if (el.classList.contains('highlighted')) return; el.classList.add('highlighted'); window.showToast('★ Highlight tersimpan!', '★'); }
+        function saveBookmark() { window.showToast('🔖 Halaman ditandai', '🔖'); }
+        
+        // ===== LOGIKA HAPUS BUKU =====
+        window.deleteActiveBook = function() {
+            if(!activeBook) return;
+            
+            // Cegah penghapusan data offline bawaan
+            if(activeBook.id.startsWith('d')) {
+                window.showToast("Buku percontohan tidak bisa dihapus.", "⚠️");
+                return;
+            }
+            
+            if(confirm(`Yakin ingin menghapus buku "${activeBook.title}" beserta isinya secara permanen?`)) {
+                if(window.firebaseDeleteBook) {
+                    window.firebaseDeleteBook(activeBook.id);
+                    switchScreen('library');
+                } else {
+                    window.showToast("Koneksi Firebase gagal.", "❌");
+                }
+            }
+        }
+
+        // ===== LOGIKA INSIGHTS (KESIMPULAN & KEY POINTS) =====
+        window.openInsights = function() {
+            if(!activeBook) return;
+            
+            document.getElementById('insightBookTitle').textContent = activeBook.title;
+            
+            // Hitung progress membaca
+            const progress = activeBook.chapters && activeBook.chapters.length > 0 
+                ? Math.round(((activeChapterIdx + 1) / activeBook.chapters.length) * 100) 
+                : 100;
+            document.getElementById('insightSubtitle').textContent = `Analisis Data · ${activeBook.author} · Selesai ${progress}%`;
+            
+            // Masukkan Kesimpulan (Memproses enter menjadi baris paragraf agar rapi)
+            const elKesimpulan = document.getElementById('insightKesimpulan');
+            if (activeBook.kesimpulan && activeBook.kesimpulan.trim() !== '') {
+                elKesimpulan.innerHTML = activeBook.kesimpulan.split('\n').map(p => `<p style="margin-bottom:8px;">${p}</p>`).join('');
+            } else {
+                elKesimpulan.innerHTML = "<p><em>Buku ini belum memiliki kesimpulan yang diinput dari Excel.</em></p>";
+            }
+
+            // Masukkan Key Points (Pisahkan berdasarkan enter \n atau titik koma ;)
+            const elKeyPoints = document.getElementById('insightKeyPoints');
+            if (activeBook.keyPoints && activeBook.keyPoints.trim() !== '') {
+                const points = activeBook.keyPoints.split(/\n|;/).filter(p => p.trim() !== '');
+                elKeyPoints.innerHTML = points.map((p, i) => `
+                    <div class="insight-item">
+                        <div class="insight-num">${i + 1}</div>
+                        <div>${p.trim()}</div>
+                    </div>
+                `).join('');
+            } else {
+                elKeyPoints.innerHTML = '<div class="insight-item"><div><em>Belum ada poin penting yang dicatat.</em></div></div>';
+            }
+
+            switchScreen('insights');
+        }
+
+        function regenQuote() { 
+            currentQuoteIdx = (currentQuoteIdx + 1) % aiQuotes.length; 
+            document.getElementById('aiQuoteText').textContent = '"' + aiQuotes[currentQuoteIdx].text + '"'; 
+        }
+
+        // ===== LOGIKA MEMBACA BAB DINAMIS =====
+        window.openReader = function(bookId) {
+            activeBook = currentBooksToDisplay.find(b => b.id === bookId);
+            if(!activeBook) return;
+            
+            activeChapterIdx = 0;
+            renderChapter();
+            switchScreen('reader');
+        }
+
+        function renderChapter() {
+            if(!activeBook) return;
+            
+            const hasChapters = activeBook.chapters && activeBook.chapters.length > 0;
+            document.getElementById('readerChapterNumber').textContent = `BAB ${activeChapterIdx + 1}`;
+            
+            if(hasChapters) {
+                const chapter = activeBook.chapters[activeChapterIdx];
+                document.getElementById('readerChapterTitle').textContent = chapter.title || "Ringkasan Utama";
+                
+                // Format text: ganti enter \n menjadi paragraf HTML <p>
+                const paragraphs = chapter.content.split('\n').filter(p => p.trim() !== '');
+                
+                let htmlContent = '';
+                paragraphs.forEach((p, index) => {
+                    if (index === 0) {
+                        htmlContent += `<p class="drop-cap">${p}</p>`; // Paragraf pertama diberi huruf besar di awal
+                    } else {
+                        htmlContent += `<p>${p}</p>`;
+                    }
+                });
+                
+                // Interaksi khusus: tambah blok highlight di paragraf acak (hanya untuk tampilan visual menarik)
+                if(paragraphs.length > 2) {
+                    htmlContent += `<div class="reader-quote-block" onclick="highlightQuote(this)">Tekan blok ini jika ada kalimat penting yang ingin kamu simpan.<div class="quote-action-hint">★ Ketuk untuk menyimpan highlight</div></div>`;
+                }
+
+                document.getElementById('readerBody').innerHTML = htmlContent;
+            } else {
+                document.getElementById('readerChapterTitle').textContent = activeBook.title;
+                document.getElementById('readerBody').innerHTML = "<p>Buku ini belum memiliki isi ringkasan bab. Silakan tambahkan konten dari Excel.</p>";
+            }
+
+            // Atur tombol Next/Prev Navigasi Bawah
+            const prevBtn = document.getElementById('btnPrevChapter');
+            const nextBtn = document.getElementById('btnNextChapter');
+            if(prevBtn) prevBtn.style.opacity = activeChapterIdx > 0 ? "1" : "0.3";
+            if(nextBtn) nextBtn.style.opacity = (hasChapters && activeChapterIdx < activeBook.chapters.length - 1) ? "1" : "0.3";
+            
+            // Setel Progress Bar otomatis berdasarkan bab yang dibaca
+            let progress = 0;
+            if (hasChapters) {
+                progress = Math.round(((activeChapterIdx + 1) / activeBook.chapters.length) * 100);
+            } else {
+                progress = 100;
+            }
+            document.getElementById('pageIndicator').textContent = `${progress}%`;
+            document.getElementById('readerProgressFill').style.width = `${progress}%`;
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.navigateChapter = function(dir) {
+            if(!activeBook || !activeBook.chapters) return;
+            
+            if (dir === 'next' && activeChapterIdx < activeBook.chapters.length - 1) {
+                activeChapterIdx++;
+                renderChapter();
+                window.showToast('→ Bab Selanjutnya');
+            } else if (dir === 'prev' && activeChapterIdx > 0) {
+                activeChapterIdx--;
+                renderChapter();
+                window.showToast('← Bab Sebelumnya');
+            } else {
+                window.showToast(dir === 'next' ? 'Ini adalah bab terakhir.' : 'Ini adalah bab pertama.');
+            }
+        }
+        
+        // ===== SHORTCUT KEYBOARD =====
+        document.addEventListener('keydown', (e) => { 
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); focusSearch(); } 
+            if (e.key === 'Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); closeSettings(); } 
+        });
+
+        // Init App on load
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+
+
+    <!-- ============================================== -->
+    <!-- BAGIAN FIREBASE (Tambah Buku, Sync & Hapus)    -->
+    <!-- ============================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+
+        // Konfigurasi API Milikmu
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9VMAwS4xrIVkEbQDgs8j9hLtXSigY39I",
+            authDomain: "booksummary-6de98.firebaseapp.com",
+            projectId: "booksummary-6de98",
+            storageBucket: "booksummary-6de98.firebasestorage.app",
+            messagingSenderId: "414399752577",
+            appId: "1:414399752577:web:e5b1939344418b63dfa080",
+            measurementId: "G-GK6BK3ZMMD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // ==========================================
+        // FUNGSI AUTENTIKASI FIREBASE (LOGIN/REGISTER)
+        // ==========================================
+        
+        // Memantau status login secara otomatis
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.APP_STATE.isLoggedIn = true;
+                window.APP_STATE.email = user.email;
+                window.APP_STATE.userName = user.displayName || user.email.split('@')[0];
+                window.updateProfileDisplay();
+                
+                // Jika sedang di halaman login onboarding, lanjut ke step genre
+                if (document.getElementById('screen-onboarding').classList.contains('active') && window.APP_STATE.currentSlide === 1) {
+                     window.goToSlide(2);
+                }
+            } else {
+                window.APP_STATE.isLoggedIn = false;
+            }
+        });
+
+        // Email & Password Login
+        window.handleLogin = async () => {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('btnLogin');
+            
+            if(!email || !pass) return window.showToast("Lengkapi email & password", "⚠️");
+            
+            btn.textContent = "Memproses...";
+            btn.disabled = true;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                window.showToast("Berhasil masuk!", "✅");
+            } catch (error) {
+                window.showToast("Gagal masuk: Periksa email/password.", "❌");
+                console.error("Login Error:", error.message);
+            } finally {
+                btn.textContent = "Masuk";
+                btn.disabled = false;
+            }
+        };
+
+        // Email & Password Register
+        window.handleRegister = async () => {
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPassword').value;
+            const name = document.getElementById('regName').value;
+            const btn = document.getElementById('btnRegister');
+            
+            if(!email || !pass || !name) return window.showToast("Lengkapi semua data", "⚠️");
+            
+            btn.textContent = "Mendaftar...";
+            btn.disabled = true;
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                await updateProfile(userCredential.user, { displayName: name });
+                
+                // Perbarui State UI
+                window.APP_STATE.userName = name;
+                window.updateProfileDisplay();
+                
+                window.showToast("Berhasil mendaftar!", "✅");
+            } catch (error) {
+                window.showToast("Gagal mendaftar: " + error.message, "❌");
+                console.error("Register Error:", error.message);
+            } finally {
+                btn.textContent = "Daftar";
+                btn.disabled = false;
+            }
+        };
+
+        // Google Login
+        window.socialLogin = async (provider) => {
+            if(provider === 'Google') {
+                try {
+                    await signInWithPopup(auth, googleProvider);
+                    window.showToast("Berhasil masuk dengan Google!", "✅");
+                } catch(error) {
+                    window.showToast("Login dibatalkan atau gagal.", "❌");
+                    console.error("Google Auth Error:", error.message);
+                }
+            } else {
+                window.showToast(provider + " login belum tersedia.", "⚠️");
+            }
+        };
+
+        // Logout
+        window.handleLogout = async () => {
+            try {
+                await signOut(auth);
+                window.APP_STATE.isLoggedIn = false; 
+                window.APP_STATE.onboardingComplete = false; 
+                localStorage.removeItem('folio-onboarding-complete');
+                window.closeModal('profileModal'); 
+                window.showToast('Berhasil keluar. Sampai jumpa! 👋');
+                setTimeout(() => { window.APP_STATE.currentSlide = 0; window.showScreen('onboarding'); window.resetOnboardingSlides(); }, 800);
+            } catch (error) {
+                 window.showToast("Gagal logout.", "❌");
+            }
+        };
+
+        // ==========================================
+        // FUNGSI UNTUK MENYIMPAN DATA DARI EXCEL
+        // ==========================================
+        const addBookForm = document.getElementById('addBookForm');
+        const btnSubmitBook = document.getElementById('btnSubmitBook');
+
+        addBookForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('excelFileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                if(window.showToast) window.showToast("Pilih file Excel terlebih dahulu!", "⚠️");
+                return;
+            }
+
+            btnSubmitBook.textContent = "Membaca Excel...";
+            btnSubmitBook.disabled = true;
+
+            const reader = new FileReader();
+            
+            reader.onload = async (event) => {
+                try {
+                    const data = new Uint8Array(event.target.result);
+                    // Gunakan fungsi XLSX dari library SheetJS
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Ubah Sheet menjadi array of Object / JSON
+                    const rows = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    if (rows.length === 0) {
+                        throw new Error("File Excel kosong atau format tidak sesuai.");
+                    }
+
+                    btnSubmitBook.textContent = "Menyimpan ke Firebase...";
+
+                    // Mengelompokkan bab berdasarkan Judul Buku
+                    const booksMap = {};
+                    
+                    rows.forEach(row => {
+                        const title = row['Judul'] || 'Tanpa Judul';
+                        
+                        // Jika buku belum ada di keranjang/map, buat objeknya
+                        if (!booksMap[title]) {
+                            booksMap[title] = {
+                                title: title,
+                                author: row['Penulis'] || 'Anonim',
+                                category: row['Kategori'] || 'lainnya',
+                                kesimpulan: row['Kesimpulan'] || '', // Ambil Kesimpulan dari Excel
+                                keyPoints: row['Key Points'] || '',  // Ambil Key Points dari Excel
+                                chapters: []
+                            };
+                        }
+                        
+                        // Masukkan bab ke dalam array chapters buku tersebut
+                        if (row['Judul Bab'] || row['Isi Bab']) {
+                            booksMap[title].chapters.push({
+                                title: row['Judul Bab'] || 'Bab Tanpa Judul',
+                                content: row['Isi Bab'] || ''
+                            });
+                        }
+                    });
+
+                    // Looping menyimpan setiap buku ke Firebase
+                    const covers = ['bc1', 'bc2', 'bc3', 'bc4', 'bc5', 'bc6'];
+                    let savedCount = 0;
+
+                    for (const key in booksMap) {
+                        const book = booksMap[key];
+                        const randomCover = covers[Math.floor(Math.random() * covers.length)];
+                        
+                        await addDoc(collection(db, "buku_bacaan"), {
+                            title: book.title,
+                            author: book.author,
+                            category: book.category.toLowerCase(),
+                            kesimpulan: book.kesimpulan,
+                            keyPoints: book.keyPoints,
+                            cover: randomCover,
+                            progress: 0,
+                            tag: "Belum Dibaca",
+                            chapters: book.chapters.length > 0 ? book.chapters : [{ title: "Ringkasan", content: "Belum ada isi bab." }],
+                            createdAt: serverTimestamp()
+                        });
+                        savedCount++;
+                    }
+
+                    if(window.showToast) window.showToast(`Berhasil menyimpan ${savedCount} buku!`, "✅");
+                    
+                    // Reset Form dan tutup Modal
+                    window.closeModal('addBookModal');
+                    addBookForm.reset();
+
+                } catch (error) {
+                    console.error("Gagal memproses Excel: ", error);
+                    if(window.showToast) window.showToast("Gagal memproses. Pastikan format kolom sesuai.", "❌");
+                } finally {
+                    btnSubmitBook.textContent = "Proses & Simpan ke Firebase";
+                    btnSubmitBook.disabled = false;
+                }
+            };
+
+            // Baca file sebagai ArrayBuffer (format yang dibutuhkan SheetJS)
+            reader.readAsArrayBuffer(file);
+        });
+
+        // ==========================================
+        // FUNGSI MEMBACA DATA SECARA REAL-TIME
+        // ==========================================
+        const q = query(collection(db, "buku_bacaan"), orderBy("createdAt", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            let bukuDariFirebase = [];
+            
+            // Memasukkan setiap buku di database ke dalam array `bukuDariFirebase`
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                bukuDariFirebase.push({
+                    id: doc.id, // ID unik Firebase, sangat penting untuk fitur Hapus
+                    title: data.title || "Tanpa Judul",
+                    author: data.author || "Anonim",
+                    category: data.category || "lainnya",
+                    kesimpulan: data.kesimpulan || "",
+                    keyPoints: data.keyPoints || "",
+                    cover: data.cover || "bc1",
+                    progress: data.progress || 0,
+                    tag: data.tag || "Belum Dibaca",
+                    chapters: data.chapters || []
+                });
+            });
+
+            // Mengawinkan buku offline bawaan dengan buku dari Firebase
+            if (window.renderBooks) {
+                // Buku firebase ditaruh di depan agar buku baru muncul paling awal
+                window.renderBooks([...bukuDariFirebase, ...defaultBooksData]);
+            }
+
+        }, (error) => {
+            console.warn("Gagal membaca Firebase secara otomatis.", error.message);
+        });
+
+        // ==========================================
+        // FUNGSI HAPUS BUKU DARI FIREBASE
+        // ==========================================
+        // Diekspor ke 'window' agar bisa dipanggil oleh tombol HTML biasa
+        window.firebaseDeleteBook = async (bookId) => {
+            try {
+                // Menghapus dokumen dari database Firebase langsung
+                await deleteDoc(doc(db, "buku_bacaan", bookId));
+                if(window.showToast) window.showToast("Buku berhasil dihapus dari server!", "🗑️");
+            } catch (error) {
+                console.error("Gagal menghapus buku: ", error);
+                if(window.showToast) window.showToast("Terjadi kesalahan saat menghapus.", "❌");
+            }
+        };
+
+    </script>
+</body>
+</html>
