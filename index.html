@@ -95,6 +95,17 @@
         @keyframes highlightPulse { 0% { background: rgba(200,134,58,0); } 40% { background: rgba(200,134,58,0.25); } 100% { background: rgba(200,134,58,0.1); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
+        /* Slide Transitions */
+        @keyframes slideNextIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideNextOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(-100%); opacity: 0; } }
+        @keyframes slidePrevIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slidePrevOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+
+        .slide-next-in { animation: slideNextIn 0.4s var(--transition-smooth); }
+        .slide-next-out { animation: slideNextOut 0.4s var(--transition-smooth); }
+        .slide-prev-in { animation: slidePrevIn 0.4s var(--transition-smooth); }
+        .slide-prev-out { animation: slidePrevOut 0.4s var(--transition-smooth); }
+
         /* ===== TOAST ===== */
         .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #1C1814; color: #F7F3EE; padding: 12px 20px; border-radius: var(--radius-full); font-size: 13px; font-family: var(--font-ui); z-index: 9999; box-shadow: var(--shadow-float); display: none; align-items: center; gap: 8px; white-space: nowrap; animation: fadeInUp 0.35s cubic-bezier(0.34,1.56,0.64,1); border: 1px solid rgba(255,255,255,0.1); }
         .toast.show { display: flex; }
@@ -118,6 +129,21 @@
         .notification-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
         .notification-time { font-size: 10px; color: var(--text-muted); margin-top: 6px; }
         
+        /* Reader TOC Sidebar */
+        .reader-toc-drawer { position: fixed; top: 0; right: 0; width: 300px; max-width: 85vw; height: 100vh; background: var(--bg-card); z-index: 1005; box-shadow: var(--shadow-xl); transform: translateX(100%); transition: transform 0.4s var(--transition-smooth); display: flex; flex-direction: column; padding: 24px; border-left: 1px solid var(--border); }
+        body.theme-dark .reader-toc-drawer { background: var(--bg-dark-card); border-color: rgba(255,255,255,0.1); }
+        .reader-toc-drawer.open { transform: translateX(0); }
+        .reader-toc-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+        body.theme-dark .reader-toc-header { border-color: rgba(255,255,255,0.1); }
+        .toc-list { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; flex: 1; }
+        .toc-item { padding: 12px 16px; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); font-family: var(--font-ui); font-size: 14px; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; border: 1px solid transparent; }
+        body.theme-dark .toc-item { color: var(--text-dark); }
+        .toc-item:hover { background: var(--bg-secondary); }
+        body.theme-dark .toc-item:hover { background: rgba(255,255,255,0.05); }
+        .toc-item.active { background: var(--accent-pale); color: var(--accent-dark); border-color: var(--accent); font-weight: 600; }
+        body.theme-dark .toc-item.active { background: rgba(200,134,58,0.15); color: var(--accent-light); }
+        .toc-section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 16px 0 8px 4px; }
+
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; align-items: center; justify-content: center; }
         .modal-overlay.show { display: flex; }
         .modal-content { background: var(--bg-card); border-radius: var(--radius-lg); padding: 28px; max-width: 440px; width: 90%; box-shadow: var(--shadow-xl); border: 1px solid var(--border); animation: scaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1); position: relative; }
@@ -401,22 +427,6 @@
         .td-sepia { background: #F4ECD8; border: 2px solid #DDD; }
         .td-dark { background: #1A1814; border: 2px solid #555; }
         
-        .insight-page { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
-        .insight-back { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: var(--radius-full); cursor: pointer; font-size: 13px; font-family: var(--font-ui); margin-bottom: 24px; transition: var(--transition); background: rgba(0,0,0,0.03); border: 1px solid var(--border); color: inherit; }
-        .insight-back:hover { background: rgba(0,0,0,0.06); transform: translateX(-3px); }
-        .insight-book-title { font-family: var(--font-display); font-size: 30px; font-style: italic; margin-bottom: 4px; }
-        .insight-subtitle { font-size: 13px; opacity: 0.6; }
-        .ai-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-full); background: var(--sage-pale); border: 1px solid var(--sage-light); font-size: 11px; font-weight: 500; color: var(--sage); margin-top: 8px; }
-        .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .insight-card { background: rgba(255,255,255,0.5); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
-        body.theme-dark .insight-card { background: rgba(255,255,255,0.03); border-color: var(--border-dark); }
-        .insight-card-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; margin-bottom: 12px; display:flex; align-items:center; gap:6px; }
-        .insight-list { display: flex; flex-direction: column; gap: 8px; }
-        .insight-item { display: flex; gap: 8px; font-size: 13px; line-height: 1.5; padding: 6px 0; }
-        .insight-num { width: 20px; height: 20px; border-radius: 50%; background: var(--accent-pale); color: var(--accent-dark); font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
-        .ai-quote-card { background: #1C1814; border-radius: var(--radius-md); padding: 20px; color: #F7F3EE; margin-top: 16px; }
-        .ai-quote-text { font-family: var(--font-body); font-size: 14px; font-style: italic; line-height: 1.6; margin-bottom: 8px; }
-        .ai-quote-source { font-size: 11px; opacity: 0.6; }
         .btn-regen { width: 100%; padding: 10px; margin-top: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-sm); cursor: pointer; font-family: var(--font-ui); font-size: 12px; transition: var(--transition); color: #F7F3EE; display:flex; align-items:center; justify-content:center; gap:8px; }
         .btn-regen:hover { background: rgba(200,134,58,0.2); border-color: var(--accent); }
         .screen { display: none; min-height: 100vh; }
@@ -431,7 +441,6 @@
             .reader-body { font-size: 16px; line-height: 1.8; }
             .reader-bottom-bar { padding: 6px 10px; gap: 2px; }
             .bottom-bar-btn { width: 36px; height: 36px; }
-            .insight-grid { grid-template-columns: 1fr; }
             .settings-popover { min-width: auto; width: 90vw; }
             .lib-body { padding: 16px; }
             .lib-topbar { padding: 16px 16px 0; }
@@ -455,20 +464,12 @@
             <div class="filter-chip" onclick="filterNotif(this)" style="font-size:11px;">Dibaca</div>
         </div>
         <div id="notifList" style="display:flex;flex-direction:column;gap:8px;">
-            <div class="notification-item" onclick="markRead(this);showToast('Beralih ke Thinking, Fast and Slow')">
-                <div class="notification-dot-indicator"></div>
-                <div class="notification-content">
-                    <div class="notification-title">Lanjutkan membaca</div>
-                    <div class="notification-desc">Thinking, Fast and Slow — Bab 3 menunggu</div>
-                    <div class="notification-time">10 menit yang lalu</div>
-                </div>
-            </div>
             <div class="notification-item" onclick="markRead(this);showToast('Insight AI baru tersedia!')">
                 <div class="notification-dot-indicator"></div>
                 <div class="notification-content">
-                    <div class="notification-title">Insight AI baru</div>
-                    <div class="notification-desc">Atomic Habits telah dianalisis</div>
-                    <div class="notification-time">2 jam yang lalu</div>
+                    <div class="notification-title">Insight AI</div>
+                    <div class="notification-desc">Analisis buku baru Anda telah siap dibaca.</div>
+                    <div class="notification-time">Baru saja</div>
                 </div>
             </div>
         </div>
@@ -497,8 +498,8 @@
             
             <div style="background: rgba(200,134,58,0.1); border: 1px dashed rgba(200,134,58,0.4); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
                 <div style="font-size: 11px; color: var(--accent-light); margin-bottom: 8px; font-weight: bold;">FORMAT KOLOM EXCEL (Baris 1):</div>
-                <div style="font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace;">Judul | Penulis | Kategori | Kesimpulan | Key Points | Judul Bab | Isi Bab</div>
-                <div style="font-size: 10px; color: var(--text-light-muted); margin-top: 8px; font-style: italic;">*Gunakan tanda titik koma (;) atau Enter untuk memisahkan Key Points.</div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace;">Judul | Penulis | Kategori | Kesimpulan | Key Points | Langkah Aksi | Judul Bab | Isi Bab</div>
+                <div style="font-size: 10px; color: var(--text-light-muted); margin-top: 8px; font-style: italic;">*Gunakan tanda titik koma (;) atau Enter untuk memisahkan Key Points dan Langkah Aksi.</div>
             </div>
 
             <form id="addBookForm">
@@ -634,17 +635,12 @@
             </div>
             <div class="lib-body">
                 <div class="lib-section-title">Lanjutkan Membaca</div>
-                <div class="lib-featured" onclick="openReader('d1')">
-                    <div class="feat-cover"><div class="feat-cover-inner"><div class="feat-cover-title">Atomic Habits</div></div></div>
-                    <div class="feat-meta">
-                        <div class="feat-badge">✦ BUKU SOROTAN</div>
-                        <div class="feat-title">Atomic Habits</div>
-                        <div class="feat-author">James Clear</div>
-                        <div class="progress-label"><span>Mulai Membaca</span><strong>0%</strong></div>
-                        <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
-                        <button class="feat-read-btn">Buka Buku <i data-lucide="arrow-right" style="width:14px;"></i></button>
+                <div id="featuredBookContainer">
+                    <div style="text-align:center; padding:30px; background:var(--bg-secondary); border-radius:20px; border:1px dashed var(--border); color:var(--text-muted); font-size:13px;">
+                        Belum ada buku di library. Upload buku pertamamu!
                     </div>
                 </div>
+
                 <div class="lib-section-title">Rekomendasi Terkini</div>
                 <div class="book-grid" id="bookGrid"></div>
             </div>
@@ -728,7 +724,7 @@
                     </div>
                 </div>
 
-                <div class="app-footer" style="width:100%; border:none; margin-top:30px; padding-bottom:0; color:var(--text-muted); font-size:12px;">Folio — Book Resume App v1.1</div>
+                <div class="app-footer" style="width:100%; border:none; margin-top:30px; padding-bottom:0; color:var(--text-muted); font-size:12px;">Folio — Book Resume App v1.2</div>
             </div>
         </div>
     </div>
@@ -757,13 +753,26 @@
             <div class="reader-top-actions">
                 <button class="reader-top-btn" onclick="deleteActiveBook()" style="color: #D45353;" title="Hapus Buku"><i data-lucide="trash-2"></i></button>
                 <button class="reader-top-btn" onclick="openInsights()" title="Lihat Kesimpulan & Key Points"><i data-lucide="sparkles"></i></button>
+                <button class="reader-top-btn" onclick="toggleTOC()" title="Daftar Isi"><i data-lucide="list"></i></button>
                 <button class="reader-top-btn" onclick="toggleSettings()" title="Pengaturan Layar"><i data-lucide="type"></i></button>
             </div>
         </div>
+        
+        <div class="drawer-overlay" id="tocOverlay" onclick="toggleTOC()"></div>
+        <div class="reader-toc-drawer" id="readerTOC">
+            <div class="reader-toc-header">
+                <div style="font-family:var(--font-display); font-style:italic; font-size: 20px;">Daftar Isi</div>
+                <button onclick="toggleTOC()" style="background:none; border:none; cursor:pointer; color:inherit;"><i data-lucide="x"></i></button>
+            </div>
+            <div class="toc-list" id="tocList"></div>
+        </div>
+        
         <div class="reader-container" id="readerScrollContainer">
-            <div class="reader-chapter-number" id="readerChapterNumber">BAB X</div>
-            <div class="reader-chapter-title" id="readerChapterTitle">Memuat Buku...</div>
-            <div class="reader-body" id="readerBody"></div>
+            <div id="readerContentAnimator">
+                <div class="reader-chapter-number" id="readerChapterNumber">BAB X</div>
+                <div class="reader-chapter-title" id="readerChapterTitle">Memuat Buku...</div>
+                <div class="reader-body" id="readerBody"></div>
+            </div>
         </div>
         <div class="reader-bottom-bar visible" id="readerBottomBar">
             <button class="bottom-bar-btn" id="btnPrevChapter" onclick="navigateChapter('prev')"><i data-lucide="chevron-left"></i></button>
@@ -784,50 +793,39 @@
     </div>
 
     <div class="screen" id="screen-insights">
-        <div class="insight-page">
-            <button class="insight-back" onclick="switchScreen('reader')"><i data-lucide="arrow-left" style="width:16px;"></i> Kembali Membaca</button>
-            <div class="insight-book-title" id="insightBookTitle">Memuat Judul...</div>
-            <div class="insight-subtitle" id="insightSubtitle">Analisis Data · Selesai 0%</div>
-            <div class="ai-badge"><i data-lucide="sparkles" style="width:14px;height:14px;"></i> Ringkasan & Insights</div>
+        <div class="reader-topbar visible">
+            <button class="reader-back-btn" onclick="switchScreen('reader')"><i data-lucide="arrow-left" style="width:16px;"></i> Kembali Membaca</button>
+            <div class="reader-top-actions">
+                <button class="reader-top-btn" onclick="toggleSettings()" title="Pengaturan Layar"><i data-lucide="type"></i></button>
+            </div>
+        </div>
+
+        <div class="reader-container" id="insightScrollContainer">
+            <div class="reader-chapter-number" style="display:flex; align-items:center; gap:6px;"><i data-lucide="sparkles" style="width:14px;height:14px;"></i> RINGKASAN & INSIGHTS</div>
+            <div class="reader-chapter-title" id="insightBookTitle" style="margin-bottom: 8px;">Memuat Judul...</div>
+            <div style="font-family: var(--font-ui); font-size: 13px; opacity: 0.6; margin-bottom: 40px; font-weight: 500;" id="insightSubtitle">Analisis Data · Selesai 0%</div>
             
-            <div class="insight-grid" style="margin-top:20px;">
-                <div class="insight-card">
-                    <div class="insight-card-label"><i data-lucide="key" style="width:14px;height:14px;"></i> Key Points Utama</div>
-                    <div class="insight-list" id="insightKeyPoints"></div>
-                </div>
-                <div class="insight-card">
-                    <div class="insight-card-label"><i data-lucide="target" style="width:14px;height:14px;"></i> Kesimpulan Menyeluruh</div>
-                    <div style="font-size: 14px; line-height: 1.8; color: var(--text-primary);" id="insightKesimpulan"></div>
-                </div>
+            <div class="reader-body" id="insightBody">
+                <h3 style="font-family: var(--font-display); font-style: italic; margin-top: 32px; margin-bottom: 16px; font-size: 1.4em; color: var(--accent);">Kesimpulan Menyeluruh</h3>
+                <div id="insightKesimpulan"></div>
+                
+                <h3 style="font-family: var(--font-display); font-style: italic; margin-top: 40px; margin-bottom: 16px; font-size: 1.4em; color: var(--accent);">Key Points Utama</h3>
+                <ul id="insightKeyPoints" style="padding-left: 24px; margin-bottom: 1em;"></ul>
+
+                <h3 style="font-family: var(--font-display); font-style: italic; margin-top: 40px; margin-bottom: 16px; font-size: 1.4em; color: var(--accent);">Langkah Aksi (Actionable Steps)</h3>
+                <ul id="insightLangkahAksi" style="padding-left: 24px; margin-bottom: 1em;"></ul>
             </div>
             
-            <div class="ai-quote-card">
-                <div class="ai-quote-text" id="aiQuoteText">"Ide yang bagus menjadi luar biasa ketika dieksekusi dengan kebiasaan kecil setiap hari."</div>
-                <div class="ai-quote-source">— Folio AI Generator</div>
-                <button class="btn-regen" onclick="regenQuote()"><i data-lucide="refresh-cw" style="width:14px;height:14px;"></i> Kutipan Acak Lainnya</button>
+            <div class="reader-quote-block" style="margin-top: 48px; cursor: default;">
+                <div id="aiQuoteText" style="font-family: var(--font-body); font-style: italic; font-size: 1.1em; line-height: 1.6;">"Ide yang bagus menjadi luar biasa ketika dieksekusi dengan kebiasaan kecil setiap hari."</div>
+                <div style="font-family: var(--font-ui); font-size: 12px; opacity: 0.6; margin-top: 12px; font-style: normal;">— Folio AI Generator</div>
+                <button class="btn-ghost" onclick="regenQuote()" style="margin-top: 16px; padding: 0; color: inherit; font-weight: 500; font-style: normal; display: flex; align-items: center; gap: 6px;"><i data-lucide="refresh-cw" style="width:14px;height:14px;"></i> Kutipan Acak Lainnya</button>
             </div>
         </div>
     </div>
 
     <script>
-        const defaultBooksData = [
-            { id: "d1", title: "Atomic Habits", author: "James Clear", cover: "bc1", progress: 0, tag: "Belum Dibaca", category: "psikologi", 
-              kesimpulan: "Kesuksesan bukan tentang transformasi drastis semalam, melainkan akumulasi dari perubahan kecil yang dilakukan secara konsisten setiap hari. Dengan berfokus pada sistem bukan sekadar tujuan akhir, kita dapat mengubah identitas diri menuju arah yang lebih baik.", 
-              keyPoints: "Sistem lebih penting dari tujuan akhir;Fokus pada perubahan identitas, bukan sekadar hasil;Aturan 1 persen lebih baik setiap hari akan memberi hasil eksponensial;Jadikan kebiasaan baik terlihat, menarik, mudah, dan memuaskan", 
-              chapters: [
-                  {title: "Bab 1: Kekuatan Mengejutkan dari Kebiasaan Atomik", content: "Sukses adalah produk dari kebiasaan sehari-hari, bukan transformasi yang terjadi sekali seumur hidup.\n\nBanyak orang berpikir bahwa mereka harus membuat perubahan besar untuk meraih kesuksesan besar. Padahal, peningkatan 1% setiap hari akan membuat Anda 37 kali lipat lebih baik dalam setahun.\n\nHasil kita adalah ukuran tertunda dari kebiasaan kita. Kekayaan, berat badan, bahkan pengetahuan, adalah hasil dari apa yang kita ulangi secara konsisten. Waktu memperbesar margin antara kesuksesan dan kegagalan."}
-              ] 
-            },
-            { id: "d2", title: "Sapiens", author: "Yuval Noah Harari", cover: "bc2", progress: 0, tag: "Belum Dibaca", category: "sejarah", 
-              kesimpulan: "Kekuatan utama umat manusia (Homo Sapiens) terletak pada kemampuannya yang unik untuk mempercayai fiksi kolektif (seperti uang, agama, hukum, dan negara) yang memungkinkan kolaborasi dan kerjasama dalam skala massal yang tidak bisa dilakukan spesies lain.", 
-              keyPoints: "Revolusi Kognitif menciptakan kemampuan berbahasa yang kompleks;Fiksi dan mitos adalah lem yang mengikat jutaan manusia untuk bekerja sama;Revolusi Pertanian sering dianggap sebagai kemajuan, namun sebenarnya adalah jebakan yang membuat hidup individu lebih keras;Uang adalah sistem kepercayaan mutual paling universal yang pernah diciptakan", 
-              chapters: [
-                  {title: "Bab 1: Hewan yang Tidak Penting", content: "Tiga revolusi penting yang membentuk jalannya sejarah umat manusia: Revolusi Kognitif, Revolusi Pertanian, dan Revolusi Ilmiah.\n\nHomo sapiens berhasil menaklukkan dunia bukan karena kekuatan fisik, melainkan berkat kemampuan unik bahasa kita yang memungkinkan kita membicarakan hal-hal yang sebenarnya tidak ada (fiksi).\n\nKemampuan bergosip dan menciptakan mitos bersama inilah yang memungkinkan Homo Sapiens berkolaborasi dalam jumlah yang tak terbatas, mengalahkan spesies manusia purba lainnya seperti Neanderthal."}
-              ] 
-            }
-        ];
-
-        let currentBooksToDisplay = [...defaultBooksData];
+        let currentBooksToDisplay = [];
         let activeBook = null;
         let activeChapterIdx = 0;
         let activeScreenName = 'onboarding';
@@ -876,7 +874,7 @@
             
             // Update Modal Lama & Avatar Atas
             document.getElementById('headerAvatar').textContent = initial;
-            document.getElementById('headerAvatarCollection').textContent = initial;
+            if(document.getElementById('headerAvatarCollection')) document.getElementById('headerAvatarCollection').textContent = initial;
             document.getElementById('profileAvatar').textContent = initial;
             document.getElementById('profileName').textContent = window.APP_STATE.userName;
             document.getElementById('profileEmail').textContent = window.APP_STATE.email || 'user@folio.app';
@@ -918,7 +916,8 @@
                 bottomNav.classList.add('hidden');
             }
 
-            if (name === 'reader') {
+            // Aturan tema berlaku untuk mode reader & insight sekarang
+            if (name === 'reader' || name === 'insights') {
                 applyReaderTheme(window.APP_STATE.readerTheme);
                 applyReaderFontSize(window.APP_STATE.readerFontSize);
             }
@@ -938,7 +937,6 @@
         window.showToast = function(message, iconCode = 'book-open') {
             const toast = document.getElementById('toast');
             
-            // Map old emoji strings to new lucide icon names just in case they are passed
             let lucideIcon = iconCode;
             if(iconCode === '✅') lucideIcon = 'check-circle';
             else if(iconCode === '❌') lucideIcon = 'x-circle';
@@ -974,7 +972,7 @@
             function handleGesture() {
                 if(!screensOrder.includes(activeScreenName)) return;
                 const diff = touchstartX - touchendX;
-                const threshold = 60; // minimum px untuk dianggap swipe
+                const threshold = 60; 
                 const currentIndex = screensOrder.indexOf(activeScreenName);
 
                 if(Math.abs(diff) > threshold) {
@@ -994,7 +992,6 @@
         window.closeModal = function(id) { document.getElementById(id).classList.remove('show'); }
         function markRead(el) { el.classList.add('read'); }
 
-        // Fitur UI untuk Login/Register Form
         window.switchAuthTab = function(tab) {
             if(tab === 'login') {
                 document.getElementById('loginForm').style.display = 'block';
@@ -1061,9 +1058,33 @@
             const gridHome = document.getElementById('bookGrid');
             const gridCollection = document.getElementById('collectionGrid');
             const totalLabel = document.getElementById('collectionTotalCount');
+            const featuredContainer = document.getElementById('featuredBookContainer');
 
             if(totalLabel) totalLabel.textContent = `${books.length} Buku`;
             if(document.getElementById('statBookCount')) document.getElementById('statBookCount').textContent = books.length;
+
+            if (featuredContainer) {
+                if (books.length === 0) {
+                    featuredContainer.innerHTML = `<div style="text-align:center; padding:30px; background:var(--bg-secondary); border-radius:20px; border:1px dashed var(--border); color:var(--text-muted); font-size:13px;">Belum ada buku di library. Upload buku pertamamu!</div>`;
+                } else {
+                    let featBook = books.find(b => b.progress > 0 && b.progress < 100);
+                    if (!featBook) featBook = books[0];
+
+                    featuredContainer.innerHTML = `
+                        <div class="lib-featured" onclick="openReader('${featBook.id}')">
+                            <div class="feat-cover ${featBook.cover}"><div class="feat-cover-inner"><div class="feat-cover-title">${featBook.title}</div></div></div>
+                            <div class="feat-meta">
+                                <div class="feat-badge">✦ ${featBook.progress > 0 ? 'SEDANG DIBACA' : 'BUKU BARU'}</div>
+                                <div class="feat-title">${featBook.title}</div>
+                                <div class="feat-author">${featBook.author}</div>
+                                <div class="progress-label"><span>Progres Membaca</span><strong>${featBook.progress}%</strong></div>
+                                <div class="progress-track"><div class="progress-fill" style="width:${featBook.progress}%"></div></div>
+                                <button class="feat-read-btn">${featBook.progress > 0 ? 'Lanjutkan Membaca' : 'Mulai Membaca'} <i data-lucide="arrow-right" style="width:14px;"></i></button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
 
             const htmlContent = books.map(b => `
             <div class="book-card" onclick="openReader('${b.id}')">
@@ -1078,7 +1099,7 @@
               </div>
               <div class="book-title">${b.title}</div>
               <div class="book-author-name">${b.author}</div>
-              <span class="book-tag ${b.progress===0?'unread':''}">${b.tag}</span>
+              <span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
             </div>`).join('');
 
             if (gridHome) {
@@ -1086,13 +1107,14 @@
                 gridHome.innerHTML = homeBooks.map(b => `
                 <div class="book-card" onclick="openReader('${b.id}')">
                   <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
-                  <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.tag}</span>
+                  <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
                 </div>`).join('');
             }
 
             if (gridCollection) {
                 gridCollection.innerHTML = htmlContent;
             }
+            lucide.createIcons();
         }
 
         function filterBooks(chip) {
@@ -1116,7 +1138,7 @@
                 grid.innerHTML = filtered.slice(0,6).map(b => `
                 <div class="book-card" onclick="openReader('${b.id}')">
                 <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
-                <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.tag}</span>
+                <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
                 </div>`).join('');
             }
         }
@@ -1141,7 +1163,7 @@
                 colGrid.innerHTML = results.length > 0 ? results.map(b => `
                 <div class="book-card" onclick="openReader('${b.id}')">
                 <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
-                <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.tag}</span>
+                <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
                 </div>`).join('') : '<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-muted);">Tidak ada buku yang ditemukan.</div>';
             } else {
                 dd.innerHTML = results.length > 0 ? results.map(b => `
@@ -1153,10 +1175,36 @@
             }
         }
 
-        // ===== PENGATURAN READER ======
+        // ===== PENGATURAN READER (Ukurannya sekarang mengikat ke Insight juga) ======
         function initReader() { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); }
-        function applyReaderTheme(theme) { document.body.className = 'theme-' + theme; document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active')); const ad = document.querySelector(`.theme-dot.td-${theme}`); if (ad) ad.classList.add('active'); window.APP_STATE.readerTheme = theme; localStorage.setItem('folio-reader-theme', theme); }
-        function applyReaderFontSize(size) { const body = document.getElementById('readerBody'); if (!body) return; body.style.fontSize = fontSizes[size] + 'px'; body.style.lineHeight = lineHeights[size]; document.querySelectorAll('.font-size-option').forEach((btn, i) => { const sizes = ['small', 'medium', 'large']; btn.classList.toggle('active', sizes[i] === size); }); window.APP_STATE.readerFontSize = size; localStorage.setItem('folio-reader-fontSize', size); }
+        function applyReaderTheme(theme) { 
+            document.body.className = 'theme-' + theme; 
+            document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active')); 
+            const ad = document.querySelector(`.theme-dot.td-${theme}`); 
+            if (ad) ad.classList.add('active'); 
+            window.APP_STATE.readerTheme = theme; 
+            localStorage.setItem('folio-reader-theme', theme); 
+        }
+        function applyReaderFontSize(size) { 
+            const rBody = document.getElementById('readerBody'); 
+            const iBody = document.getElementById('insightBody'); 
+            
+            if (rBody) { 
+                rBody.style.fontSize = fontSizes[size] + 'px'; 
+                rBody.style.lineHeight = lineHeights[size]; 
+            }
+            if (iBody) { 
+                iBody.style.fontSize = fontSizes[size] + 'px'; 
+                iBody.style.lineHeight = lineHeights[size]; 
+            }
+            
+            document.querySelectorAll('.font-size-option').forEach((btn, i) => { 
+                const sizes = ['small', 'medium', 'large']; 
+                btn.classList.toggle('active', sizes[i] === size); 
+            }); 
+            window.APP_STATE.readerFontSize = size; 
+            localStorage.setItem('folio-reader-fontSize', size); 
+        }
         function toggleSettings() { window.APP_STATE.settingsOpen = !window.APP_STATE.settingsOpen; const pop = document.getElementById('settingsPopover'); if (window.APP_STATE.settingsOpen) { pop.classList.add('show'); } else { pop.classList.remove('show'); } }
         function closeSettings() { document.getElementById('settingsPopover')?.classList.remove('show'); window.APP_STATE.settingsOpen = false; }
         function setFontSize(size, btn) { applyReaderFontSize(size); window.showToast('Font: ' + size); }
@@ -1168,8 +1216,6 @@
         // ===== LOGIKA HAPUS BUKU =====
         window.deleteActiveBook = function() {
             if(!activeBook) return;
-            if(activeBook.id.startsWith('d')) { window.showToast("Buku percontohan tidak bisa dihapus.", "⚠️"); return; }
-            
             if(confirm(`Yakin ingin menghapus buku "${activeBook.title}" beserta isinya secara permanen?`)) {
                 if(window.firebaseDeleteBook) {
                     window.firebaseDeleteBook(activeBook.id);
@@ -1180,7 +1226,7 @@
             }
         }
 
-        // ===== LOGIKA INSIGHTS (KESIMPULAN & KEY POINTS) =====
+        // ===== LOGIKA INSIGHTS (KESIMPULAN, KEY POINTS & LANGKAH AKSI) =====
         window.openInsights = function() {
             if(!activeBook) return;
             document.getElementById('insightBookTitle').textContent = activeBook.title;
@@ -1189,7 +1235,7 @@
             
             const elKesimpulan = document.getElementById('insightKesimpulan');
             if (activeBook.kesimpulan && activeBook.kesimpulan.trim() !== '') {
-                elKesimpulan.innerHTML = activeBook.kesimpulan.split('\n').map(p => `<p style="margin-bottom:8px;">${p}</p>`).join('');
+                elKesimpulan.innerHTML = activeBook.kesimpulan.split('\n').map(p => `<p style="margin-bottom:1.2em;">${p}</p>`).join('');
             } else {
                 elKesimpulan.innerHTML = "<p><em>Buku ini belum memiliki kesimpulan yang diinput dari Excel.</em></p>";
             }
@@ -1197,22 +1243,69 @@
             const elKeyPoints = document.getElementById('insightKeyPoints');
             if (activeBook.keyPoints && activeBook.keyPoints.trim() !== '') {
                 const points = activeBook.keyPoints.split(/\n|;/).filter(p => p.trim() !== '');
-                elKeyPoints.innerHTML = points.map((p, i) => `<div class="insight-item"><div class="insight-num">${i + 1}</div><div>${p.trim()}</div></div>`).join('');
+                elKeyPoints.innerHTML = points.map(p => `<li style="margin-bottom:12px;">${p.trim()}</li>`).join('');
             } else {
-                elKeyPoints.innerHTML = '<div class="insight-item"><div><em>Belum ada poin penting yang dicatat.</em></div></div>';
+                elKeyPoints.innerHTML = '<li><em>Belum ada poin penting yang dicatat.</em></li>';
             }
 
+            const elLangkahAksi = document.getElementById('insightLangkahAksi');
+            if (activeBook.langkahAksi && activeBook.langkahAksi.trim() !== '') {
+                const steps = activeBook.langkahAksi.split(/\n|;/).filter(p => p.trim() !== '');
+                elLangkahAksi.innerHTML = steps.map(p => `<li style="margin-bottom:12px;">${p.trim()}</li>`).join('');
+            } else {
+                elLangkahAksi.innerHTML = '<li><em>Belum ada langkah aksi yang dicatat dari Excel.</em></li>';
+            }
+
+            applyReaderFontSize(window.APP_STATE.readerFontSize);
             switchScreen('insights');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function regenQuote() { currentQuoteIdx = (currentQuoteIdx + 1) % aiQuotes.length; document.getElementById('aiQuoteText').textContent = '"' + aiQuotes[currentQuoteIdx].text + '"'; }
 
-        // ===== LOGIKA MEMBACA BAB DINAMIS =====
+        // ===== LOGIKA MEMBACA BAB DINAMIS & TOC =====
+        
+        window.toggleTOC = function() {
+            const drawer = document.getElementById('readerTOC');
+            const overlay = document.getElementById('tocOverlay');
+            drawer.classList.toggle('open');
+            overlay.classList.toggle('show');
+        };
+
+        window.renderTOC = function() {
+            if(!activeBook) return;
+            const list = document.getElementById('tocList');
+            let html = `<div class="toc-section-label">Bab</div>`;
+            
+            if (activeBook.chapters && activeBook.chapters.length > 0) {
+                activeBook.chapters.forEach((c, i) => {
+                    html += `<div class="toc-item ${i===activeChapterIdx?'active':''}" onclick="jumpToChapter(${i})">
+                        <i data-lucide="book"></i> <span>${c.title}</span>
+                    </div>`;
+                });
+            } else {
+                html += `<div class="toc-item active"><i data-lucide="book"></i> <span>Ringkasan</span></div>`;
+            }
+            
+            html += `<div class="toc-section-label">Analisis</div>`;
+            html += `<div class="toc-item" onclick="toggleTOC(); openInsights();"><i data-lucide="sparkles"></i> <span>Kesimpulan & Insights</span></div>`;
+            list.innerHTML = html;
+            lucide.createIcons();
+        };
+
+        window.jumpToChapter = function(idx) {
+            activeChapterIdx = idx;
+            renderChapter();
+            renderTOC();
+            toggleTOC();
+        };
+
         window.openReader = function(bookId) {
             activeBook = currentBooksToDisplay.find(b => b.id === bookId);
             if(!activeBook) return;
             activeChapterIdx = 0;
             renderChapter();
+            renderTOC();
             switchScreen('reader');
         }
 
@@ -1252,11 +1345,31 @@
 
         window.navigateChapter = function(dir) {
             if(!activeBook || !activeBook.chapters) return;
+            const animator = document.getElementById('readerContentAnimator');
+            
             if (dir === 'next' && activeChapterIdx < activeBook.chapters.length - 1) {
-                activeChapterIdx++; renderChapter(); window.showToast('Bab Selanjutnya', 'chevron-right');
+                animator.classList.add('slide-next-out');
+                setTimeout(() => {
+                    activeChapterIdx++; 
+                    renderChapter(); 
+                    renderTOC();
+                    animator.classList.remove('slide-next-out');
+                    animator.classList.add('slide-next-in');
+                    setTimeout(() => animator.classList.remove('slide-next-in'), 400);
+                }, 300);
             } else if (dir === 'prev' && activeChapterIdx > 0) {
-                activeChapterIdx--; renderChapter(); window.showToast('Bab Sebelumnya', 'chevron-left');
-            } else { window.showToast(dir === 'next' ? 'Ini adalah bab terakhir.' : 'Ini adalah bab pertama.', 'book-open'); }
+                animator.classList.add('slide-prev-out');
+                setTimeout(() => {
+                    activeChapterIdx--; 
+                    renderChapter(); 
+                    renderTOC();
+                    animator.classList.remove('slide-prev-out');
+                    animator.classList.add('slide-prev-in');
+                    setTimeout(() => animator.classList.remove('slide-prev-in'), 400);
+                }, 300);
+            } else { 
+                window.showToast(dir === 'next' ? 'Ini adalah bab terakhir.' : 'Ini adalah bab pertama.', 'book-open'); 
+            }
         }
         
         // ===== SHORTCUT KEYBOARD =====
@@ -1379,13 +1492,39 @@
                     btnSubmitBook.innerHTML = "Menyimpan ke Firebase...";
                     const booksMap = {};
                     
+                    let skippedCount = 0;
+                    let skippedTitles = new Set();
+
                     rows.forEach(row => {
-                        const title = row['Judul'] || 'Tanpa Judul';
+                        const title = String(row['Judul'] || 'Tanpa Judul').trim();
+                        const author = String(row['Penulis'] || 'Anonim').trim();
+                        
+                        // CEK DUPLIKAT TERHADAP DATA YANG SUDAH ADA DI FIREBASE
+                        const isDuplicate = currentBooksToDisplay.some(b => 
+                            b.title.toLowerCase() === title.toLowerCase() && 
+                            b.author.toLowerCase() === author.toLowerCase()
+                        );
+
+                        if (isDuplicate) {
+                            skippedTitles.add(title);
+                            return; 
+                        }
+
                         if (!booksMap[title]) {
-                            booksMap[title] = { title: title, author: row['Penulis'] || 'Anonim', category: row['Kategori'] || 'lainnya', kesimpulan: row['Kesimpulan'] || '', keyPoints: row['Key Points'] || '', chapters: [] };
+                            booksMap[title] = { 
+                                title: title, 
+                                author: author, 
+                                category: row['Kategori'] || 'lainnya', 
+                                kesimpulan: row['Kesimpulan'] || '', 
+                                keyPoints: row['Key Points'] || '', 
+                                langkahAksi: row['Langkah Aksi'] || '', // NEW FIELD EXTRACTED
+                                chapters: [] 
+                            };
                         }
                         if (row['Judul Bab'] || row['Isi Bab']) { booksMap[title].chapters.push({ title: row['Judul Bab'] || 'Bab Tanpa Judul', content: row['Isi Bab'] || '' }); }
                     });
+
+                    skippedCount = skippedTitles.size;
 
                     const covers = ['bc1', 'bc2', 'bc3', 'bc4', 'bc5', 'bc6'];
                     let savedCount = 0;
@@ -1394,11 +1533,25 @@
                         const book = booksMap[key];
                         const randomCover = covers[Math.floor(Math.random() * covers.length)];
                         await addDoc(collection(db, "buku_bacaan"), {
-                            title: book.title, author: book.author, category: book.category.toLowerCase(), kesimpulan: book.kesimpulan, keyPoints: book.keyPoints, cover: randomCover, progress: 0, tag: "Belum Dibaca", chapters: book.chapters.length > 0 ? book.chapters : [{ title: "Ringkasan", content: "Belum ada isi bab." }], createdAt: serverTimestamp()
+                            title: book.title, 
+                            author: book.author, 
+                            category: book.category.toLowerCase(), 
+                            kesimpulan: book.kesimpulan, 
+                            keyPoints: book.keyPoints, 
+                            langkahAksi: book.langkahAksi, // SAVED TO FIREBASE
+                            cover: randomCover, 
+                            progress: 0, 
+                            tag: "Belum Dibaca", 
+                            chapters: book.chapters.length > 0 ? book.chapters : [{ title: "Ringkasan", content: "Belum ada isi bab." }], 
+                            createdAt: serverTimestamp()
                         });
                         savedCount++;
                     }
-                    if(window.showToast) window.showToast(`Berhasil menyimpan ${savedCount} buku!`, "✅");
+                    
+                    let finalMessage = `Berhasil menyimpan ${savedCount} buku!`;
+                    if(skippedCount > 0) finalMessage += ` (${skippedCount} buku dilewati karena duplikat)`;
+                    
+                    if(window.showToast) window.showToast(finalMessage, "✅");
                     window.closeModal('addBookModal'); addBookForm.reset();
                 } catch (error) { if(window.showToast) window.showToast("Gagal memproses. Pastikan format kolom sesuai.", "❌"); } 
                 finally { btnSubmitBook.innerHTML = `<i data-lucide="upload-cloud" style="width:18px;"></i> Proses & Simpan ke Firebase`; btnSubmitBook.disabled = false; lucide.createIcons(); }
@@ -1412,10 +1565,20 @@
             snapshot.forEach((doc) => {
                 const data = doc.data();
                 bukuDariFirebase.push({
-                    id: doc.id, title: data.title || "Tanpa Judul", author: data.author || "Anonim", category: data.category || "lainnya", kesimpulan: data.kesimpulan || "", keyPoints: data.keyPoints || "", cover: data.cover || "bc1", progress: data.progress || 0, tag: data.tag || "Belum Dibaca", chapters: data.chapters || []
+                    id: doc.id, 
+                    title: data.title || "Tanpa Judul", 
+                    author: data.author || "Anonim", 
+                    category: data.category || "lainnya", 
+                    kesimpulan: data.kesimpulan || "", 
+                    keyPoints: data.keyPoints || "", 
+                    langkahAksi: data.langkahAksi || "", // LOAD FROM FIREBASE
+                    cover: data.cover || "bc1", 
+                    progress: data.progress || 0, 
+                    tag: data.tag || "Belum Dibaca", 
+                    chapters: data.chapters || []
                 });
             });
-            if (window.renderBooks) window.renderBooks([...bukuDariFirebase, ...defaultBooksData]);
+            if (window.renderBooks) window.renderBooks(bukuDariFirebase);
         }, (error) => { console.warn("Gagal membaca Firebase secara otomatis.", error.message); });
 
         window.firebaseDeleteBook = async (bookId) => {
