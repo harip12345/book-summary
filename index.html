@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Folio — Book Resume App</title>
+    <title>Folio — Book Summary App</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -73,7 +73,6 @@
             color: var(--text-light);
         }
 
-        /* Base Icon Styling */
         .lucide { width: 18px; height: 18px; stroke-width: 1.5px; }
 
         body.theme-parchment { background: var(--bg-parchment); color: var(--text-parchment); }
@@ -86,7 +85,6 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.3); border-radius: 10px; }
 
-        /* ===== ANIMATIONS ===== */
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         @keyframes floatSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
@@ -95,7 +93,6 @@
         @keyframes highlightPulse { 0% { background: rgba(200,134,58,0); } 40% { background: rgba(200,134,58,0.25); } 100% { background: rgba(200,134,58,0.1); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
-        /* Slide Transitions */
         @keyframes slideNextIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes slideNextOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(-100%); opacity: 0; } }
         @keyframes slidePrevIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -106,11 +103,9 @@
         .slide-prev-in { animation: slidePrevIn 0.4s var(--transition-smooth); }
         .slide-prev-out { animation: slidePrevOut 0.4s var(--transition-smooth); }
 
-        /* ===== TOAST ===== */
         .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #1C1814; color: #F7F3EE; padding: 12px 20px; border-radius: var(--radius-full); font-size: 13px; font-family: var(--font-ui); z-index: 9999; box-shadow: var(--shadow-float); display: none; align-items: center; gap: 8px; white-space: nowrap; animation: fadeInUp 0.35s cubic-bezier(0.34,1.56,0.64,1); border: 1px solid rgba(255,255,255,0.1); }
         .toast.show { display: flex; }
 
-        /* ===== DRAWER & MODAL ===== */
         .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; }
         .drawer-overlay.show { display: block; }
         .drawer { position: fixed; top: 0; right: 0; width: 380px; max-width: 100vw; height: 100vh; background: var(--bg-card); z-index: 1001; box-shadow: var(--shadow-xl); border-left: 1px solid var(--border); padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
@@ -129,7 +124,6 @@
         .notification-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
         .notification-time { font-size: 10px; color: var(--text-muted); margin-top: 6px; }
         
-        /* Reader TOC Sidebar */
         .reader-toc-drawer { position: fixed; top: 0; right: 0; width: 300px; max-width: 85vw; height: 100vh; background: var(--bg-card); z-index: 1005; box-shadow: var(--shadow-xl); transform: translateX(100%); transition: transform 0.4s var(--transition-smooth); display: flex; flex-direction: column; padding: 24px; border-left: 1px solid var(--border); }
         body.theme-dark .reader-toc-drawer { background: var(--bg-dark-card); border-color: rgba(255,255,255,0.1); }
         .reader-toc-drawer.open { transform: translateX(0); }
@@ -216,7 +210,7 @@
         .divider { display: flex; align-items: center; gap: 12px; margin: 14px 0; color: var(--text-light-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
         .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
         
-        .genre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .genre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; max-height: 400px; overflow-y: auto; }
         .genre-card { padding: 16px 12px; border-radius: var(--radius-md); border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); cursor: pointer; text-align: center; transition: var(--transition-spring); display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; }
         .genre-card.active { border-color: rgba(200,134,58,0.6); background: rgba(200,134,58,0.12); transform: scale(1.03); }
         .genre-card .genre-icon { margin-bottom: 4px; position: relative; z-index: 1; color: var(--text-light-muted); }
@@ -432,6 +426,23 @@
         .screen { display: none; min-height: 100vh; }
         .screen.active { display: block; }
 
+        /* Login langsung tanpa daftar - username & password sederhana */
+        .quick-login-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .quick-login-title {
+            font-family: var(--font-display);
+            font-size: 16px;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
         @media (max-width: 768px) {
             .onboarding-card { border-radius: 24px; min-height: auto; }
             .onboarding-slide { padding: 16px 20px 24px; }
@@ -512,6 +523,7 @@
         </div>
     </div>
 
+    <!-- ===== SCREEN ONBOARDING DENGAN LOGIN TANPA DAFTAR ===== -->
     <div class="screen active" id="screen-onboarding">
         <div class="onboarding-wrapper">
             <div class="particles">
@@ -527,6 +539,7 @@
                     <div class="step-dot" data-step="4"></div>
                 </div>
                 <div class="onboarding-slides-container" id="onboardingSlidesContainer">
+                    <!-- Slide 0: Splash -->
                     <div class="onboarding-slide active" data-slide="0">
                         <div class="splash-visual">
                             <div class="splash-books">
@@ -542,32 +555,62 @@
                         <button class="btn-primary" onclick="goToSlide(1)">Mulai Perjalanan <i data-lucide="arrow-right" style="width:16px;"></i></button>
                         <button class="btn-ghost" style="margin-top:8px;width:100%;" onclick="skipToLibrary()">Lewati, langsung ke Library</button>
                     </div>
+                    
+                    <!-- Slide 1: LOGIN TANPA DAFTAR - LANGSUNG MASUKKAN USERNAME/PASSWORD -->
                     <div class="onboarding-slide" data-slide="1">
                         <div style="margin-bottom:12px;">
-                            <div class="onboarding-title" style="font-size:22px;">Gabung dengan<br><em>Folio</em></div>
-                            <div class="onboarding-desc" style="font-size:13px;margin-bottom:12px;">Simpan progress dan dapatkan rekomendasi personal.</div>
+                            <div class="onboarding-title" style="font-size:22px;">Masuk ke<br><em>Folio</em></div>
+                            <div class="onboarding-desc" style="font-size:13px;margin-bottom:12px;">Masukkan username dan password untuk melanjutkan.</div>
                         </div>
+                        
+                        <!-- QUICK LOGIN: Tidak perlu daftar, langsung masukkan username & password -->
+                        <div class="quick-login-section">
+                            <div class="quick-login-title">Masuk Sekarang</div>
+                            <div class="form-group">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-input" placeholder="Masukkan username" id="quickUsername">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <div class="password-wrapper">
+                                    <input type="password" class="form-input" placeholder="Masukkan password" id="quickPassword">
+                                    <button class="password-toggle" onclick="togglePassword('quickPassword',this)" type="button">
+                                        <i data-lucide="eye" style="width:16px;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="btn-primary" onclick="handleQuickLogin()" style="margin-top:8px;">
+                                <i data-lucide="log-in" style="width:16px;"></i> Masuk Sekarang
+                            </button>
+                            <p style="font-size:11px;color:var(--text-light-muted);text-align:center;margin-top:8px;">
+                                Tidak perlu daftar, langsung masuk dengan username & password Anda.
+                            </p>
+                        </div>
+                        
+                        <div class="divider">atau masuk dengan</div>
                         <div class="social-login">
                             <button class="social-btn" onclick="socialLogin('Google')"><i data-lucide="chrome" style="width:16px;"></i> Google</button>
                             <button class="social-btn" onclick="socialLogin('Apple')"><i data-lucide="smartphone" style="width:16px;"></i> Apple</button>
                         </div>
-                        <div class="divider">atau</div>
+                        <div class="divider">atau daftar akun baru</div>
                         <div style="display:flex;gap:0;margin-bottom:12px;background:rgba(255,255,255,0.03);border-radius:10px;padding:4px;">
-                            <button class="btn-ghost" id="tabLogin" onclick="switchAuthTab('login')" style="flex:1;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-weight:500;background:rgba(200,134,58,0.15);color:var(--accent-light);">Masuk</button>
+                            <button class="btn-ghost" id="tabLogin" onclick="switchAuthTab('login')" style="flex:1;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-weight:500;background:rgba(200,134,58,0.15);color:var(--accent-light);">Masuk Email</button>
                             <button class="btn-ghost" id="tabRegister" onclick="switchAuthTab('register')" style="flex:1;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-weight:500;">Daftar</button>
                         </div>
                         <div id="loginForm">
                             <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="nama@email.com" id="loginEmail"></div>
-                            <div class="form-group"><label class="form-label">Password</label><div class="password-wrapper"><input type="password" class="form-input" placeholder="••••••••" id="loginPassword"><button class="password-toggle" onclick="togglePassword('loginPassword',this)"><i data-lucide="eye" style="width:16px;"></i></button></div></div>
+                            <div class="form-group"><label class="form-label">Password</label><div class="password-wrapper"><input type="password" class="form-input" placeholder="••••••••" id="loginPassword"><button class="password-toggle" onclick="togglePassword('loginPassword',this)" type="button"><i data-lucide="eye" style="width:16px;"></i></button></div></div>
                             <button class="btn-primary" id="btnLogin" onclick="handleLogin()">Masuk</button>
                         </div>
                         <div id="registerForm" style="display:none;">
                             <div class="form-group"><label class="form-label">Nama Lengkap</label><input type="text" class="form-input" placeholder="Andi Pratama" id="regName"></div>
                             <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="nama@email.com" id="regEmail"></div>
-                            <div class="form-group"><label class="form-label">Password</label><div class="password-wrapper"><input type="password" class="form-input" placeholder="Min. 6 karakter" id="regPassword"><button class="password-toggle" onclick="togglePassword('regPassword',this)"><i data-lucide="eye" style="width:16px;"></i></button></div></div>
+                            <div class="form-group"><label class="form-label">Password</label><div class="password-wrapper"><input type="password" class="form-input" placeholder="Min. 6 karakter" id="regPassword"><button class="password-toggle" onclick="togglePassword('regPassword',this)" type="button"><i data-lucide="eye" style="width:16px;"></i></button></div></div>
                             <button class="btn-primary" id="btnRegister" onclick="handleRegister()">Daftar</button>
                         </div>
                     </div>
+                    
+                    <!-- Slide 2: PILIH TOPIK LENGKAP -->
                     <div class="onboarding-slide" data-slide="2">
                         <div style="margin-bottom:12px;">
                             <div class="onboarding-title" style="font-size:22px;">Pilih topik<br><em>favoritmu</em></div>
@@ -578,26 +621,53 @@
                             <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check"><i data-lucide="check" style="width:12px;"></i></div><i data-lucide="briefcase" class="genre-icon" style="width:28px; height:28px;"></i><div class="genre-name">Bisnis & Karir</div></div>
                             <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check"><i data-lucide="check" style="width:12px;"></i></div><i data-lucide="globe" class="genre-icon" style="width:28px; height:28px;"></i><div class="genre-name">Sejarah</div></div>
                             <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check"><i data-lucide="check" style="width:12px;"></i></div><i data-lucide="flask-conical" class="genre-icon" style="width:28px; height:28px;"></i><div class="genre-name">Sains & Teknologi</div></div>
+                            <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check"><i data-lucide="check" style="width:12px;"></i></div><i data-lucide="heart" class="genre-icon" style="width:28px; height:28px;"></i><div class="genre-name">Pengembangan Diri</div></div>
+                            <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check"><i data-lucide="check" style="width:12px;"></i></div><i data-lucide="palette" class="genre-icon" style="width:28px; height:28px;"></i><div class="genre-name">Seni & Kreativitas</div></div>
+                            <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check"><i data-lucide="check" style="width:12px;"></i></div><i data-lucide="dumbbell" class="genre-icon" style="width:28px; height:28px;"></i><div class="genre-name">Kesehatan</div></div>
+                            <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check"><i data-lucide="check" style="width:12px;"></i></div><i data-lucide="landmark" class="genre-icon" style="width:28px; height:28px;"></i><div class="genre-name">Filsafat</div></div>
+                            <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check"><i data-lucide="check" style="width:12px;"></i></div><i data-lucide="wallet" class="genre-icon" style="width:28px; height:28px;"></i><div class="genre-name">Keuangan</div></div>
+                            <div class="genre-card" onclick="toggleGenre(this)"><div class="genre-check"><i data-lucide="check" style="width:12px;"></i></div><i data-lucide="users" class="genre-icon" style="width:28px; height:28px;"></i><div class="genre-name">Sosial & Budaya</div></div>
                         </div>
                         <button class="btn-primary" onclick="goToSlide(3)">Lanjutkan <i data-lucide="arrow-right" style="width:16px;"></i></button>
                         <button class="btn-ghost" style="margin-top:4px;width:100%;" onclick="goToSlide(3)">Nanti saja</button>
                     </div>
+                    
+                    <!-- Slide 3: TARGET MEMBACA HARIAN (BISA DIKLIK & SINKRON) -->
                     <div class="onboarding-slide" data-slide="3">
                         <div style="text-align:center;margin-bottom:12px;">
                             <div class="onboarding-title" style="font-size:22px;">Target membaca<br><em>harianmu?</em></div>
-                            <div class="onboarding-desc" style="font-size:13px;margin-bottom:12px;">Konsistensi adalah kunci.</div>
+                            <div class="onboarding-desc" style="font-size:13px;margin-bottom:12px;">Konsistensi adalah kunci. Klik pilihan di bawah.</div>
                         </div>
                         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;" id="goalOptions">
-                            <div class="genre-card" onclick="selectGoal(this,10)" style="flex-direction:row;justify-content:space-between;padding:14px 16px;"><span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--text-light);display:flex;align-items:center;gap:8px;"><i data-lucide="leaf" style="width:16px;"></i> Ringan</span><span style="font-size:13px;color:var(--text-light-muted);">10 mnt/hari</span><div class="genre-check" style="position:relative;top:auto;right:auto;"><i data-lucide="check" style="width:12px;"></i></div></div>
-                            <div class="genre-card active" onclick="selectGoal(this,15)" style="flex-direction:row;justify-content:space-between;padding:14px 16px;"><span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--accent-light);display:flex;align-items:center;gap:8px;"><i data-lucide="book" style="width:16px;"></i> Sedang</span><span style="font-size:13px;color:var(--accent-light);">15 mnt/hari</span><div class="genre-check" style="position:relative;top:auto;right:auto;opacity:1;transform:scale(1);"><i data-lucide="check" style="width:12px;"></i></div></div>
-                            <div class="genre-card" onclick="selectGoal(this,30)" style="flex-direction:row;justify-content:space-between;padding:14px 16px;"><span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--text-light);display:flex;align-items:center;gap:8px;"><i data-lucide="flame" style="width:16px;"></i> Serius</span><span style="font-size:13px;color:var(--text-light-muted);">30 mnt/hari</span><div class="genre-check" style="position:relative;top:auto;right:auto;"><i data-lucide="check" style="width:12px;"></i></div></div>
+                            <div class="genre-card" onclick="selectGoal(this,10)" style="flex-direction:row;justify-content:space-between;padding:14px 16px; cursor:pointer;">
+                                <span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--text-light);display:flex;align-items:center;gap:8px;"><i data-lucide="leaf" style="width:16px;"></i> Ringan</span>
+                                <span style="font-size:13px;color:var(--text-light-muted);">10 mnt/hari</span>
+                                <div class="genre-check" style="position:relative;top:auto;right:auto;"><i data-lucide="check" style="width:12px;"></i></div>
+                            </div>
+                            <div class="genre-card active" onclick="selectGoal(this,15)" style="flex-direction:row;justify-content:space-between;padding:14px 16px; cursor:pointer;">
+                                <span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--accent-light);display:flex;align-items:center;gap:8px;"><i data-lucide="book" style="width:16px;"></i> Sedang</span>
+                                <span style="font-size:13px;color:var(--accent-light);">15 mnt/hari</span>
+                                <div class="genre-check" style="position:relative;top:auto;right:auto;opacity:1;transform:scale(1);"><i data-lucide="check" style="width:12px;"></i></div>
+                            </div>
+                            <div class="genre-card" onclick="selectGoal(this,30)" style="flex-direction:row;justify-content:space-between;padding:14px 16px; cursor:pointer;">
+                                <span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--text-light);display:flex;align-items:center;gap:8px;"><i data-lucide="flame" style="width:16px;"></i> Serius</span>
+                                <span style="font-size:13px;color:var(--text-light-muted);">30 mnt/hari</span>
+                                <div class="genre-check" style="position:relative;top:auto;right:auto;"><i data-lucide="check" style="width:12px;"></i></div>
+                            </div>
+                            <div class="genre-card" onclick="selectGoal(this,60)" style="flex-direction:row;justify-content:space-between;padding:14px 16px; cursor:pointer;">
+                                <span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--text-light);display:flex;align-items:center;gap:8px;"><i data-lucide="zap" style="width:16px;"></i> Intens</span>
+                                <span style="font-size:13px;color:var(--text-light-muted);">60 mnt/hari</span>
+                                <div class="genre-check" style="position:relative;top:auto;right:auto;"><i data-lucide="check" style="width:12px;"></i></div>
+                            </div>
                         </div>
                         <button class="btn-primary" onclick="goToSlide(4)">Lanjutkan <i data-lucide="arrow-right" style="width:16px;"></i></button>
                     </div>
+                    
+                    <!-- Slide 4: Welcome -->
                     <div class="onboarding-slide" data-slide="4">
                         <div class="welcome-visual"><div class="welcome-icon"><i data-lucide="book-open" style="width:70px;height:70px;"></i></div><div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:rgba(122,140,110,0.15);border:1px solid rgba(122,140,110,0.3);font-size:12px;font-weight:500;color:var(--sage-light);"><i data-lucide="sparkles" style="width:14px;"></i> Siap Membaca</div></div>
                         <div style="text-align:center;">
-                            <div class="onboarding-title">Kamu sudah<br><em>siap!</em></div>
+                            <div class="onboarding-title">Kamu Sudah Siap<br><em>Ayo Mulai Membaca!</em></div>
                             <div class="onboarding-desc">Library personalmu sudah disiapkan.</div>
                         </div>
                         <button class="btn-primary" onclick="finishOnboarding()">Masuk ke Menu Home <i data-lucide="arrow-right" style="width:16px;"></i></button>
@@ -607,6 +677,7 @@
         </div>
     </div>
 
+    <!-- SCREEN LIBRARY (HOME) -->
     <div class="screen" id="screen-library">
         <div class="library-shell swipe-area">
             <div class="lib-topbar">
@@ -631,6 +702,11 @@
                     <div class="filter-chip" onclick="filterBooks(this)">Selesai</div>
                     <div class="filter-chip" onclick="filterBooks(this)">Bisnis</div>
                     <div class="filter-chip" onclick="filterBooks(this)">Psikologi</div>
+                    <div class="filter-chip" onclick="filterBooks(this)">Sejarah</div>
+                    <div class="filter-chip" onclick="filterBooks(this)">Keuangan</div>
+                    <div class="filter-chip" onclick="filterBooks(this)">Filsafat</div>
+                    <div class="filter-chip" onclick="filterBooks(this)">Pengembangan Diri</div>
+                    <div class="filter-chip" onclick="filterBooks(this)">Sains & Teknologi</div>
                 </div>
             </div>
             <div class="lib-body">
@@ -647,6 +723,7 @@
         </div>
     </div>
 
+    <!-- SCREEN COLLECTION (LIBRARY) -->
     <div class="screen" id="screen-collection">
         <div class="library-shell swipe-area">
             <div class="lib-topbar">
@@ -673,6 +750,7 @@
         </div>
     </div>
 
+    <!-- SCREEN PROFILE -->
     <div class="screen" id="screen-profile">
         <div class="library-shell swipe-area">
             <div class="lib-topbar">
@@ -693,8 +771,20 @@
                 <h2 style="font-family:var(--font-display);font-size:28px;margin-bottom:4px;color:var(--text-primary);" id="profileTabName">Andi Pratama</h2>
                 <p style="color:var(--text-secondary);font-size:14px;margin-bottom:32px; letter-spacing:0.02em;" id="profileTabEmail">andi@email.com</p>
 
+                <!-- Target Membaca Harian di Profil (SINKRON DENGAN ONBOARDING) -->
+                <div style="width:100%;max-width:500px;background:var(--accent-pale);border-radius:var(--radius-lg);padding:20px;margin-bottom:24px;border:1px solid rgba(200,134,58,0.2);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                        <i data-lucide="target" style="color:var(--accent);width:20px;"></i>
+                        <span style="font-weight:600;font-size:14px;">Target Membaca Harian</span>
+                    </div>
+                    <div style="font-size:28px;font-weight:700;color:var(--accent-dark);" id="profileReadingGoal">15 menit/hari</div>
+                    <button class="btn-ghost" style="margin-top:8px;text-decoration:none;font-size:12px;" onclick="changeReadingGoal()">
+                        <i data-lucide="edit-3" style="width:14px;"></i> Ubah Target
+                    </button>
+                </div>
+
                 <div style="display:flex; gap:16px; width:100%; max-width:500px; margin-bottom:36px;">
-                    <div class="profile-stat-box">
+                    <div class="profile-stat-box" onclick="switchMainTab('collection')" style="cursor:pointer;">
                         <div class="profile-stat-val" id="statBookCount">0</div>
                         <div class="profile-stat-label">Buku Dibaca</div>
                     </div>
@@ -724,12 +814,12 @@
                     </div>
                 </div>
 
-                <div class="app-footer" style="width:100%; border:none; margin-top:30px; padding-bottom:0; color:var(--text-muted); font-size:12px;">Folio — Book Resume App v1.2</div>
+                <div class="app-footer" style="width:100%; border:none; margin-top:30px; padding-bottom:0; color:var(--text-muted); font-size:12px;">Folio — Book Summary App by Hari Pamungkas v1.2</div>
             </div>
         </div>
     </div>
 
-
+    <!-- BOTTOM NAVIGATION -->
     <nav class="app-bottom-nav hidden" id="appBottomNav">
         <button class="nav-item active" data-tab="library" onclick="switchMainTab('library')">
             <i class="nav-icon" data-lucide="home"></i>
@@ -745,7 +835,7 @@
         </button>
     </nav>
 
-
+    <!-- SCREEN READER -->
     <div class="screen" id="screen-reader">
         <div class="reader-progress-top"><div class="reader-progress-fill" id="readerProgressFill"></div></div>
         <div class="reader-topbar visible" id="readerTopBar">
@@ -792,6 +882,7 @@
         </div>
     </div>
 
+    <!-- SCREEN INSIGHTS -->
     <div class="screen" id="screen-insights">
         <div class="reader-topbar visible">
             <button class="reader-back-btn" onclick="switchScreen('reader')"><i data-lucide="arrow-left" style="width:16px;"></i> Kembali Membaca</button>
@@ -825,6 +916,7 @@
     </div>
 
     <script>
+        // ===== GLOBAL STATE =====
         let currentBooksToDisplay = [];
         let activeBook = null;
         let activeChapterIdx = 0;
@@ -855,9 +947,11 @@
         ];
         let currentQuoteIdx = 0;
 
+        // ===== INISIALISASI =====
         function initApp() {
-            lucide.createIcons(); // Initialize all Lucide SVG Icons
+            lucide.createIcons();
             updateProfileDisplay();
+            updateReadingGoalDisplay();
             if (window.APP_STATE.onboardingComplete) { 
                 switchMainTab('library'); 
             } else { 
@@ -871,15 +965,12 @@
 
         function updateProfileDisplay() {
             const initial = window.APP_STATE.userName.charAt(0).toUpperCase();
-            
-            // Update Modal Lama & Avatar Atas
             document.getElementById('headerAvatar').textContent = initial;
             if(document.getElementById('headerAvatarCollection')) document.getElementById('headerAvatarCollection').textContent = initial;
             document.getElementById('profileAvatar').textContent = initial;
             document.getElementById('profileName').textContent = window.APP_STATE.userName;
             document.getElementById('profileEmail').textContent = window.APP_STATE.email || 'user@folio.app';
 
-            // Update Tab Profile Baru
             const tabAvatar = document.getElementById('profileTabAvatar');
             if(tabAvatar) {
                 tabAvatar.innerHTML = `${initial} <div style="position:absolute; bottom:0; right:0; background:var(--bg-card); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:14px; box-shadow:var(--shadow-sm); cursor:pointer; color: var(--text-primary);" onclick="showToast('Edit foto profil')"><i data-lucide="pencil" style="width:14px;height:14px;"></i></div>`;
@@ -889,10 +980,51 @@
             const tabEmail = document.getElementById('profileTabEmail');
             if(tabEmail) tabEmail.textContent = window.APP_STATE.email || 'user@folio.app';
             
-            // Re-render icons dynamically injected
             lucide.createIcons();
         }
 
+        function updateReadingGoalDisplay() {
+            const goalEl = document.getElementById('profileReadingGoal');
+            if (goalEl) {
+                goalEl.textContent = window.APP_STATE.readingGoal + ' menit/hari';
+            }
+        }
+
+        // ===== CHANGE READING GOAL (BISA DIAKSES DARI PROFIL) =====
+        window.changeReadingGoal = function() {
+            const newGoal = prompt('Masukkan target membaca harian (menit):', window.APP_STATE.readingGoal);
+            if (newGoal && !isNaN(newGoal) && parseInt(newGoal) > 0) {
+                window.APP_STATE.readingGoal = parseInt(newGoal);
+                localStorage.setItem('folio-reading-goal', newGoal);
+                updateReadingGoalDisplay();
+                showToast('Target membaca diperbarui: ' + newGoal + ' menit/hari', '✅');
+            }
+        }
+
+        // ===== QUICK LOGIN (TANPA DAFTAR) =====
+        window.handleQuickLogin = function() {
+            const username = document.getElementById('quickUsername').value.trim();
+            const password = document.getElementById('quickPassword').value.trim();
+            
+            if (!username || !password) {
+                showToast('Masukkan username dan password', '⚠️');
+                return;
+            }
+            
+            // Simpan ke localStorage sebagai login sederhana
+            window.APP_STATE.userName = username;
+            window.APP_STATE.email = username + '@folio.local';
+            window.APP_STATE.isLoggedIn = true;
+            localStorage.setItem('folio-user-name', username);
+            localStorage.setItem('folio-user-email', username + '@folio.local');
+            localStorage.setItem('folio-user-logged-in', 'true');
+            
+            updateProfileDisplay();
+            showToast('Selamat datang, ' + username + '! ✨', '✅');
+            goToSlide(2); // Lanjut ke pilih topik
+        }
+
+        // ===== SCREEN MANAGEMENT =====
         function showScreen(name) {
             activeScreenName = name;
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -900,14 +1032,11 @@
             if (target) target.classList.add('active');
             document.body.className = '';
             
-            // Logic Tab Melayang (Hanya muncul di Home, Collection, Profile)
             const bottomNav = document.getElementById('appBottomNav');
             const mainTabs = ['library', 'collection', 'profile'];
             if(mainTabs.includes(name)) {
                 bottomNav.classList.remove('hidden');
                 document.body.classList.add('app-mode');
-                
-                // Update active state di nav bar bawah
                 document.querySelectorAll('.nav-item').forEach(btn => {
                     btn.classList.remove('active');
                     if(btn.dataset.tab === name) btn.classList.add('active');
@@ -916,7 +1045,6 @@
                 bottomNav.classList.add('hidden');
             }
 
-            // Aturan tema berlaku untuk mode reader & insight sekarang
             if (name === 'reader' || name === 'insights') {
                 applyReaderTheme(window.APP_STATE.readerTheme);
                 applyReaderFontSize(window.APP_STATE.readerFontSize);
@@ -924,19 +1052,20 @@
             if (name === 'library' || name === 'collection') {
                 renderBooks(currentBooksToDisplay);
             }
+            if (name === 'profile') {
+                updateReadingGoalDisplay();
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function switchScreen(name) { showScreen(name); }
         
-        // Pindah Tab Utama
         window.switchMainTab = function(tabName) {
             showScreen(tabName);
         }
 
         window.showToast = function(message, iconCode = 'book-open') {
             const toast = document.getElementById('toast');
-            
             let lucideIcon = iconCode;
             if(iconCode === '✅') lucideIcon = 'check-circle';
             else if(iconCode === '❌') lucideIcon = 'x-circle';
@@ -947,14 +1076,13 @@
             
             document.getElementById('toastIcon').innerHTML = `<i data-lucide="${lucideIcon}"></i>`;
             lucide.createIcons();
-            
             document.getElementById('toastMessage').textContent = message;
             clearTimeout(window.APP_STATE.toastTimeout);
             toast.classList.add('show');
             window.APP_STATE.toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // ===== SWIPE GESTURE LOGIC =====
+        // ===== SWIPE GESTURE =====
         function initGestures() {
             const screensOrder = ['library', 'collection', 'profile'];
             let touchstartX = 0;
@@ -974,7 +1102,6 @@
                 const diff = touchstartX - touchendX;
                 const threshold = 60; 
                 const currentIndex = screensOrder.indexOf(activeScreenName);
-
                 if(Math.abs(diff) > threshold) {
                     if (diff > 0 && currentIndex < screensOrder.length - 1) {
                         switchMainTab(screensOrder[currentIndex + 1]);
@@ -985,13 +1112,14 @@
             }
         }
 
-
+        // ===== DRAWER & MODAL =====
         function openDrawer() { document.getElementById('notifOverlay').classList.add('show'); document.getElementById('notifDrawer').classList.add('open'); }
         function closeDrawer() { document.getElementById('notifDrawer').classList.remove('open'); setTimeout(() => document.getElementById('notifOverlay').classList.remove('show'), 400); }
         window.openModal = function(id) { document.getElementById(id).classList.add('show'); }
         window.closeModal = function(id) { document.getElementById(id).classList.remove('show'); }
         function markRead(el) { el.classList.add('read'); }
 
+        // ===== AUTH TABS =====
         window.switchAuthTab = function(tab) {
             if(tab === 'login') {
                 document.getElementById('loginForm').style.display = 'block';
@@ -1022,11 +1150,6 @@
             lucide.createIcons();
         }
 
-        window.goToSlide = goToSlide;
-        window.showScreen = showScreen;
-        window.resetOnboardingSlides = resetOnboardingSlides;
-        window.updateProfileDisplay = updateProfileDisplay;
-
         // ===== ONBOARDING =====
         function goToSlide(index) {
             const slides = document.querySelectorAll('.onboarding-slide');
@@ -1048,11 +1171,56 @@
         function resetOnboardingSlides() { goToSlide(0); }
         function skipToLibrary() { window.showToast('Langsung ke Library...', 'book-open'); setTimeout(() => switchMainTab('library'), 500); }
         function finishOnboarding() {
-            APP_STATE.onboardingComplete = true; localStorage.setItem('folio-onboarding-complete', 'true');
-            window.showToast('Library siap!', 'book-open'); setTimeout(() => switchMainTab('library'), 600);
+            APP_STATE.onboardingComplete = true; 
+            localStorage.setItem('folio-onboarding-complete', 'true');
+            // Simpan reading goal
+            localStorage.setItem('folio-reading-goal', APP_STATE.readingGoal);
+            window.showToast('Library siap!', 'book-open'); 
+            setTimeout(() => switchMainTab('library'), 600);
         }
 
-        // ===== LIBRARY RENDERING & FILTER =====
+        // ===== TOGGLE GENRE =====
+        window.toggleGenre = function(card) {
+            card.classList.toggle('active');
+            const genreName = card.querySelector('.genre-name').textContent.trim();
+            if (card.classList.contains('active')) {
+                if (!window.APP_STATE.selectedGenres.includes(genreName)) {
+                    window.APP_STATE.selectedGenres.push(genreName);
+                }
+            } else {
+                window.APP_STATE.selectedGenres = window.APP_STATE.selectedGenres.filter(g => g !== genreName);
+            }
+            localStorage.setItem('folio-genres', JSON.stringify(window.APP_STATE.selectedGenres));
+        }
+
+        // ===== SELECT GOAL =====
+        window.selectGoal = function(card, minutes) {
+            document.querySelectorAll('#goalOptions .genre-card').forEach(c => {
+                c.classList.remove('active');
+                const checkIcon = c.querySelector('.genre-check');
+                if (checkIcon) {
+                    checkIcon.style.opacity = '0';
+                    checkIcon.style.transform = 'scale(0)';
+                }
+                const spanEls = c.querySelectorAll('span');
+                spanEls.forEach(s => s.style.color = 'var(--text-light-muted)');
+            });
+            
+            card.classList.add('active');
+            const checkIcon = card.querySelector('.genre-check');
+            if (checkIcon) {
+                checkIcon.style.opacity = '1';
+                checkIcon.style.transform = 'scale(1)';
+            }
+            const spanEls = card.querySelectorAll('span');
+            spanEls.forEach(s => s.style.color = 'var(--accent-light)');
+            
+            window.APP_STATE.readingGoal = minutes;
+            localStorage.setItem('folio-reading-goal', minutes);
+            updateReadingGoalDisplay();
+        }
+
+        // ===== LIBRARY RENDERING =====
         window.renderBooks = function(books) {
             currentBooksToDisplay = books;
             const gridHome = document.getElementById('bookGrid');
@@ -1069,7 +1237,6 @@
                 } else {
                     let featBook = books.find(b => b.progress > 0 && b.progress < 100);
                     if (!featBook) featBook = books[0];
-
                     featuredContainer.innerHTML = `
                         <div class="lib-featured" onclick="openReader('${featBook.id}')">
                             <div class="feat-cover ${featBook.cover}"><div class="feat-cover-inner"><div class="feat-cover-title">${featBook.title}</div></div></div>
@@ -1086,22 +1253,6 @@
                 }
             }
 
-            const htmlContent = books.map(b => `
-            <div class="book-card" onclick="openReader('${b.id}')">
-              <div class="book-cover ${b.cover}">
-                <div class="book-cover-inner">
-                  <div class="book-cover-text">${b.title}</div>
-                  <div class="book-cover-author">${b.author}</div>
-                </div>
-                <div class="book-progress-mini">
-                  <div class="book-progress-mini-fill" style="width:${b.progress}%"></div>
-                </div>
-              </div>
-              <div class="book-title">${b.title}</div>
-              <div class="book-author-name">${b.author}</div>
-              <span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
-            </div>`).join('');
-
             if (gridHome) {
                 const homeBooks = books.slice(0, 6);
                 gridHome.innerHTML = homeBooks.map(b => `
@@ -1112,7 +1263,11 @@
             }
 
             if (gridCollection) {
-                gridCollection.innerHTML = htmlContent;
+                gridCollection.innerHTML = books.map(b => `
+                <div class="book-card" onclick="openReader('${b.id}')">
+                  <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
+                  <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
+                </div>`).join('');
             }
             lucide.createIcons();
         }
@@ -1121,10 +1276,8 @@
             const parent = chip.parentElement;
             parent.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
-            
             const f = chip.textContent.trim().toLowerCase();
             let filtered = currentBooksToDisplay;
-            
             if (f === 'sedang dibaca') {
                 filtered = currentBooksToDisplay.filter(b => b.progress > 0 && b.progress < 100);
             } else if (f === 'selesai') {
@@ -1132,7 +1285,6 @@
             } else if (f !== 'semua') {
                 filtered = currentBooksToDisplay.filter(b => b.category.toLowerCase() === f);
             }
-            
             const grid = document.getElementById('bookGrid');
             if(grid) {
                 grid.innerHTML = filtered.slice(0,6).map(b => `
@@ -1150,15 +1302,12 @@
             const isCollectionTab = (activeScreenName === 'collection');
             const dd = document.getElementById('searchDropdown');
             const colGrid = document.getElementById('collectionGrid');
-
             if (!query.trim()) { 
                 dd.classList.remove('show'); 
                 if(isCollectionTab) renderBooks(currentBooksToDisplay); 
                 return; 
             }
-            
             const results = currentBooksToDisplay.filter(b => b.title.toLowerCase().includes(query.toLowerCase()) || b.author.toLowerCase().includes(query.toLowerCase()));
-            
             if (isCollectionTab) {
                 colGrid.innerHTML = results.length > 0 ? results.map(b => `
                 <div class="book-card" onclick="openReader('${b.id}')">
@@ -1175,7 +1324,7 @@
             }
         }
 
-        // ===== PENGATURAN READER (Ukurannya sekarang mengikat ke Insight juga) ======
+        // ===== READER FUNCTIONS =====
         function initReader() { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); }
         function applyReaderTheme(theme) { 
             document.body.className = 'theme-' + theme; 
@@ -1188,7 +1337,6 @@
         function applyReaderFontSize(size) { 
             const rBody = document.getElementById('readerBody'); 
             const iBody = document.getElementById('insightBody'); 
-            
             if (rBody) { 
                 rBody.style.fontSize = fontSizes[size] + 'px'; 
                 rBody.style.lineHeight = lineHeights[size]; 
@@ -1197,7 +1345,6 @@
                 iBody.style.fontSize = fontSizes[size] + 'px'; 
                 iBody.style.lineHeight = lineHeights[size]; 
             }
-            
             document.querySelectorAll('.font-size-option').forEach((btn, i) => { 
                 const sizes = ['small', 'medium', 'large']; 
                 btn.classList.toggle('active', sizes[i] === size); 
@@ -1213,7 +1360,6 @@
         function highlightQuote(el) { if (el.classList.contains('highlighted')) return; el.classList.add('highlighted'); window.showToast('Highlight tersimpan!', '★'); }
         function saveBookmark() { window.showToast('Halaman ditandai', '🔖'); }
         
-        // ===== LOGIKA HAPUS BUKU =====
         window.deleteActiveBook = function() {
             if(!activeBook) return;
             if(confirm(`Yakin ingin menghapus buku "${activeBook.title}" beserta isinya secara permanen?`)) {
@@ -1226,7 +1372,6 @@
             }
         }
 
-        // ===== LOGIKA INSIGHTS (KESIMPULAN, KEY POINTS & LANGKAH AKSI) =====
         window.openInsights = function() {
             if(!activeBook) return;
             document.getElementById('insightBookTitle').textContent = activeBook.title;
@@ -1263,8 +1408,6 @@
 
         function regenQuote() { currentQuoteIdx = (currentQuoteIdx + 1) % aiQuotes.length; document.getElementById('aiQuoteText').textContent = '"' + aiQuotes[currentQuoteIdx].text + '"'; }
 
-        // ===== LOGIKA MEMBACA BAB DINAMIS & TOC =====
-        
         window.toggleTOC = function() {
             const drawer = document.getElementById('readerTOC');
             const overlay = document.getElementById('tocOverlay');
@@ -1276,17 +1419,13 @@
             if(!activeBook) return;
             const list = document.getElementById('tocList');
             let html = `<div class="toc-section-label">Bab</div>`;
-            
             if (activeBook.chapters && activeBook.chapters.length > 0) {
                 activeBook.chapters.forEach((c, i) => {
-                    html += `<div class="toc-item ${i===activeChapterIdx?'active':''}" onclick="jumpToChapter(${i})">
-                        <i data-lucide="book"></i> <span>${c.title}</span>
-                    </div>`;
+                    html += `<div class="toc-item ${i===activeChapterIdx?'active':''}" onclick="jumpToChapter(${i})"><i data-lucide="book"></i> <span>${c.title}</span></div>`;
                 });
             } else {
                 html += `<div class="toc-item active"><i data-lucide="book"></i> <span>Ringkasan</span></div>`;
             }
-            
             html += `<div class="toc-section-label">Analisis</div>`;
             html += `<div class="toc-item" onclick="toggleTOC(); openInsights();"><i data-lucide="sparkles"></i> <span>Kesimpulan & Insights</span></div>`;
             list.innerHTML = html;
@@ -1313,7 +1452,6 @@
             if(!activeBook) return;
             const hasChapters = activeBook.chapters && activeBook.chapters.length > 0;
             document.getElementById('readerChapterNumber').textContent = `BAB ${activeChapterIdx + 1}`;
-            
             if(hasChapters) {
                 const chapter = activeBook.chapters[activeChapterIdx];
                 document.getElementById('readerChapterTitle').textContent = chapter.title || "Ringkasan Utama";
@@ -1329,24 +1467,20 @@
                 document.getElementById('readerChapterTitle').textContent = activeBook.title;
                 document.getElementById('readerBody').innerHTML = "<p>Buku ini belum memiliki isi ringkasan bab. Silakan tambahkan konten dari Excel.</p>";
             }
-
             const prevBtn = document.getElementById('btnPrevChapter');
             const nextBtn = document.getElementById('btnNextChapter');
             if(prevBtn) prevBtn.style.opacity = activeChapterIdx > 0 ? "1" : "0.3";
             if(nextBtn) nextBtn.style.opacity = (hasChapters && activeChapterIdx < activeBook.chapters.length - 1) ? "1" : "0.3";
-            
             let progress = 0;
             if (hasChapters) { progress = Math.round(((activeChapterIdx + 1) / activeBook.chapters.length) * 100); } else { progress = 100; }
             document.getElementById('pageIndicator').textContent = `${progress}%`;
             document.getElementById('readerProgressFill').style.width = `${progress}%`;
-            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         window.navigateChapter = function(dir) {
             if(!activeBook || !activeBook.chapters) return;
             const animator = document.getElementById('readerContentAnimator');
-            
             if (dir === 'next' && activeChapterIdx < activeBook.chapters.length - 1) {
                 animator.classList.add('slide-next-out');
                 setTimeout(() => {
@@ -1371,21 +1505,40 @@
                 window.showToast(dir === 'next' ? 'Ini adalah bab terakhir.' : 'Ini adalah bab pertama.', 'book-open'); 
             }
         }
-        
-        // ===== SHORTCUT KEYBOARD =====
+
+        // ===== KEYBOARD SHORTCUT =====
         document.addEventListener('keydown', (e) => { 
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); focusSearch(); } 
             if (e.key === 'Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); closeSettings(); } 
         });
 
-        // Init App on load
+        // ===== EXPORT FUNCTIONS TO WINDOW =====
+        window.goToSlide = goToSlide;
+        window.showScreen = showScreen;
+        window.resetOnboardingSlides = resetOnboardingSlides;
+        window.updateProfileDisplay = updateProfileDisplay;
+        window.openDrawer = openDrawer;
+        window.closeDrawer = closeDrawer;
+        window.markRead = markRead;
+        window.handleQuickLogin = handleQuickLogin;
+        window.toggleGenre = toggleGenre;
+        window.selectGoal = selectGoal;
+        window.openReader = openReader;
+        window.renderBooks = renderBooks;
+        window.handleSearch = handleSearch;
+        window.renderTOC = renderTOC;
+        window.jumpToChapter = jumpToChapter;
+        window.navigateChapter = navigateChapter;
+        window.openInsights = openInsights;
+        window.toggleTOC = toggleTOC;
+        window.deleteActiveBook = deleteActiveBook;
+
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
 
-
+    <!-- ===== FIREBASE INTEGRATION ===== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
@@ -1400,7 +1553,6 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const db = getFirestore(app);
         const auth = getAuth(app);
         const googleProvider = new GoogleAuthProvider();
@@ -1410,13 +1562,13 @@
                 window.APP_STATE.isLoggedIn = true;
                 window.APP_STATE.email = user.email;
                 window.APP_STATE.userName = user.displayName || user.email.split('@')[0];
+                localStorage.setItem('folio-user-email', window.APP_STATE.email);
+                localStorage.setItem('folio-user-name', window.APP_STATE.userName);
+                localStorage.setItem('folio-user-logged-in', 'true');
                 window.updateProfileDisplay();
-                
                 if (document.getElementById('screen-onboarding').classList.contains('active') && window.APP_STATE.currentSlide === 1) {
-                     window.goToSlide(2);
+                    window.goToSlide(2);
                 }
-            } else {
-                window.APP_STATE.isLoggedIn = false;
             }
         });
 
@@ -1425,10 +1577,9 @@
             const pass = document.getElementById('loginPassword').value;
             const btn = document.getElementById('btnLogin');
             if(!email || !pass) return window.showToast("Lengkapi email & password", "⚠️");
-            
             btn.textContent = "Memproses..."; btn.disabled = true;
             try { await signInWithEmailAndPassword(auth, email, pass); window.showToast("Berhasil masuk!", "✅"); } 
-            catch (error) { window.showToast("Gagal masuk: Periksa email/password.", "❌"); console.error("Login Error:", error.message); } 
+            catch (error) { window.showToast("Gagal masuk: Periksa email/password.", "❌"); } 
             finally { btn.textContent = "Masuk"; btn.disabled = false; }
         };
 
@@ -1437,7 +1588,6 @@
             const pass = document.getElementById('regPassword').value;
             const name = document.getElementById('regName').value;
             const btn = document.getElementById('btnRegister');
-            
             if(!email || !pass || !name) return window.showToast("Lengkapi semua data", "⚠️");
             btn.textContent = "Mendaftar..."; btn.disabled = true;
             try {
@@ -1463,6 +1613,7 @@
                 window.APP_STATE.isLoggedIn = false; 
                 window.APP_STATE.onboardingComplete = false; 
                 localStorage.removeItem('folio-onboarding-complete');
+                localStorage.removeItem('folio-user-logged-in');
                 window.closeModal('profileModal'); 
                 window.showToast('Berhasil keluar. Sampai jumpa! 👋', '✅');
                 setTimeout(() => { window.APP_STATE.currentSlide = 0; window.showScreen('onboarding'); window.resetOnboardingSlides(); }, 800);
@@ -1491,25 +1642,20 @@
                     if (rows.length === 0) throw new Error("File Excel kosong atau format tidak sesuai.");
                     btnSubmitBook.innerHTML = "Menyimpan ke Firebase...";
                     const booksMap = {};
-                    
                     let skippedCount = 0;
                     let skippedTitles = new Set();
 
                     rows.forEach(row => {
                         const title = String(row['Judul'] || 'Tanpa Judul').trim();
                         const author = String(row['Penulis'] || 'Anonim').trim();
-                        
-                        // CEK DUPLIKAT TERHADAP DATA YANG SUDAH ADA DI FIREBASE
                         const isDuplicate = currentBooksToDisplay.some(b => 
                             b.title.toLowerCase() === title.toLowerCase() && 
                             b.author.toLowerCase() === author.toLowerCase()
                         );
-
                         if (isDuplicate) {
                             skippedTitles.add(title);
                             return; 
                         }
-
                         if (!booksMap[title]) {
                             booksMap[title] = { 
                                 title: title, 
@@ -1517,15 +1663,19 @@
                                 category: row['Kategori'] || 'lainnya', 
                                 kesimpulan: row['Kesimpulan'] || '', 
                                 keyPoints: row['Key Points'] || '', 
-                                langkahAksi: row['Langkah Aksi'] || '', // NEW FIELD EXTRACTED
+                                langkahAksi: row['Langkah Aksi'] || '',
                                 chapters: [] 
                             };
                         }
-                        if (row['Judul Bab'] || row['Isi Bab']) { booksMap[title].chapters.push({ title: row['Judul Bab'] || 'Bab Tanpa Judul', content: row['Isi Bab'] || '' }); }
+                        if (row['Judul Bab'] || row['Isi Bab']) { 
+                            booksMap[title].chapters.push({ 
+                                title: row['Judul Bab'] || 'Bab Tanpa Judul', 
+                                content: row['Isi Bab'] || '' 
+                            }); 
+                        }
                     });
 
                     skippedCount = skippedTitles.size;
-
                     const covers = ['bc1', 'bc2', 'bc3', 'bc4', 'bc5', 'bc6'];
                     let savedCount = 0;
 
@@ -1538,7 +1688,7 @@
                             category: book.category.toLowerCase(), 
                             kesimpulan: book.kesimpulan, 
                             keyPoints: book.keyPoints, 
-                            langkahAksi: book.langkahAksi, // SAVED TO FIREBASE
+                            langkahAksi: book.langkahAksi,
                             cover: randomCover, 
                             progress: 0, 
                             tag: "Belum Dibaca", 
@@ -1550,7 +1700,6 @@
                     
                     let finalMessage = `Berhasil menyimpan ${savedCount} buku!`;
                     if(skippedCount > 0) finalMessage += ` (${skippedCount} buku dilewati karena duplikat)`;
-                    
                     if(window.showToast) window.showToast(finalMessage, "✅");
                     window.closeModal('addBookModal'); addBookForm.reset();
                 } catch (error) { if(window.showToast) window.showToast("Gagal memproses. Pastikan format kolom sesuai.", "❌"); } 
@@ -1571,7 +1720,7 @@
                     category: data.category || "lainnya", 
                     kesimpulan: data.kesimpulan || "", 
                     keyPoints: data.keyPoints || "", 
-                    langkahAksi: data.langkahAksi || "", // LOAD FROM FIREBASE
+                    langkahAksi: data.langkahAksi || "",
                     cover: data.cover || "bc1", 
                     progress: data.progress || 0, 
                     tag: data.tag || "Belum Dibaca", 
