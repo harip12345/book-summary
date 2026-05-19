@@ -276,7 +276,7 @@
         .feat-read-btn:hover { background: var(--accent-light); }
         
         .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
-        .book-card { cursor: pointer; transition: var(--transition-spring); }
+        .book-card { cursor: pointer; transition: var(--transition-spring); position: relative; }
         .book-card:hover { transform: translateY(-4px); }
         .book-cover { aspect-ratio: 2/3; border-radius: 4px 8px 8px 4px; margin-bottom: 10px; box-shadow: var(--shadow-md); overflow: hidden; position: relative; }
         .book-cover-inner { width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px 12px; justify-content: space-between; position: relative; }
@@ -295,6 +295,7 @@
         .book-author-name { font-size: 11px; color: var(--text-muted); }
         .book-tag { display: inline-block; margin-top: 4px; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 500; background: var(--sage-pale); color: var(--sage); }
         .book-tag.unread { background: var(--accent-pale); color: var(--accent-dark); }
+        .fav-badge { position: absolute; top: -8px; right: -8px; background: #D45353; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); z-index: 5;}
 
         /* ===== BOTTOM FLOATING TAB NAVIGATION ===== */
         .app-bottom-nav {
@@ -509,8 +510,8 @@
             
             <div style="background: rgba(200,134,58,0.1); border: 1px dashed rgba(200,134,58,0.4); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
                 <div style="font-size: 11px; color: var(--accent-light); margin-bottom: 8px; font-weight: bold;">FORMAT KOLOM EXCEL (Baris 1):</div>
-                <div style="font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace;">Judul | Penulis | Kategori | Kesimpulan | Key Points | Langkah Aksi | Judul Bab | Isi Bab</div>
-                <div style="font-size: 10px; color: var(--text-light-muted); margin-top: 8px; font-style: italic;">*Gunakan tanda titik koma (;) atau Enter untuk memisahkan Key Points dan Langkah Aksi.</div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace;">Judul | Penulis | Kategori | Kesimpulan | Key Points | Langkah Aksi | Judul Bab 1 | Isi Bab 1 | ... s/d Bab 10</div>
+                <div style="font-size: 10px; color: var(--text-light-muted); margin-top: 8px; font-style: italic;">*Gunakan tanda titik koma (;) atau Enter untuk memisahkan Key Points dan Langkah Aksi. Anda bisa mengisi hingga 10 bab menyamping dalam 1 baris.</div>
             </div>
 
             <form id="addBookForm">
@@ -556,14 +557,14 @@
                         <button class="btn-ghost" style="margin-top:8px;width:100%;" onclick="skipToLibrary()">Lewati, langsung ke Library</button>
                     </div>
                     
-                    <!-- Slide 1: LOGIN TANPA DAFTAR - LANGSUNG MASUKKAN USERNAME/PASSWORD -->
+                    <!-- Slide 1: LOGIN TANPA DAFTAR -->
                     <div class="onboarding-slide" data-slide="1">
                         <div style="margin-bottom:12px;">
                             <div class="onboarding-title" style="font-size:22px;">Masuk ke<br><em>Folio</em></div>
                             <div class="onboarding-desc" style="font-size:13px;margin-bottom:12px;">Masukkan username dan password untuk melanjutkan.</div>
                         </div>
                         
-                        <!-- QUICK LOGIN: Tidak perlu daftar, langsung masukkan username & password -->
+                        <!-- QUICK LOGIN -->
                         <div class="quick-login-section">
                             <div class="quick-login-title">Masuk Sekarang</div>
                             <div class="form-group">
@@ -610,7 +611,7 @@
                         </div>
                     </div>
                     
-                    <!-- Slide 2: PILIH TOPIK LENGKAP -->
+                    <!-- Slide 2: PILIH TOPIK -->
                     <div class="onboarding-slide" data-slide="2">
                         <div style="margin-bottom:12px;">
                             <div class="onboarding-title" style="font-size:22px;">Pilih topik<br><em>favoritmu</em></div>
@@ -632,7 +633,7 @@
                         <button class="btn-ghost" style="margin-top:4px;width:100%;" onclick="goToSlide(3)">Nanti saja</button>
                     </div>
                     
-                    <!-- Slide 3: TARGET MEMBACA HARIAN (BISA DIKLIK & SINKRON) -->
+                    <!-- Slide 3: TARGET MEMBACA HARIAN -->
                     <div class="onboarding-slide" data-slide="3">
                         <div style="text-align:center;margin-bottom:12px;">
                             <div class="onboarding-title" style="font-size:22px;">Target membaca<br><em>harianmu?</em></div>
@@ -679,7 +680,8 @@
 
     <!-- SCREEN LIBRARY (HOME) -->
     <div class="screen" id="screen-library">
-        <div class="library-shell swipe-area">
+        <!-- class swipe-area dihapus -->
+        <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
                     <div class="lib-wordmark">F<span>olio</span> by Haripam</div>
@@ -725,7 +727,8 @@
 
     <!-- SCREEN COLLECTION (LIBRARY) -->
     <div class="screen" id="screen-collection">
-        <div class="library-shell swipe-area">
+        <!-- class swipe-area dihapus -->
+        <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
                     <div class="lib-wordmark">Semua <span>Buku</span></div>
@@ -752,7 +755,8 @@
 
     <!-- SCREEN PROFILE -->
     <div class="screen" id="screen-profile">
-        <div class="library-shell swipe-area">
+        <!-- class swipe-area dihapus -->
+        <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
                     <div class="lib-wordmark">My <span>Profile</span></div>
@@ -771,7 +775,6 @@
                 <h2 style="font-family:var(--font-display);font-size:28px;margin-bottom:4px;color:var(--text-primary);" id="profileTabName">Andi Pratama</h2>
                 <p style="color:var(--text-secondary);font-size:14px;margin-bottom:32px; letter-spacing:0.02em;" id="profileTabEmail">andi@email.com</p>
 
-                <!-- Target Membaca Harian di Profil (SINKRON DENGAN ONBOARDING) -->
                 <div style="width:100%;max-width:500px;background:var(--accent-pale);border-radius:var(--radius-lg);padding:20px;margin-bottom:24px;border:1px solid rgba(200,134,58,0.2);">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
                         <i data-lucide="target" style="color:var(--accent);width:20px;"></i>
@@ -789,8 +792,16 @@
                         <div class="profile-stat-label">Buku Dibaca</div>
                     </div>
                     <div class="profile-stat-box">
-                        <div class="profile-stat-val">12j</div>
-                        <div class="profile-stat-label">Waktu Membaca</div>
+                        <div class="profile-stat-val" id="statFavCount">0</div>
+                        <div class="profile-stat-label">Buku Favorit</div>
+                    </div>
+                </div>
+
+                <!-- DAFTAR BUKU FAVORIT -->
+                <div style="width:100%;max-width:500px;text-align:left;display:flex;flex-direction:column;gap:12px; margin-bottom: 30px;">
+                    <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px; padding-left:8px;">Buku Favorit</div>
+                    <div id="profileFavoritesGrid" class="book-grid" style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px;">
+                        <!-- Buku favorit akan dimuat di sini oleh JS -->
                     </div>
                 </div>
 
@@ -839,8 +850,9 @@
     <div class="screen" id="screen-reader">
         <div class="reader-progress-top"><div class="reader-progress-fill" id="readerProgressFill"></div></div>
         <div class="reader-topbar visible" id="readerTopBar">
-            <button class="reader-back-btn" onclick="switchMainTab('library')"><i data-lucide="chevron-left" style="width:16px;"></i> Kembali</button>
+            <button class="reader-back-btn" onclick="goBackFromReader()"><i data-lucide="chevron-left" style="width:16px;"></i> Kembali</button>
             <div class="reader-top-actions">
+                <button class="reader-top-btn" onclick="toggleFavorite()" id="btnFavorite" title="Simpan ke Favorit"><i data-lucide="heart"></i></button>
                 <button class="reader-top-btn" onclick="deleteActiveBook()" style="color: #D45353;" title="Hapus Buku"><i data-lucide="trash-2"></i></button>
                 <button class="reader-top-btn" onclick="openInsights()" title="Lihat Kesimpulan & Key Points"><i data-lucide="sparkles"></i></button>
                 <button class="reader-top-btn" onclick="toggleTOC()" title="Daftar Isi"><i data-lucide="list"></i></button>
@@ -921,6 +933,7 @@
         let activeBook = null;
         let activeChapterIdx = 0;
         let activeScreenName = 'onboarding';
+        let previousScreenInfo = { name: 'library', scrollY: 0 }; // Menyimpan state tab sebelumnya
 
         window.APP_STATE = {
             currentSlide: 0,
@@ -960,7 +973,7 @@
             }
             renderBooks(currentBooksToDisplay);
             if (window.APP_STATE.onboardingComplete) initReader();
-            initGestures();
+            // initGestures() dihapus agar slide ke kiri/kanan mati
         }
 
         function updateProfileDisplay() {
@@ -990,7 +1003,7 @@
             }
         }
 
-        // ===== CHANGE READING GOAL (BISA DIAKSES DARI PROFIL) =====
+        // ===== CHANGE READING GOAL =====
         window.changeReadingGoal = function() {
             const newGoal = prompt('Masukkan target membaca harian (menit):', window.APP_STATE.readingGoal);
             if (newGoal && !isNaN(newGoal) && parseInt(newGoal) > 0) {
@@ -1001,7 +1014,7 @@
             }
         }
 
-        // ===== QUICK LOGIN (TANPA DAFTAR) =====
+        // ===== QUICK LOGIN =====
         window.handleQuickLogin = function() {
             const username = document.getElementById('quickUsername').value.trim();
             const password = document.getElementById('quickPassword').value.trim();
@@ -1011,7 +1024,6 @@
                 return;
             }
             
-            // Simpan ke localStorage sebagai login sederhana
             window.APP_STATE.userName = username;
             window.APP_STATE.email = username + '@folio.local';
             window.APP_STATE.isLoggedIn = true;
@@ -1021,7 +1033,7 @@
             
             updateProfileDisplay();
             showToast('Selamat datang, ' + username + '! ✨', '✅');
-            goToSlide(2); // Lanjut ke pilih topik
+            goToSlide(2);
         }
 
         // ===== SCREEN MANAGEMENT =====
@@ -1055,13 +1067,16 @@
             if (name === 'profile') {
                 updateReadingGoalDisplay();
             }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function switchScreen(name) { showScreen(name); }
+        function switchScreen(name) { 
+            showScreen(name); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        }
         
-        window.switchMainTab = function(tabName) {
-            showScreen(tabName);
+        window.switchMainTab = function(tabName) { 
+            showScreen(tabName); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
         }
 
         window.showToast = function(message, iconCode = 'book-open') {
@@ -1080,36 +1095,6 @@
             clearTimeout(window.APP_STATE.toastTimeout);
             toast.classList.add('show');
             window.APP_STATE.toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
-        }
-
-        // ===== SWIPE GESTURE =====
-        function initGestures() {
-            const screensOrder = ['library', 'collection', 'profile'];
-            let touchstartX = 0;
-            let touchendX = 0;
-
-            const areas = document.querySelectorAll('.swipe-area');
-            areas.forEach(area => {
-                area.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive: true});
-                area.addEventListener('touchend', e => {
-                    touchendX = e.changedTouches[0].screenX;
-                    handleGesture();
-                }, {passive: true});
-            });
-
-            function handleGesture() {
-                if(!screensOrder.includes(activeScreenName)) return;
-                const diff = touchstartX - touchendX;
-                const threshold = 60; 
-                const currentIndex = screensOrder.indexOf(activeScreenName);
-                if(Math.abs(diff) > threshold) {
-                    if (diff > 0 && currentIndex < screensOrder.length - 1) {
-                        switchMainTab(screensOrder[currentIndex + 1]);
-                    } else if (diff < 0 && currentIndex > 0) {
-                        switchMainTab(screensOrder[currentIndex - 1]);
-                    }
-                }
-            }
         }
 
         // ===== DRAWER & MODAL =====
@@ -1173,7 +1158,6 @@
         function finishOnboarding() {
             APP_STATE.onboardingComplete = true; 
             localStorage.setItem('folio-onboarding-complete', 'true');
-            // Simpan reading goal
             localStorage.setItem('folio-reading-goal', APP_STATE.readingGoal);
             window.showToast('Library siap!', 'book-open'); 
             setTimeout(() => switchMainTab('library'), 600);
@@ -1225,12 +1209,17 @@
             currentBooksToDisplay = books;
             const gridHome = document.getElementById('bookGrid');
             const gridCollection = document.getElementById('collectionGrid');
+            const gridFavorites = document.getElementById('profileFavoritesGrid');
             const totalLabel = document.getElementById('collectionTotalCount');
             const featuredContainer = document.getElementById('featuredBookContainer');
 
             if(totalLabel) totalLabel.textContent = `${books.length} Buku`;
             if(document.getElementById('statBookCount')) document.getElementById('statBookCount').textContent = books.length;
 
+            const favBooks = books.filter(b => b.isFavorite);
+            if(document.getElementById('statFavCount')) document.getElementById('statFavCount').textContent = favBooks.length;
+
+            // Render Featured
             if (featuredContainer) {
                 if (books.length === 0) {
                     featuredContainer.innerHTML = `<div style="text-align:center; padding:30px; background:var(--bg-secondary); border-radius:20px; border:1px dashed var(--border); color:var(--text-muted); font-size:13px;">Belum ada buku di library. Upload buku pertamamu!</div>`;
@@ -1253,22 +1242,41 @@
                 }
             }
 
+            // Render Home Grid
             if (gridHome) {
                 const homeBooks = books.slice(0, 6);
                 gridHome.innerHTML = homeBooks.map(b => `
                 <div class="book-card" onclick="openReader('${b.id}')">
+                  ${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}
                   <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
                   <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
                 </div>`).join('');
             }
 
+            // Render Collection Grid
             if (gridCollection) {
                 gridCollection.innerHTML = books.map(b => `
                 <div class="book-card" onclick="openReader('${b.id}')">
+                  ${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}
                   <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
                   <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
                 </div>`).join('');
             }
+
+            // Render Favorites in Profile Tab
+            if (gridFavorites) {
+                if (favBooks.length === 0) {
+                    gridFavorites.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 20px; font-size:13px; color:var(--text-muted); border: 1px dashed var(--border); border-radius: 8px;">Belum ada buku favorit. Buka buku dan tekan ikon hati untuk menambahkan.</div>`;
+                } else {
+                    gridFavorites.innerHTML = favBooks.map(b => `
+                    <div class="book-card" onclick="openReader('${b.id}')">
+                      <div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>
+                      <div class="book-cover ${b.cover}" style="aspect-ratio: 2/3;"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
+                      <div class="book-title" style="font-size:12px;">${b.title}</div>
+                    </div>`).join('');
+                }
+            }
+
             lucide.createIcons();
         }
 
@@ -1289,10 +1297,12 @@
             if(grid) {
                 grid.innerHTML = filtered.slice(0,6).map(b => `
                 <div class="book-card" onclick="openReader('${b.id}')">
+                ${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}
                 <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
                 <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
                 </div>`).join('');
             }
+            lucide.createIcons();
         }
 
         function focusSearch() { document.getElementById('searchInput')?.focus(); }
@@ -1360,6 +1370,29 @@
         function highlightQuote(el) { if (el.classList.contains('highlighted')) return; el.classList.add('highlighted'); window.showToast('Highlight tersimpan!', '★'); }
         function saveBookmark() { window.showToast('Halaman ditandai', '🔖'); }
         
+        window.toggleFavorite = function() {
+            if(!activeBook) return;
+            activeBook.isFavorite = !activeBook.isFavorite;
+            
+            // Update UI Tombol
+            const btnFav = document.getElementById('btnFavorite');
+            if (activeBook.isFavorite) {
+                btnFav.style.color = '#D45353';
+                btnFav.innerHTML = '<i data-lucide="heart" fill="#D45353"></i>';
+            } else {
+                btnFav.style.color = '';
+                btnFav.innerHTML = '<i data-lucide="heart"></i>';
+            }
+            lucide.createIcons();
+
+            // Panggil Firebase
+            if(window.firebaseToggleFavorite) {
+                window.firebaseToggleFavorite(activeBook.id, activeBook.isFavorite);
+            }
+            
+            window.showToast(activeBook.isFavorite ? 'Ditambahkan ke Favorit' : 'Dihapus dari Favorit', 'heart');
+        }
+
         window.deleteActiveBook = function() {
             if(!activeBook) return;
             if(confirm(`Yakin ingin menghapus buku "${activeBook.title}" beserta isinya secara permanen?`)) {
@@ -1439,19 +1472,46 @@
             toggleTOC();
         };
 
+        // ===== SMART BACK BUTTON & OPEN READER =====
         window.openReader = function(bookId) {
+            // Rekam dari tab mana kita datang dan posisi scroll saat ini
+            previousScreenInfo.name = activeScreenName;
+            previousScreenInfo.scrollY = window.scrollY;
+
             activeBook = currentBooksToDisplay.find(b => b.id === bookId);
             if(!activeBook) return;
             activeChapterIdx = 0;
+            
+            // Set ikon favorit
+            const btnFav = document.getElementById('btnFavorite');
+            if (activeBook.isFavorite) {
+                btnFav.style.color = '#D45353';
+                btnFav.innerHTML = '<i data-lucide="heart" fill="#D45353"></i>';
+            } else {
+                btnFav.style.color = '';
+                btnFav.innerHTML = '<i data-lucide="heart"></i>';
+            }
+
             renderChapter();
             renderTOC();
-            switchScreen('reader');
+            
+            showScreen('reader'); 
+            window.scrollTo(0, 0); 
+        }
+
+        window.goBackFromReader = function() {
+            showScreen(previousScreenInfo.name);
+            // Memberikan sedikit waktu delay agar DOM ter-render dengan display block sebelum kita paksakan scrollnya
+            setTimeout(() => {
+                window.scrollTo({ top: previousScreenInfo.scrollY, behavior: 'auto' });
+            }, 30);
         }
 
         function renderChapter() {
             if(!activeBook) return;
             const hasChapters = activeBook.chapters && activeBook.chapters.length > 0;
             document.getElementById('readerChapterNumber').textContent = `BAB ${activeChapterIdx + 1}`;
+            
             if(hasChapters) {
                 const chapter = activeBook.chapters[activeChapterIdx];
                 document.getElementById('readerChapterTitle').textContent = chapter.title || "Ringkasan Utama";
@@ -1467,15 +1527,32 @@
                 document.getElementById('readerChapterTitle').textContent = activeBook.title;
                 document.getElementById('readerBody').innerHTML = "<p>Buku ini belum memiliki isi ringkasan bab. Silakan tambahkan konten dari Excel.</p>";
             }
+
             const prevBtn = document.getElementById('btnPrevChapter');
             const nextBtn = document.getElementById('btnNextChapter');
             if(prevBtn) prevBtn.style.opacity = activeChapterIdx > 0 ? "1" : "0.3";
             if(nextBtn) nextBtn.style.opacity = (hasChapters && activeChapterIdx < activeBook.chapters.length - 1) ? "1" : "0.3";
+            
+            // Hitung Progress
             let progress = 0;
-            if (hasChapters) { progress = Math.round(((activeChapterIdx + 1) / activeBook.chapters.length) * 100); } else { progress = 100; }
+            if (hasChapters) { 
+                progress = Math.round(((activeChapterIdx + 1) / activeBook.chapters.length) * 100); 
+            } else { 
+                progress = 100; 
+            }
+            
+            // Update UI reader
             document.getElementById('pageIndicator').textContent = `${progress}%`;
             document.getElementById('readerProgressFill').style.width = `${progress}%`;
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Simpan Progress ke Firebase jika progressnya bertambah (maju membaca)
+            if (progress > activeBook.progress) {
+                activeBook.progress = progress;
+                if (window.firebaseUpdateProgress) {
+                    window.firebaseUpdateProgress(activeBook.id, progress);
+                }
+            }
         }
 
         window.navigateChapter = function(dir) {
@@ -1524,6 +1601,7 @@
         window.toggleGenre = toggleGenre;
         window.selectGoal = selectGoal;
         window.openReader = openReader;
+        window.goBackFromReader = goBackFromReader;
         window.renderBooks = renderBooks;
         window.handleSearch = handleSearch;
         window.renderTOC = renderTOC;
@@ -1539,7 +1617,7 @@
     <!-- ===== FIREBASE INTEGRATION ===== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -1620,6 +1698,24 @@
             } catch (error) { window.showToast("Gagal logout.", "❌"); }
         };
 
+        // FUngsi Firebase untuk Update Progress
+        window.firebaseUpdateProgress = async (bookId, newProgress) => {
+            try {
+                await updateDoc(doc(db, "buku_bacaan", bookId), { progress: newProgress });
+            } catch (error) {
+                console.error("Gagal update progress di Firebase", error);
+            }
+        }
+        
+        // Fungsi Firebase untuk Toggle Favorit
+        window.firebaseToggleFavorite = async (bookId, isFav) => {
+            try {
+                await updateDoc(doc(db, "buku_bacaan", bookId), { isFavorite: isFav });
+            } catch (error) {
+                console.error("Gagal update favorit di Firebase", error);
+            }
+        }
+
         const addBookForm = document.getElementById('addBookForm');
         const btnSubmitBook = document.getElementById('btnSubmitBook');
 
@@ -1652,10 +1748,12 @@
                             b.title.toLowerCase() === title.toLowerCase() && 
                             b.author.toLowerCase() === author.toLowerCase()
                         );
+                        
                         if (isDuplicate) {
                             skippedTitles.add(title);
                             return; 
                         }
+                        
                         if (!booksMap[title]) {
                             booksMap[title] = { 
                                 title: title, 
@@ -1667,11 +1765,21 @@
                                 chapters: [] 
                             };
                         }
-                        if (row['Judul Bab'] || row['Isi Bab']) { 
-                            booksMap[title].chapters.push({ 
-                                title: row['Judul Bab'] || 'Bab Tanpa Judul', 
-                                content: row['Isi Bab'] || '' 
-                            }); 
+                        
+                        for (let i = 1; i <= 10; i++) {
+                            let judulVal = row[`Judul Bab ${i}`];
+                            let isiVal = row[`Isi Bab ${i}`]; 
+                            if (isiVal === undefined) {
+                                if (i === 1) isiVal = row['Isi Bab'];
+                                else isiVal = row[`Isi Bab_${i-1}`];
+                            }
+
+                            if (judulVal || isiVal) {
+                                booksMap[title].chapters.push({ 
+                                    title: judulVal || `Bab ${i}`, 
+                                    content: isiVal || '' 
+                                });
+                            }
                         }
                     });
 
@@ -1691,6 +1799,7 @@
                             langkahAksi: book.langkahAksi,
                             cover: randomCover, 
                             progress: 0, 
+                            isFavorite: false, // Default tidak favorit
                             tag: "Belum Dibaca", 
                             chapters: book.chapters.length > 0 ? book.chapters : [{ title: "Ringkasan", content: "Belum ada isi bab." }], 
                             createdAt: serverTimestamp()
@@ -1723,6 +1832,7 @@
                     langkahAksi: data.langkahAksi || "",
                     cover: data.cover || "bc1", 
                     progress: data.progress || 0, 
+                    isFavorite: data.isFavorite || false, 
                     tag: data.tag || "Belum Dibaca", 
                     chapters: data.chapters || []
                 });
