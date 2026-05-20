@@ -11,7 +11,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Folio">
-    <!-- ====================================== -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,47 +21,23 @@
 
     <style>
         :root {
-            --bg-parchment: #FBF8F1;
-            --bg-white: #FFFFFF;
-            --bg-sepia: #F4ECD8;
-            --bg-dark: #1A1814;
-            --bg-dark-card: #25221D;
-            --bg-primary: #F7F3EE;
-            --bg-secondary: #EDE7DD;
-            --bg-card: #FFFFFF;
-            --text-parchment: #2C2416;
-            --text-white: #1A1A1A;
-            --text-sepia: #3A3020;
-            --text-dark: #D4CFC4;
-            --text-dark-secondary: #A09888;
-            --text-primary: #1C1814;
-            --text-secondary: #6B6259;
-            --text-muted: #A09488;
-            --text-light: #F7F3EE;
-            --text-light-muted: #C4BAB0;
-            --accent: #C8863A;
-            --accent-light: #E8A85A;
-            --accent-dark: #9A5E1F;
-            --accent-pale: #F5E9D8;
-            --sage: #7A8C6E;
-            --sage-light: #B5C4A8;
-            --sage-pale: #EBF0E7;
-            --border: rgba(28, 24, 20, 0.1);
-            --border-dark: rgba(247, 243, 238, 0.12);
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-            --shadow-md: 0 4px 24px rgba(0,0,0,0.08);
-            --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
-            --shadow-xl: 0 24px 80px rgba(0,0,0,0.2);
+            --bg-parchment: #FBF8F1; --bg-white: #FFFFFF; --bg-sepia: #F4ECD8; --bg-dark: #1A1814;
+            --bg-dark-card: #25221D; --bg-primary: #F7F3EE; --bg-secondary: #EDE7DD; --bg-card: #FFFFFF;
+            --text-parchment: #2C2416; --text-white: #1A1A1A; --text-sepia: #3A3020; --text-dark: #D4CFC4;
+            --text-dark-secondary: #A09888; --text-primary: #1C1814; --text-secondary: #6B6259;
+            --text-muted: #A09488; --text-light: #F7F3EE; --text-light-muted: #C4BAB0;
+            --accent: #C8863A; --accent-light: #E8A85A; --accent-dark: #9A5E1F; --accent-pale: #F5E9D8;
+            --sage: #7A8C6E; --sage-light: #B5C4A8; --sage-pale: #EBF0E7;
+            --border: rgba(28, 24, 20, 0.1); --border-dark: rgba(247, 243, 238, 0.12);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04); --shadow-md: 0 4px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 48px rgba(0,0,0,0.12); --shadow-xl: 0 24px 80px rgba(0,0,0,0.2);
             --shadow-float: 0 8px 32px rgba(0,0,0,0.18);
             --font-display: 'DM Serif Display', Georgia, serif;
             --font-body: 'Lora', Georgia, serif;
             --font-ui: 'DM Sans', system-ui, sans-serif;
             --font-mono: 'Inter', monospace;
-            --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --radius-xl: 28px;
-            --radius-full: 9999px;
+            --radius-sm: 8px; --radius-md: 14px; --radius-lg: 20px;
+            --radius-xl: 28px; --radius-full: 9999px;
             --transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
             --transition-spring: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
             --transition-smooth: all 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
@@ -71,15 +46,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: var(--font-ui);
-            font-size: 15px;
-            line-height: 1.6;
-            min-height: 100dvh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+            font-family: var(--font-ui); font-size: 15px; line-height: 1.6;
+            min-height: 100dvh; overflow-x: hidden; -webkit-font-smoothing: antialiased;
             transition: background 0.5s ease, color 0.5s ease;
-            background: #0D0C0A;
-            color: var(--text-light);
+            background: #0D0C0A; color: var(--text-light);
         }
 
         .lucide { width: 18px; height: 18px; stroke-width: 1.5px; }
@@ -102,15 +72,37 @@
         @keyframes highlightPulse { 0% { background: rgba(200,134,58,0); } 40% { background: rgba(200,134,58,0.25); } 100% { background: rgba(200,134,58,0.1); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
-        @keyframes slideNextIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes slideNextOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(-100%); opacity: 0; } }
-        @keyframes slidePrevIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes slidePrevOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+        /* ===== EFEK TRANSISI HALAMAN BUKU (PAGE TURN) ===== */
+        @keyframes pageTurnNextOut {
+            0% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: left center; box-shadow: none; }
+            100% { transform: perspective(1200px) rotateY(-90deg); opacity: 0; transform-origin: left center; box-shadow: 15px 0 30px rgba(0,0,0,0.15); }
+        }
+        @keyframes pageTurnNextIn {
+            0% { transform: perspective(1200px) rotateY(90deg); opacity: 0; transform-origin: right center; box-shadow: -15px 0 30px rgba(0,0,0,0.15); }
+            100% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: right center; box-shadow: none; }
+        }
+        @keyframes pageTurnPrevOut {
+            0% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: right center; box-shadow: none; }
+            100% { transform: perspective(1200px) rotateY(90deg); opacity: 0; transform-origin: right center; box-shadow: -15px 0 30px rgba(0,0,0,0.15); }
+        }
+        @keyframes pageTurnPrevIn {
+            0% { transform: perspective(1200px) rotateY(-90deg); opacity: 0; transform-origin: left center; box-shadow: 15px 0 30px rgba(0,0,0,0.15); }
+            100% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: left center; box-shadow: none; }
+        }
 
+        .page-turn-next-out { animation: pageTurnNextOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .page-turn-next-in { animation: pageTurnNextIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .page-turn-prev-out { animation: pageTurnPrevOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .page-turn-prev-in { animation: pageTurnPrevIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        /* ================================================= */
+
+        @keyframes jumpPulse {
+            0% { box-shadow: 0 0 0 0 rgba(200,134,58,0.8); background-color: rgba(200,134,58,0.3); }
+            100% { box-shadow: 0 0 0 10px rgba(200,134,58,0); background-color: transparent; }
+        }
+        .jump-pulse { animation: jumpPulse 1.5s ease-out; border-radius: 4px; }
         .slide-next-in { animation: slideNextIn 0.4s var(--transition-smooth); }
-        .slide-next-out { animation: slideNextOut 0.4s var(--transition-smooth); }
-        .slide-prev-in { animation: slidePrevIn 0.4s var(--transition-smooth); }
-        .slide-prev-out { animation: slidePrevOut 0.4s var(--transition-smooth); }
+        @keyframes slideNextIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         .toast { position: fixed; bottom: calc(100px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); background: #1C1814; color: #F7F3EE; padding: 12px 20px; border-radius: var(--radius-full); font-size: 13px; font-family: var(--font-ui); z-index: 9999; box-shadow: var(--shadow-float); display: none; align-items: center; gap: 8px; white-space: nowrap; animation: fadeInUp 0.35s cubic-bezier(0.34,1.56,0.64,1); border: 1px solid rgba(255,255,255,0.1); }
         .toast.show { display: flex; }
@@ -134,7 +126,7 @@
         .notification-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
         .notification-time { font-size: 10px; color: var(--text-muted); margin-top: 6px; }
         
-        .reader-toc-drawer { position: fixed; top: 0; right: 0; width: 300px; max-width: 85vw; height: 100dvh; background: var(--bg-card); z-index: 1005; box-shadow: var(--shadow-xl); transform: translateX(100%); transition: transform 0.4s var(--transition-smooth); display: flex; flex-direction: column; padding: calc(24px + env(safe-area-inset-top)) 24px 24px; border-left: 1px solid var(--border); }
+        .reader-toc-drawer { position: fixed; top: 0; right: 0; width: 340px; max-width: 85vw; height: 100dvh; background: var(--bg-card); z-index: 1005; box-shadow: var(--shadow-xl); transform: translateX(100%); transition: transform 0.4s var(--transition-smooth); display: flex; flex-direction: column; padding: calc(24px + env(safe-area-inset-top)) 24px 24px; border-left: 1px solid var(--border); }
         body.theme-dark .reader-toc-drawer { background: var(--bg-dark-card); border-color: rgba(255,255,255,0.1); }
         .reader-toc-drawer.open { transform: translateX(0); }
         .reader-toc-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
@@ -147,6 +139,15 @@
         .toc-item.active { background: var(--accent-pale); color: var(--accent-dark); border-color: var(--accent); font-weight: 600; }
         body.theme-dark .toc-item.active { background: rgba(200,134,58,0.15); color: var(--accent-light); }
         .toc-section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 16px 0 8px 4px; }
+
+        .bookmark-item { padding: 14px 16px; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: 1px solid var(--border); margin-bottom: 8px; background: var(--bg-secondary); display: flex; flex-direction: column; gap: 6px; }
+        body.theme-dark .bookmark-item { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); }
+        .bookmark-item:hover { border-color: var(--accent); background: var(--accent-pale); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        body.theme-dark .bookmark-item:hover { background: rgba(200,134,58,0.15); }
+        .bookmark-chapter { font-size: 11px; font-weight: 600; color: var(--accent-dark); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; }
+        body.theme-dark .bookmark-chapter { color: var(--accent-light); }
+        .bookmark-text { font-family: var(--font-body); font-style: italic; font-size: 14px; color: var(--text-primary); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        body.theme-dark .bookmark-text { color: var(--text-dark); }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; align-items: center; justify-content: center; padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
         .modal-overlay.show { display: flex; }
@@ -221,12 +222,6 @@
         .form-input.error { border-color: #D45353; animation: shake 0.5s ease; }
         .form-input.dark-theme-form { background: var(--bg-secondary); border-color: var(--border); color: var(--text-primary); }
         .form-input.dark-theme-form:focus { border-color: var(--accent); background: var(--bg-primary); }
-        
-        select.form-input option { background-color: var(--bg-dark); color: var(--text-light); padding: 10px; }
-        .form-error { font-size: 11px; color: #D45353; margin-top: 4px; display: none; }
-        .form-error.show { display: block; }
-        .form-row { display: flex; gap: 10px; }
-        .form-row .form-group { flex: 1; }
         
         .social-login { display: flex; gap: 10px; margin-bottom: 16px; }
         .social-btn { flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 1.5px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-ui); font-size: 13px; font-weight: 500; color: var(--text-light); transition: var(--transition); }
@@ -326,77 +321,21 @@
 
         /* ===== BOTTOM FLOATING TAB NAVIGATION ===== */
         .app-bottom-nav {
-            position: fixed;
-            bottom: calc(30px + env(safe-area-inset-bottom));
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(22, 22, 22, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 8px 12px;
-            border-radius: 100px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.05) inset;
-            z-index: 900;
-            width: fit-content;
-            gap: 8px;
-            transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.5s;
+            position: fixed; bottom: calc(30px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(22, 22, 22, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12); padding: 8px 12px; border-radius: 100px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.05) inset; z-index: 900;
+            width: fit-content; gap: 8px; transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.5s;
         }
-        .app-bottom-nav.hidden {
-            transform: translate(-50%, 150%);
-            opacity: 0;
-            pointer-events: none;
-        }
-        .nav-item {
-            position: relative;
-            background: transparent;
-            border: none;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            padding: 12px;
-            border-radius: 100px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
-            color: rgba(255, 255, 255, 0.45);
-            outline: none;
-        }
+        .app-bottom-nav.hidden { transform: translate(-50%, 150%); opacity: 0; pointer-events: none; }
+        .nav-item { position: relative; background: transparent; border: none; display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 12px; border-radius: 100px; cursor: pointer; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); color: rgba(255, 255, 255, 0.45); outline: none; }
         .nav-item:hover { color: rgba(255, 255, 255, 0.8); }
-        .nav-item.active {
-            background: var(--accent); 
-            color: #fff;
-            padding: 12px 24px;
-            box-shadow: 0 4px 15px rgba(200,134,58,0.4);
-        }
-        .nav-icon { 
-            width: 22px; 
-            height: 22px; 
-            stroke-width: 2.2px;
-            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-        }
-        .nav-item.active .nav-icon {
-            transform: scale(1.1);
-        }
-        .nav-label { 
-            font-size: 13px; 
-            font-weight: 600; 
-            font-family: var(--font-ui); 
-            max-width: 0;
-            opacity: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            margin-left: 0;
-            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
-        }
-        .nav-item.active .nav-label {
-            max-width: 100px;
-            opacity: 1;
-            margin-left: 8px;
-        }
+        .nav-item.active { background: var(--accent); color: #fff; padding: 12px 24px; box-shadow: 0 4px 15px rgba(200,134,58,0.4); }
+        .nav-icon { width: 22px; height: 22px; stroke-width: 2.2px; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+        .nav-item.active .nav-icon { transform: scale(1.1); }
+        .nav-label { font-size: 13px; font-weight: 600; font-family: var(--font-ui); max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; margin-left: 0; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+        .nav-item.active .nav-label { max-width: 100px; opacity: 1; margin-left: 8px; }
 
         /* ===== PROFILE STATS BLOCKS ===== */
         .profile-stat-box { background: var(--bg-secondary); padding: 20px; border-radius: var(--radius-xl); border: 1px solid var(--border); flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: var(--shadow-sm); }
@@ -404,36 +343,82 @@
         .profile-stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; font-weight: 500; }
 
         /* ===== READER & INSIGHTS SCROLL ===== */
-        .reader-progress-top { position: fixed; top: env(safe-area-inset-top); left: 0; right: 0; height: 2.5px; background: rgba(128,128,128,0.1); z-index: 100; }
+        .reader-progress-top { position: fixed; top: env(safe-area-inset-top); left: 0; right: 0; height: 2.5px; background: rgba(128,128,128,0.1); z-index: 101; }
         .reader-progress-fill { height: 100%; background: var(--accent); width: 0%; border-radius: 0 2px 2px 0; transition: width 0.15s linear; }
         
-        .reader-topbar { position: fixed; top: calc(3px + env(safe-area-inset-top)); left: 0; right: 0; z-index: 99; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; transition: transform 0.4s ease, opacity 0.4s ease; }
+        /* ===== TOP BAR BARU (FIXED/STATIS) ===== */
+        .reader-topbar {
+            position: fixed; 
+            top: 0; left: 0; right: 0; 
+            z-index: 100;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+            /* Warna Gelap Premium Konsisten untuk semua tema */
+            background: #1A1814;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transition: transform 0.4s ease;
+        }
         
-        .reader-topbar.visible { transform: translateY(0); opacity: 1; pointer-events: all; }
-        .reader-topbar.hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
-        .reader-back-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--radius-full); background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.06); cursor: pointer; font-size: 12px; font-weight: 500; color: #333; font-family: var(--font-ui); transition: var(--transition); box-shadow: var(--shadow-sm); }
-        .reader-back-btn:hover { background: rgba(255,255,255,0.9); transform: translateX(-2px); }
-        .reader-top-actions { display: flex; gap: 8px; }
-        .reader-top-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.06); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); box-shadow: var(--shadow-sm); color: #333; }
-        .reader-top-btn:hover { background: rgba(255,255,255,0.9); transform: translateY(-1px); }
-        body.theme-dark .reader-back-btn, body.theme-dark .reader-top-btn { background: rgba(40,40,40,0.8); border-color: rgba(255,255,255,0.1); color: #D4CFC4; }
+        .reader-topbar-left { display: flex; align-items: center; flex-shrink: 0; }
+        .reader-topbar-center {
+            flex: 1; text-align: center; overflow: hidden; padding: 0 10px;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .reader-book-title {
+            font-family: var(--font-display); font-size: 16px; font-weight: normal;
+            color: #F7F3EE; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            line-height: 1.2;
+        }
+        .reader-book-author {
+            font-family: var(--font-ui); font-size: 11px; font-weight: 500;
+            color: #A09888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin-top: 2px;
+        }
         
-        .reader-container { max-width: 680px; margin: 0 auto; padding: calc(60px + env(safe-area-inset-top)) 32px calc(160px + env(safe-area-inset-bottom)); transition: padding 0.3s ease; }
-        .reader-chapter-number { font-family: var(--font-ui); font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
-        .reader-chapter-title { font-family: var(--font-display); font-size: 36px; line-height: 1.15; margin-bottom: 40px; font-style: italic; letter-spacing: -0.01em; }
-        .reader-body { font-family: var(--font-body); font-size: 18px; line-height: 1.9; text-align: left; word-spacing: 0.02em; transition: font-size 0.3s ease, line-height 0.3s ease; }
+        .reader-top-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+        .reader-top-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: transparent; border: none;
+            display: flex; align-items: center; justify-content: center;
+            color: #F7F3EE; cursor: pointer; transition: 0.2s;
+        }
+        .reader-top-btn:hover { background: rgba(255,255,255,0.1); }
+        /* ======================================= */
+
+        /* PADDING DISESUAIKAN AGAR KONTEN TIDAK TERTUTUP TOPBAR */
+        .reader-container { max-width: 720px; margin: 0 auto; padding: calc(85px + env(safe-area-inset-top)) 10px calc(160px + env(safe-area-inset-bottom)); transition: padding 0.3s ease; }
+        
+        #readerContentAnimator {
+            padding: 20px 22px;
+            border-radius: 8px;
+            min-height: 85vh;
+            background-color: inherit; 
+            transform-style: preserve-3d;
+        }
+
+        body.theme-parchment #readerContentAnimator { background-color: var(--bg-parchment); }
+        body.theme-white #readerContentAnimator { background-color: var(--bg-white); }
+        body.theme-sepia #readerContentAnimator { background-color: var(--bg-sepia); }
+        body.theme-dark #readerContentAnimator { background-color: var(--bg-dark); }
+
+        .reader-chapter-title { 
+            font-family: var(--font-display); font-size: 36px; line-height: 1.15; 
+            margin-bottom: 40px; font-style: italic; letter-spacing: -0.01em;
+        }
+        
+        .reader-body { font-family: var(--font-body); font-size: 18px; line-height: 1.9; text-align: justify; word-spacing: 0.02em; transition: font-size 0.3s ease, line-height 0.3s ease; }
         .reader-body p { margin-bottom: 1.6em; }
         .reader-body .drop-cap::first-letter { float: left; font-family: var(--font-display); font-size: 4.2em; line-height: 0.75; padding-right: 10px; padding-top: 4px; color: var(--accent); font-style: italic; }
-        .reader-quote-block { margin: 32px 0; padding: 24px 28px; border-left: 3px solid var(--accent); background: rgba(200,134,58,0.06); border-radius: 0 var(--radius-md) var(--radius-md) 0; font-style: italic; position: relative; cursor: pointer; transition: var(--transition); }
-        .reader-quote-block::before { content: '"'; position: absolute; top: -14px; left: 14px; font-family: var(--font-display); font-size: 60px; color: var(--accent); opacity: 0.2; line-height: 1; }
-        .reader-quote-block:hover { background: rgba(200,134,58,0.12); border-left-color: var(--accent-dark); }
-        .reader-quote-block.highlighted { animation: highlightPulse 1.2s ease; background: rgba(200,134,58,0.15); border-left-color: var(--accent-dark); }
-        .quote-action-hint { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 11px; font-style: normal; color: var(--accent-dark); font-family: var(--font-ui); opacity: 0; transition: opacity 0.3s; }
-        .reader-quote-block:hover .quote-action-hint { opacity: 1; }
         
-        .reader-bottom-bar { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 90; background: rgba(255,255,255,0.75); backdrop-filter: blur(24px); border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-full); padding: 8px 12px; display: flex; align-items: center; gap: 4px; box-shadow: var(--shadow-float); transition: transform 0.4s ease, opacity 0.4s ease; max-width: 95vw; }
-        .reader-bottom-bar.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
-        .reader-bottom-bar.hidden { transform: translateX(-50%) translateY(150%); opacity: 0; }
+        .reader-note-block { margin: 40px 0; padding: 24px; border: 1px solid var(--border); background: var(--bg-secondary); border-radius: var(--radius-md); transition: var(--transition); }
+        .reader-note-block:focus-within { border-color: var(--accent); background: var(--bg-card); box-shadow: 0 0 0 4px rgba(200,134,58,0.1); }
+        body.theme-dark .reader-note-block { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); }
+        body.theme-dark .reader-note-block:focus-within { border-color: var(--accent); background: rgba(0,0,0,0.2); }
+        
+        .reader-bottom-bar { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 90; background: rgba(255,255,255,0.75); backdrop-filter: blur(24px); border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-full); padding: 8px 12px; display: flex; align-items: center; gap: 4px; box-shadow: var(--shadow-float); max-width: 95vw; }
         body.theme-dark .reader-bottom-bar { background: rgba(40,40,40,0.8); border-color: rgba(255,255,255,0.1); }
         .bottom-bar-btn { width: 42px; height: 42px; border-radius: 50%; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); color: #555; position: relative; }
         body.theme-dark .bottom-bar-btn { color: #BBB; }
@@ -477,7 +462,10 @@
             .onboarding-card { height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); min-height: 80dvh; border-radius: 28px; }
             .onboarding-slide { padding: 16px 20px 24px; }
             .onboarding-title { font-size: 22px; }
-            .reader-container { padding: calc(40px + env(safe-area-inset-top)) 20px calc(160px + env(safe-area-inset-bottom)); max-width: 100%; }
+            
+            /* PADDING READER DI MOBILE */
+            .reader-container { padding: calc(80px + env(safe-area-inset-top)) 0 calc(160px + env(safe-area-inset-bottom)); max-width: 100%; }
+            #readerContentAnimator { padding: 10px 20px; }
             .reader-chapter-title { font-size: 26px; }
             .reader-body { font-size: 16px; line-height: 1.8; }
             .reader-bottom-bar { padding: 6px 10px; gap: 2px; }
@@ -571,9 +559,7 @@
                 <i data-lucide="heart" style="color: #D45353; width: 22px; height: 22px;"></i>
                 <div class="modal-title" style="color:var(--text-primary); margin-bottom: 0;">Buku Favorit</div>
             </div>
-            <div id="favoritesList" style="display:flex; flex-direction:column; gap:10px;">
-                <!-- Diisi otomatis oleh JavaScript -->
-            </div>
+            <div id="favoritesList" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
     </div>
 
@@ -598,6 +584,7 @@
         </div>
     </div>
 
+    <!-- MODAL ADD BOOK EXCEL -->
     <div class="modal-overlay" id="addBookModal">
         <div class="modal-content" style="background: var(--bg-dark); color: var(--text-light); border-color: rgba(255,255,255,0.1);">
             <button class="modal-close" onclick="closeModal('addBookModal')" style="background: rgba(255,255,255,0.05); color: #fff;"><i data-lucide="x"></i></button>
@@ -607,7 +594,7 @@
             <div style="background: rgba(200,134,58,0.1); border: 1px dashed rgba(200,134,58,0.4); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
                 <div style="font-size: 11px; color: var(--accent-light); margin-bottom: 8px; font-weight: bold;">FORMAT KOLOM EXCEL (Baris 1):</div>
                 <div style="font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace;">Judul | Penulis | Kategori | Kesimpulan | Key Points | Langkah Aksi | Judul Bab 1 | Isi Bab 1 | ... s/d Bab 10</div>
-                <div style="font-size: 10px; color: var(--text-light-muted); margin-top: 8px; font-style: italic;">*Gunakan tanda titik koma (;) atau Enter untuk memisahkan Key Points dan Langkah Aksi. Anda bisa mengisi hingga 10 bab menyamping dalam 1 baris.</div>
+                <div style="font-size: 10px; color: var(--text-light-muted); margin-top: 8px; font-style: italic;">*Gunakan tanda titik koma (;) atau Enter untuk memisahkan Key Points dan Langkah Aksi.</div>
             </div>
 
             <form id="addBookForm">
@@ -622,6 +609,7 @@
 
     <!-- ===== SCREEN ONBOARDING ===== -->
     <div class="screen active" id="screen-onboarding">
+        <!-- Kode Onboarding Tetap Sama -->
         <div class="onboarding-wrapper">
             <div class="particles">
                 <div class="particle"></div><div class="particle"></div><div class="particle"></div>
@@ -636,7 +624,7 @@
                     <div class="step-dot" data-step="4"></div>
                 </div>
                 <div class="onboarding-slides-container" id="onboardingSlidesContainer">
-                    <!-- Slide 0: Splash -->
+                    
                     <div class="onboarding-slide active" data-slide="0">
                         <div class="splash-visual">
                             <div class="splash-books">
@@ -653,7 +641,6 @@
                         <button class="btn-ghost" style="margin-top:8px;width:100%;" onclick="skipToLibrary()">Lewati, langsung ke Library</button>
                     </div>
                     
-                    <!-- Slide 1: LOGIN / DAFTAR TERPADU -->
                     <div class="onboarding-slide" data-slide="1">
                         <div style="margin-bottom:12px;">
                             <div class="onboarding-title" style="font-size:22px;" id="authMainTitle">Masuk ke<br><em>Folio</em></div>
@@ -662,25 +649,21 @@
                         
                         <div class="auth-section">
                             <div class="auth-title" id="authBoxTitle">Masuk Sekarang</div>
-                            
                             <div class="form-group" id="authNameGroup" style="display: none;">
                                 <label class="form-label">Nama Lengkap</label>
                                 <input type="text" class="form-input" placeholder="Masukkan nama Anda" id="authName">
                             </div>
-                            
                             <div class="form-group">
                                 <label class="form-label">Email</label>
                                 <input type="email" class="form-input" placeholder="nama@email.com" id="authEmail">
                             </div>
-                            
-                            <div class="form-group">
+                            <div class="form-group" style="position: relative;">
                                 <label class="form-label">Password</label>
                                 <div class="password-wrapper">
                                     <input type="password" class="form-input" placeholder="Min. 6 karakter" id="authPassword">
-                                    <button class="password-toggle" onclick="togglePassword('authPassword',this)" type="button">
-                                        <i data-lucide="eye" style="width:16px;"></i>
-                                    </button>
+                                    <button class="password-toggle" onclick="togglePassword('authPassword',this)" type="button"><i data-lucide="eye" style="width:16px;"></i></button>
                                 </div>
+                                <div style="text-align: right; margin-top: 8px;"><a href="#" onclick="handleForgotPassword()" style="color: var(--accent-light); font-size: 11px; text-decoration: none; font-weight: 500;">Lupa Password?</a></div>
                             </div>
                             
                             <div style="display: flex; gap: 10px; margin-top: 16px;">
@@ -695,12 +678,18 @@
                         
                         <div class="divider">atau masuk dengan</div>
                         <div class="social-login">
-                            <button class="social-btn" onclick="socialLogin('Google')"><i data-lucide="chrome" style="width:16px;"></i> Google</button>
+                            <button class="social-btn" onclick="socialLogin('Google')">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="16px" height="16px">
+                                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                                </svg> Google
+                            </button>
                             <button class="social-btn" onclick="socialLogin('Apple')"><i data-lucide="smartphone" style="width:16px;"></i> Apple</button>
                         </div>
                     </div>
                     
-                    <!-- Slide 2: PILIH TOPIK -->
                     <div class="onboarding-slide" data-slide="2">
                         <div style="margin-bottom:12px;">
                             <div class="onboarding-title" style="font-size:22px;">Pilih topik<br><em>favoritmu</em></div>
@@ -722,7 +711,6 @@
                         <button class="btn-ghost" style="margin-top:4px;width:100%;" onclick="goToSlide(3)">Nanti saja</button>
                     </div>
                     
-                    <!-- Slide 3: TARGET MEMBACA HARIAN -->
                     <div class="onboarding-slide" data-slide="3">
                         <div style="text-align:center;margin-bottom:12px;">
                             <div class="onboarding-title" style="font-size:22px;">Target membaca<br><em>harianmu?</em></div>
@@ -753,7 +741,6 @@
                         <button class="btn-primary" onclick="goToSlide(4)">Lanjutkan <i data-lucide="arrow-right" style="width:16px;"></i></button>
                     </div>
                     
-                    <!-- Slide 4: Welcome -->
                     <div class="onboarding-slide" data-slide="4">
                         <div class="welcome-visual"><div class="welcome-icon"><i data-lucide="book-open" style="width:70px;height:70px;"></i></div><div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:rgba(122,140,110,0.15);border:1px solid rgba(122,140,110,0.3);font-size:12px;font-weight:500;color:var(--sage-light);"><i data-lucide="sparkles" style="width:14px;"></i> Siap Membaca</div></div>
                         <div style="text-align:center;">
@@ -879,7 +866,6 @@
                     </div>
                 </div>
 
-                <!-- TOMBOL ADMIN PANEL - Disembunyikan secara default -->
                 <div class="notification-item" id="btnAdminPanel" style="display: none; align-items:center; width:100%; max-width:500px; margin-bottom: 24px; padding: 16px; background: rgba(200,134,58,0.1); border: 1px solid rgba(200,134,58,0.3);" onclick="openAdminPanel()">
                     <div style="width: 44px; height: 44px; border-radius: 12px; background: var(--accent); display: flex; align-items: center; justify-content: center; margin-right: 14px; flex-shrink: 0;">
                         <i data-lucide="shield" style="color: #fff; width: 22px; height: 22px;"></i>
@@ -912,13 +898,17 @@
                         <i data-lucide="settings" style="width:20px;height:20px;margin-right:8px;color:var(--text-secondary);"></i>
                         <div class="notification-content"><div class="notification-title">Preferensi Membaca</div><div class="notification-desc">Target harian & genre favorit</div></div>
                     </div>
+                    <div class="notification-item" style="align-items:center;" onclick="handleChangePassword()">
+                        <i data-lucide="key" style="width:20px;height:20px;margin-right:8px;color:var(--text-secondary);"></i>
+                        <div class="notification-content"><div class="notification-title">Ubah Kata Sandi</div><div class="notification-desc">Kirim link reset sandi ke email Anda</div></div>
+                    </div>
                     <div class="notification-item" style="align-items:center; background:rgba(212,83,83,0.05); border: 1px solid rgba(212,83,83,0.2);" onclick="handleLogout()">
                         <i data-lucide="log-out" style="width:20px;height:20px;margin-right:8px;color:#D45353;"></i>
                         <div class="notification-content"><div class="notification-title" style="color:#D45353;">Keluar Akun</div></div>
                     </div>
                 </div>
                 
-                <div class="app-footer" style="width:100%; border:none; margin-top:30px; padding-bottom:0; color:var(--text-muted); font-size:12px;">Folio — Book Summary App by Hari Pamungkas v1.7</div>
+                <div class="app-footer" style="width:100%; border:none; margin-top:30px; padding-bottom:0; color:var(--text-muted); font-size:12px;">Folio — Book Summary App by Hari Pamungkas v2.0</div>
             </div>
         </div>
     </div>
@@ -941,18 +931,27 @@
 
     <!-- SCREEN READER -->
     <div class="screen" id="screen-reader">
-        <div class="reader-progress-top"><div class="reader-progress-fill" id="readerProgressFill"></div></div>
-        <div class="reader-topbar visible" id="readerTopBar">
-            <button class="reader-back-btn" onclick="goBackFromReader()"><i data-lucide="chevron-left" style="width:16px;"></i> Kembali</button>
+        
+        <!-- HEADER TOP BAR FIXED -->
+        <div class="reader-topbar" id="readerTopBar">
+            <div class="reader-progress-top"><div class="reader-progress-fill" id="readerProgressFill"></div></div>
+            
+            <div class="reader-topbar-left">
+                <button class="reader-top-btn" onclick="goBackFromReader()"><i data-lucide="arrow-left" style="width:18px;"></i></button>
+            </div>
+            <div class="reader-topbar-center">
+                <div class="reader-book-title" id="topbarBookTitle">Memuat Buku...</div>
+                <div class="reader-book-author" id="topbarBookAuthor">Memuat Penulis...</div>
+            </div>
             <div class="reader-top-actions">
-                <button class="reader-top-btn" onclick="toggleFavorite()" id="btnFavorite" title="Simpan ke Favorit"><i data-lucide="heart"></i></button>
-                <button class="reader-top-btn" id="btnDeleteBook" onclick="deleteActiveBook()" style="display:none; color: #D45353;" title="Hapus Buku"><i data-lucide="trash-2"></i></button>
-                <button class="reader-top-btn" onclick="openInsights()" title="Lihat Kesimpulan & Key Points"><i data-lucide="sparkles"></i></button>
-                <button class="reader-top-btn" onclick="toggleTOC()" title="Daftar Isi"><i data-lucide="list"></i></button>
-                <button class="reader-top-btn" onclick="toggleSettings()" title="Pengaturan Layar"><i data-lucide="type"></i></button>
+                <button class="reader-top-btn" onclick="toggleFavorite()" id="btnFavorite" title="Simpan ke Favorit"><i data-lucide="heart" style="width:16px;"></i></button>
+                <button class="reader-top-btn" id="btnDeleteBook" onclick="deleteActiveBook()" style="display:none; color: #D45353;" title="Hapus Buku"><i data-lucide="trash-2" style="width:16px;"></i></button>
+                <button class="reader-top-btn" onclick="toggleBookmarksDrawer()" title="Sorotan & Bookmark"><i data-lucide="book-marked" style="width:16px;"></i></button> 
+                <button class="reader-top-btn" onclick="toggleTOC()" title="Daftar Isi"><i data-lucide="list" style="width:16px;"></i></button>
             </div>
         </div>
         
+        <!-- DRAWER DAFTAR ISI (TOC) -->
         <div class="drawer-overlay" id="tocOverlay" onclick="toggleTOC()"></div>
         <div class="reader-toc-drawer" id="readerTOC">
             <div class="reader-toc-header">
@@ -962,13 +961,24 @@
             <div class="toc-list" id="tocList"></div>
         </div>
         
+        <!-- DRAWER DAFTAR SOROTAN (HIGHLIGHTS) -->
+        <div class="drawer-overlay" id="bookmarksOverlay" onclick="toggleBookmarksDrawer()"></div>
+        <div class="reader-toc-drawer" id="readerBookmarksDrawer">
+            <div class="reader-toc-header">
+                <div style="font-family:var(--font-display); font-style:italic; font-size: 20px;">Sorotan Bab</div>
+                <button onclick="toggleBookmarksDrawer()" style="background:none; border:none; cursor:pointer; color:inherit;"><i data-lucide="x"></i></button>
+            </div>
+            <div class="toc-list" id="bookmarksListContent" style="padding-bottom: 20px;"></div>
+        </div>
+        
         <div class="reader-container" id="readerScrollContainer">
             <div id="readerContentAnimator">
-                <div class="reader-chapter-number" id="readerChapterNumber">BAB X</div>
                 <div class="reader-chapter-title" id="readerChapterTitle">Memuat Buku...</div>
                 <div class="reader-body" id="readerBody"></div>
             </div>
         </div>
+        
+        <!-- READER BOTTOM BAR -->
         <div class="reader-bottom-bar visible" id="readerBottomBar">
             <button class="bottom-bar-btn" id="btnPrevChapter" onclick="navigateChapter('prev')"><i data-lucide="chevron-left"></i></button>
             <span class="bottom-bar-page-indicator" id="pageIndicator">0%</span>
@@ -989,15 +999,21 @@
 
     <!-- SCREEN INSIGHTS -->
     <div class="screen" id="screen-insights">
-        <div class="reader-topbar visible">
-            <button class="reader-back-btn" onclick="switchScreen('reader')"><i data-lucide="arrow-left" style="width:16px;"></i> Kembali Membaca</button>
+        
+        <div class="reader-topbar" id="insightTopBar">
+            <div class="reader-topbar-left">
+                <button class="reader-top-btn" onclick="switchScreen('reader')"><i data-lucide="arrow-left" style="width:18px;"></i></button>
+            </div>
+            <div class="reader-topbar-center">
+                <div class="reader-book-title">Ringkasan & Insights</div>
+                <div class="reader-book-author">Analisis Buku</div>
+            </div>
             <div class="reader-top-actions">
-                <button class="reader-top-btn" onclick="toggleSettings()" title="Pengaturan Layar"><i data-lucide="type"></i></button>
+                <button class="reader-top-btn" onclick="toggleSettings()" title="Pengaturan Layar"><i data-lucide="type" style="width:16px;"></i></button>
             </div>
         </div>
 
         <div class="reader-container" id="insightScrollContainer">
-            <div class="reader-chapter-number" style="display:flex; align-items:center; gap:6px;"><i data-lucide="sparkles" style="width:14px;height:14px;"></i> RINGKASAN & INSIGHTS</div>
             <div class="reader-chapter-title" id="insightBookTitle" style="margin-bottom: 8px;">Memuat Judul...</div>
             <div style="font-family: var(--font-ui); font-size: 13px; opacity: 0.6; margin-bottom: 40px; font-weight: 500;" id="insightSubtitle">Analisis Data · Selesai 0%</div>
             
@@ -1012,7 +1028,7 @@
                 <ul id="insightLangkahAksi" style="padding-left: 24px; margin-bottom: 1em;"></ul>
             </div>
             
-            <div class="reader-quote-block" style="margin-top: 48px; cursor: default;">
+            <div class="reader-note-block" style="margin-top: 48px; border-left: 3px solid var(--accent); padding-left: 24px;">
                 <div id="aiQuoteText" style="font-family: var(--font-body); font-style: italic; font-size: 1.1em; line-height: 1.6;">"Ide yang bagus menjadi luar biasa ketika dieksekusi dengan kebiasaan kecil setiap hari."</div>
                 <div style="font-family: var(--font-ui); font-size: 12px; opacity: 0.6; margin-top: 12px; font-style: normal;">— Folio AI Generator</div>
                 <button class="btn-ghost" onclick="regenQuote()" style="margin-top: 16px; padding: 0; color: inherit; font-weight: 500; font-style: normal; display: flex; align-items: center; gap: 6px;"><i data-lucide="refresh-cw" style="width:14px;height:14px;"></i> Kutipan Acak Lainnya</button>
@@ -1030,7 +1046,6 @@
         let readingTimer = null; 
         let authMode = 'login'; 
 
-        // DAFTAR ADMIN
         const ADMIN_EMAILS = ['hari@gmail.com', 'haripamungkas519@gmail.com', 'hari.pamungkas@rumahzakat.org'];
         window.isCurrentUserAdmin = false;
 
@@ -1063,6 +1078,7 @@
             entries.forEach(entry => {
                 if(entry.isIntersecting && activeBook) {
                     let pid = entry.target.id.split('-')[1]; 
+                    
                     activeBook.lastReadChapter = activeChapterIdx;
                     activeBook.lastReadParagraph = parseInt(pid);
                     
@@ -1117,8 +1133,6 @@
 
         function checkAdminUI(email) {
             if (!email) return;
-
-            // Ubah email menjadi huruf kecil semua agar cocok 100%
             const userEmail = email.toLowerCase();
             window.isCurrentUserAdmin = ADMIN_EMAILS.some(e => e.toLowerCase() === userEmail);
             
@@ -1153,29 +1167,23 @@
         function updateProfileDisplay() {
             const initial = window.APP_STATE.userName ? window.APP_STATE.userName.charAt(0).toUpperCase() : 'U';
             
-            // Update Avatar di Header Library
             const headerAvatar = document.getElementById('headerAvatar');
             if (headerAvatar) headerAvatar.textContent = initial;
             
-            // Update Avatar di Header Collection
             const headerAvatarCollection = document.getElementById('headerAvatarCollection');
             if (headerAvatarCollection) headerAvatarCollection.textContent = initial;
 
-            // Update Avatar di Tab Profil
             const tabAvatar = document.getElementById('profileTabAvatar');
             if(tabAvatar) {
                 tabAvatar.innerHTML = `${initial} <div style="position:absolute; bottom:0; right:0; background:var(--bg-card); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:14px; box-shadow:var(--shadow-sm); cursor:pointer; color: var(--text-primary);" onclick="openEditProfile()"><i data-lucide="pencil" style="width:14px;height:14px;"></i></div>`;
             }
             
-            // Update Nama di Tab Profil
             const tabName = document.getElementById('profileTabName');
             if(tabName) tabName.textContent = window.APP_STATE.userName;
             
-            // Update Email di Tab Profil
             const tabEmail = document.getElementById('profileTabEmail');
             if(tabEmail) tabEmail.textContent = window.APP_STATE.email || 'user@folio.app';
             
-            // Cek status Admin
             checkAdminUI(window.APP_STATE.email);
             if (window.lucide) lucide.createIcons();
         }
@@ -1268,6 +1276,25 @@
                 if(window.handleRealLogin) window.handleRealLogin();
             } else {
                 if(window.handleRealRegister) window.handleRealRegister();
+            }
+        }
+
+        window.handleForgotPassword = async function() {
+            const email = document.getElementById('authEmail').value;
+            if(!email) {
+                window.showToast("Masukkan alamat email Anda terlebih dahulu", "⚠️");
+                return;
+            }
+            if (window.firebaseResetPassword) {
+                window.firebaseResetPassword(email);
+            }
+        }
+
+        window.handleChangePassword = function() {
+            if (window.APP_STATE.email && window.firebaseResetPassword) {
+                window.firebaseResetPassword(window.APP_STATE.email);
+            } else {
+                window.showToast("Tidak dapat mereset sandi. Pastikan Anda sudah login.", "❌");
             }
         }
 
@@ -1649,21 +1676,22 @@
         function setFontSize(size, btn) { applyReaderFontSize(size); window.showToast('Font: ' + size); }
         function setTheme(theme, dot) { applyReaderTheme(theme); closeSettings(); window.showToast('Tema: ' + theme); }
         
-        window.highlightQuote = function(el) { 
+        window.saveChapterNote = function(text) {
             if(!activeBook) return;
-            if (el.classList.contains('highlighted')) return; 
+            if(!activeBook.chapterNotes) activeBook.chapterNotes = {};
+            activeBook.chapterNotes[activeChapterIdx] = text;
             
-            el.classList.add('highlighted'); 
-            const hintText = "Tekan blok ini jika ada kalimat penting yang ingin kamu simpan.";
-            let quoteText = el.innerText.replace(hintText, '').trim();
-            
-            if (!activeBook.savedQuotes) activeBook.savedQuotes = [];
-            activeBook.savedQuotes.push(quoteText || "Kutipan penting tersimpan.");
-            
-            if(window.firebaseUpdateQuotes) {
-                window.firebaseUpdateQuotes(activeBook.id, activeBook.savedQuotes);
+            const statusEl = document.getElementById('noteSaveStatus');
+            if(statusEl) statusEl.textContent = 'Menyimpan...';
+
+            if(window.firebaseUpdateChapterNotes) {
+                window.firebaseUpdateChapterNotes(activeBook.id, activeBook.chapterNotes).then(() => {
+                    if(statusEl) {
+                        statusEl.textContent = 'Tersimpan ✓';
+                        setTimeout(() => statusEl.textContent = 'Otomatis tersimpan', 2000);
+                    }
+                });
             }
-            window.showToast('Quote berhasil disimpan!', '★'); 
         }
         
         window.toggleFavorite = function() {
@@ -1673,10 +1701,10 @@
             const btnFav = document.getElementById('btnFavorite');
             if (activeBook.isFavorite) {
                 btnFav.style.color = '#D45353';
-                btnFav.innerHTML = '<i data-lucide="heart" fill="#D45353"></i>';
+                btnFav.innerHTML = '<i data-lucide="heart" fill="#D45353" style="width:16px;"></i>';
             } else {
                 btnFav.style.color = '';
-                btnFav.innerHTML = '<i data-lucide="heart"></i>';
+                btnFav.innerHTML = '<i data-lucide="heart" style="width:16px;"></i>';
             }
             lucide.createIcons();
 
@@ -1742,6 +1770,64 @@
             overlay.classList.toggle('show');
         };
 
+        window.toggleBookmarksDrawer = function() {
+            const drawer = document.getElementById('readerBookmarksDrawer');
+            const overlay = document.getElementById('bookmarksOverlay');
+            drawer.classList.toggle('open');
+            overlay.classList.toggle('show');
+            if(drawer.classList.contains('open')) {
+                renderBookmarksList();
+            }
+        };
+
+        window.renderBookmarksList = function() {
+            if(!activeBook) return;
+            const list = document.getElementById('bookmarksListContent');
+            let html = '';
+            let hasHighlights = false;
+            
+            if (activeBook.highlights && activeBook.chapters) {
+                const chaptersWithHighlights = Object.keys(activeBook.highlights).map(Number).sort((a,b)=>a-b);
+                
+                chaptersWithHighlights.forEach(cIdx => {
+                    const chapterHighlights = activeBook.highlights[cIdx];
+                    if (chapterHighlights && chapterHighlights.length > 0 && activeBook.chapters[cIdx]) {
+                        hasHighlights = true;
+                        const chapterTitle = activeBook.chapters[cIdx].title || `Bab ${cIdx + 1}`;
+                        const paragraphs = activeBook.chapters[cIdx].content.split('\n').filter(p => p.trim() !== '');
+                        
+                        chapterHighlights.sort((a,b)=>a-b).forEach(pIdx => {
+                            if (paragraphs[pIdx]) {
+                                const snippet = paragraphs[pIdx];
+                                html += `
+                                <div class="bookmark-item" onclick="jumpToHighlight(${cIdx}, ${pIdx})">
+                                    <div class="bookmark-chapter"><i data-lucide="highlighter" style="width:12px;height:12px;"></i> ${chapterTitle}</div>
+                                    <div class="bookmark-text">"${snippet}"</div>
+                                </div>`;
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (!hasHighlights) {
+                html = '<div style="text-align:center; padding: 20px; font-size: 13px; color: var(--text-muted); border: 1px dashed var(--border); border-radius: 8px; margin-top: 10px;">Belum ada kalimat yang disorot (highlight) di buku ini.</div>';
+            }
+
+            list.innerHTML = html;
+            lucide.createIcons();
+        };
+
+        window.jumpToHighlight = function(cIdx, pIdx) {
+            window.targetHighlightParagraph = pIdx; 
+            
+            activeChapterIdx = cIdx;
+            
+            renderChapter();
+            renderTOC();
+            toggleBookmarksDrawer();
+        };
+
         window.renderTOC = function() {
             if(!activeBook) return;
             const list = document.getElementById('tocList');
@@ -1761,6 +1847,11 @@
 
         window.jumpToChapter = function(idx) {
             activeChapterIdx = idx;
+            if(activeBook) {
+                activeBook.lastReadChapter = idx;
+                activeBook.lastReadParagraph = 0; // Reset ke atas
+            }
+            window.scrollTo({ top: 0, behavior: 'auto' });
             renderChapter();
             renderTOC();
             toggleTOC();
@@ -1773,6 +1864,10 @@
             activeBook = currentBooksToDisplay.find(b => b.id === bookId);
             if(!activeBook) return;
             
+            // Set judul ke header fixed
+            document.getElementById('topbarBookTitle').textContent = activeBook.title;
+            document.getElementById('topbarBookAuthor').textContent = activeBook.author;
+
             activeBook.lastReadAt = Date.now();
             if(window.firebaseUpdateLastRead) window.firebaseUpdateLastRead(activeBook.id, activeBook.lastReadAt);
             
@@ -1781,10 +1876,10 @@
             const btnFav = document.getElementById('btnFavorite');
             if (activeBook.isFavorite) {
                 btnFav.style.color = '#D45353';
-                btnFav.innerHTML = '<i data-lucide="heart" fill="#D45353"></i>';
+                btnFav.innerHTML = '<i data-lucide="heart" fill="#D45353" style="width:16px;"></i>';
             } else {
                 btnFav.style.color = '';
-                btnFav.innerHTML = '<i data-lucide="heart"></i>';
+                btnFav.innerHTML = '<i data-lucide="heart" style="width:16px;"></i>';
             }
 
             renderChapter();
@@ -1803,7 +1898,6 @@
         function renderChapter() {
             if(!activeBook) return;
             const hasChapters = activeBook.chapters && activeBook.chapters.length > 0;
-            document.getElementById('readerChapterNumber').textContent = `BAB ${activeChapterIdx + 1}`;
             
             if(hasChapters) {
                 const chapter = activeBook.chapters[activeChapterIdx];
@@ -1819,22 +1913,57 @@
                     htmlContent += `<p id="para-${index}" class="${dropCap} ${isHigh}" onclick="toggleParagraphHighlight(${index})">${p}</p>`;
                 });
                 
-                if(paragraphs.length > 2) { htmlContent += `<div class="reader-quote-block" onclick="highlightQuote(this)">Tekan blok ini jika ada kalimat penting yang ingin kamu simpan.<div class="quote-action-hint"><i data-lucide="star" style="width:12px;"></i> Ketuk untuk menyimpan highlight</div></div>`; }
+                let existingNote = (activeBook.chapterNotes && activeBook.chapterNotes[activeChapterIdx]) ? activeBook.chapterNotes[activeChapterIdx] : '';
+
+                htmlContent += `
+                <div class="reader-note-block">
+                    <div style="font-size:12px; font-weight:600; color:var(--accent); margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="edit-3" style="width:14px;"></i> CATATAN & REFLEKSI BAB
+                    </div>
+                    <textarea id="chapterNoteInput" placeholder="Apa insight menarik yang kamu dapatkan dari bab ini? Ketik catatan pribadi Anda di sini..." style="width:100%; background:transparent; border:none; outline:none; color:inherit; font-family:var(--font-body); font-size:16px; line-height:1.6; resize:vertical; min-height:80px;" oninput="saveChapterNote(this.value)">${existingNote}</textarea>
+                    <div style="font-size:11px; color:var(--text-muted); margin-top:12px; text-align:right;" id="noteSaveStatus">Otomatis tersimpan</div>
+                </div>`;
                 
                 document.getElementById('readerBody').innerHTML = htmlContent;
                 lucide.createIcons();
 
                 document.querySelectorAll('#readerBody p').forEach(p => paragraphObserver.observe(p));
 
+                // ===== LOGIKA SCROLL =====
                 setTimeout(() => {
-                    if (activeBook.lastReadParagraph !== undefined) {
-                        let targetP = document.getElementById(`para-${activeBook.lastReadParagraph}`);
+                    let isJumpingHighlight = window.targetHighlightParagraph !== undefined;
+                    let targetIdx;
+
+                    if (isJumpingHighlight) {
+                        targetIdx = window.targetHighlightParagraph;
+                    } else if (activeChapterIdx === activeBook.lastReadChapter && activeBook.lastReadParagraph !== undefined && activeBook.lastReadParagraph > 0) {
+                        // Hanya scroll ke paragraf jika paragrafnya BUKAN paragraf 0
+                        targetIdx = activeBook.lastReadParagraph;
+                    } else {
+                        targetIdx = undefined; 
+                    }
+
+                    if (targetIdx !== undefined && targetIdx !== null) {
+                        let targetP = document.getElementById(`para-${targetIdx}`);
                         if (targetP) {
-                            targetP.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            // Hitung posisi dengan offset agar tidak tertutup Top Bar
+                            const yOffset = -95; // Jarak aman dari top bar
+                            const y = targetP.getBoundingClientRect().top + window.scrollY + yOffset;
+                            window.scrollTo({ top: y, behavior: 'auto' });
+                            
+                            if (isJumpingHighlight) {
+                                targetP.classList.add('jump-pulse');
+                                setTimeout(() => targetP.classList.remove('jump-pulse'), 1500);
+                            }
+                        } else {
+                            window.scrollTo({ top: 0, behavior: 'auto' });
                         }
                     } else {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        // Pastikan BENAR-BENAR ke paling atas (posisi 0 mutlak)
+                        window.scrollTo({ top: 0, behavior: 'auto' });
                     }
+                    
+                    window.targetHighlightParagraph = undefined;
                 }, 300);
 
             } else {
@@ -1870,28 +1999,41 @@
         window.navigateChapter = function(dir) {
             if(!activeBook || !activeBook.chapters) return;
             const animator = document.getElementById('readerContentAnimator');
+            
             if (dir === 'next' && activeChapterIdx < activeBook.chapters.length - 1) {
-                animator.classList.add('slide-next-out');
+                animator.classList.add('page-turn-next-out'); 
+                
                 setTimeout(() => {
-                    activeBook.lastReadParagraph = 0;
                     activeChapterIdx++; 
+                    activeBook.lastReadChapter = activeChapterIdx;
+                    activeBook.lastReadParagraph = 0; // Reset scroll ke atas
+                    window.scrollTo({ top: 0, behavior: 'auto' }); // Eksekusi mutlak
+
                     renderChapter(); 
                     renderTOC();
-                    animator.classList.remove('slide-next-out');
-                    animator.classList.add('slide-next-in');
-                    setTimeout(() => animator.classList.remove('slide-next-in'), 400);
-                }, 300);
+                    
+                    animator.classList.remove('page-turn-next-out');
+                    animator.classList.add('page-turn-next-in'); 
+                    setTimeout(() => animator.classList.remove('page-turn-next-in'), 400);
+                }, 350); 
+                
             } else if (dir === 'prev' && activeChapterIdx > 0) {
-                animator.classList.add('slide-prev-out');
+                animator.classList.add('page-turn-prev-out'); 
+                
                 setTimeout(() => {
-                    activeBook.lastReadParagraph = 0;
                     activeChapterIdx--; 
+                    activeBook.lastReadChapter = activeChapterIdx;
+                    activeBook.lastReadParagraph = 0; // Reset scroll ke atas
+                    window.scrollTo({ top: 0, behavior: 'auto' }); // Eksekusi mutlak
+                    
                     renderChapter(); 
                     renderTOC();
-                    animator.classList.remove('slide-prev-out');
-                    animator.classList.add('slide-prev-in');
-                    setTimeout(() => animator.classList.remove('slide-prev-in'), 400);
-                }, 300);
+                    
+                    animator.classList.remove('page-turn-prev-out');
+                    animator.classList.add('page-turn-prev-in'); 
+                    setTimeout(() => animator.classList.remove('page-turn-prev-in'), 400);
+                }, 350);
+                
             } else { 
                 window.showToast(dir === 'next' ? 'Ini adalah bab terakhir.' : 'Ini adalah bab pertama.', 'book-open'); 
             }
@@ -1899,7 +2041,7 @@
 
         document.addEventListener('keydown', (e) => { 
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); focusSearch(); } 
-            if (e.key === 'Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); window.closeModal('editProfileModal'); window.closeModal('preferencesModal'); window.closeModal('favoritesModal'); window.closeModal('adminModal'); closeSettings(); } 
+            if (e.key === 'Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); window.closeModal('editProfileModal'); window.closeModal('preferencesModal'); window.closeModal('favoritesModal'); window.closeModal('adminModal'); closeSettings(); toggleBookmarksDrawer(); } 
         });
 
         window.goToSlide = goToSlide;
@@ -1920,6 +2062,10 @@
         window.openInsights = openInsights;
         window.toggleTOC = toggleTOC;
         window.deleteActiveBook = deleteActiveBook;
+        
+        window.toggleBookmarksDrawer = toggleBookmarksDrawer;
+        window.renderBookmarksList = renderBookmarksList;
+        window.jumpToHighlight = jumpToHighlight;
 
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
@@ -1928,7 +2074,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB9VMAwS4xrIVkEbQDgs8j9hLtXSigY39I",
@@ -1956,7 +2102,6 @@
                 
                 window.updateProfileDisplay();
 
-                // HILANGKAN await: Biarkan berjalan di background agar tidak menghentikan layar jika gagal
                 setDoc(doc(db, "users", user.uid), {
                     uid: user.uid,
                     email: user.email,
@@ -1965,14 +2110,28 @@
                     lastActive: serverTimestamp()
                 }, { merge: true }).catch(e => console.warn("Firebase rules/permission memblokir status online", e));
 
-                // Pastikan pindah slide dari background state
                 if (document.getElementById('screen-onboarding').classList.contains('active') && window.APP_STATE.currentSlide === 1) {
                     window.goToSlide(2);
                 }
             }
         });
 
-        // KONEKSI LOGIN TERPADU KE FIREBASE
+        window.firebaseResetPassword = async (email) => {
+            try {
+                await sendPasswordResetEmail(auth, email);
+                window.showToast("Link reset password telah dikirim ke email Anda!", "✅");
+            } catch (error) {
+                window.showToast("Gagal mengirim link: Email tidak ditemukan atau tidak valid.", "❌");
+            }
+        };
+
+        window.firebaseUpdateProfileAuth = async (newName) => {
+            if (auth.currentUser) {
+                await updateProfile(auth.currentUser, { displayName: newName });
+                await updateDoc(doc(db, "users", auth.currentUser.uid), { name: newName });
+            }
+        };
+
         window.handleRealLogin = async () => {
             const email = document.getElementById('authEmail').value;
             const pass = document.getElementById('authPassword').value;
@@ -1983,7 +2142,6 @@
             try { 
                 await signInWithEmailAndPassword(auth, email, pass); 
                 window.showToast("Berhasil masuk!", "✅"); 
-                // PAKSA pindah ke slide 2 segera setelah sukses
                 if (document.getElementById('screen-onboarding').classList.contains('active')) {
                     window.goToSlide(2);
                 }
@@ -1999,7 +2157,6 @@
             }
         };
 
-        // KONEKSI DAFTAR TERPADU KE FIREBASE
         window.handleRealRegister = async () => {
             const email = document.getElementById('authEmail').value;
             const pass = document.getElementById('authPassword').value;
@@ -2014,7 +2171,6 @@
                 window.APP_STATE.userName = name;
                 window.updateProfileDisplay();
                 window.showToast("Berhasil mendaftar!", "✅");
-                // PAKSA pindah ke slide 2 segera setelah sukses
                 if (document.getElementById('screen-onboarding').classList.contains('active')) {
                     window.goToSlide(2);
                 }
@@ -2029,13 +2185,11 @@
             }
         };
 
-        // KONEKSI LOGIN GOOGLE
         window.socialLogin = async (provider) => {
             if(provider === 'Google') {
                 try { 
                     await signInWithPopup(auth, googleProvider); 
                     window.showToast("Berhasil masuk dengan Google!", "✅"); 
-                    // PAKSA pindah ke slide 2 segera setelah sukses
                     if (document.getElementById('screen-onboarding').classList.contains('active')) {
                         window.goToSlide(2);
                     }
@@ -2048,35 +2202,26 @@
         };
 
         window.handleLogout = async () => {
-            // Update status ke offline (abaikan jika ditolak Firebase)
             if(auth.currentUser) {
                 updateDoc(doc(db, "users", auth.currentUser.uid), { isOnline: false })
                     .catch(e => console.warn("Abaikan error status offline", e));
             }
 
             try {
-                // Proses Sign Out Firebase
                 await signOut(auth);
                 
-                // Reset State
                 window.APP_STATE.isLoggedIn = false; 
                 window.APP_STATE.onboardingComplete = false; 
                 
-                // Hapus data login dari browser
                 localStorage.removeItem('folio-onboarding-complete');
                 localStorage.removeItem('folio-user-logged-in');
                 
-                // BARIS YANG BIKIN ERROR (closeModal profileModal) SUDAH DIHAPUS DI SINI
-                
-                // Tampilkan notifikasi
                 window.showToast('Berhasil keluar. Sampai jumpa! 👋', '✅');
                 
-                // Kembalikan form ke Login jika sedang di mode Daftar
                 if (typeof authMode !== 'undefined' && authMode === 'register') {
                     window.toggleAuthMode();
                 }
                 
-                // Arahkan kembali ke layar depan (Onboarding)
                 window.showScreen('onboarding');
                 window.goToSlide(1); 
                 
@@ -2086,7 +2231,6 @@
             }
         };
 
-        // ADMIN PANEL LISTENER
         let adminUnsubscribe = null;
         window.openAdminPanel = () => {
             if(!window.isCurrentUserAdmin) return;
@@ -2164,6 +2308,10 @@
 
         window.firebaseUpdateQuotes = async (bookId, quotes) => {
             try { await updateDoc(doc(db, "buku_bacaan", bookId), { savedQuotes: quotes }); } catch (error) { console.error(error); }
+        }
+        
+        window.firebaseUpdateChapterNotes = async (bookId, notesObj) => {
+            try { await updateDoc(doc(db, "buku_bacaan", bookId), { chapterNotes: notesObj }); } catch (error) { console.error(error); }
         }
 
         const addBookForm = document.getElementById('addBookForm');
@@ -2252,6 +2400,7 @@
                             isFavorite: false,
                             highlights: {},
                             bookmarks: [],
+                            chapterNotes: {}, 
                             tag: "Belum Dibaca", 
                             chapters: book.chapters.length > 0 ? book.chapters : [{ title: "Ringkasan", content: "Belum ada isi bab." }], 
                             createdAt: serverTimestamp(),
@@ -2296,6 +2445,7 @@
                     chapters: data.chapters || [],
                     highlights: data.highlights || {},
                     bookmarks: data.bookmarks || [],
+                    chapterNotes: data.chapterNotes || {}, 
                     lastReadAt: data.lastReadAt || 0,
                     lastReadChapter: data.lastReadChapter || 0,
                     lastReadParagraph: data.lastReadParagraph || 0,
