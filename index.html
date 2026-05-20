@@ -1411,15 +1411,15 @@
 
         function goToSlide(index) {
             const slides = document.querySelectorAll('.onboarding-slide');
-            if (slides[APP_STATE.currentSlide]) {
-                slides[APP_STATE.currentSlide].classList.remove('active');
-                slides[APP_STATE.currentSlide].classList.add('exit-left');
+            if (slides[window.APP_STATE.currentSlide]) {
+                slides[window.APP_STATE.currentSlide].classList.remove('active');
+                slides[window.APP_STATE.currentSlide].classList.add('exit-left');
             }
             if (slides[index]) {
                 slides[index].classList.remove('exit-left');
                 slides[index].classList.add('active');
             }
-            APP_STATE.currentSlide = index;
+            window.APP_STATE.currentSlide = index;
             document.querySelectorAll('.step-dot').forEach((dot, i) => {
                 dot.classList.remove('active', 'done');
                 if (i < index) dot.classList.add('done');
@@ -1927,7 +1927,7 @@
         const auth = getAuth(app);
         const googleProvider = new GoogleAuthProvider();
 
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.APP_STATE.isLoggedIn = true;
                 window.APP_STATE.email = user.email;
@@ -1938,36 +1938,21 @@
                 
                 window.updateProfileDisplay();
 
-                // Simpan data User ke Firestore untuk pelacakan Admin Panel
-                try {
-                    await setDoc(doc(db, "users", user.uid), {
-                        uid: user.uid,
-                        email: user.email,
-                        name: user.displayName || user.email.split('@')[0],
-                        isOnline: true,
-                        lastActive: serverTimestamp()
-                    }, { merge: true });
-                } catch(e) { console.warn("Gagal update status online", e); }
+                // HILANGKAN await: Biarkan berjalan di background agar tidak menghentikan layar jika gagal
+                setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid,
+                    email: user.email,
+                    name: user.displayName || user.email.split('@')[0],
+                    isOnline: true,
+                    lastActive: serverTimestamp()
+                }, { merge: true }).catch(e => console.warn("Firebase rules/permission memblokir status online", e));
 
+                // Pastikan pindah slide dari background state
                 if (document.getElementById('screen-onboarding').classList.contains('active') && window.APP_STATE.currentSlide === 1) {
                     window.goToSlide(2);
                 }
             }
         });
-
-        // Event listener saat browser/tab ditutup untuk update status Offline
-        window.addEventListener('beforeunload', () => {
-            if(auth.currentUser) {
-                updateDoc(doc(db, "users", auth.currentUser.uid), { isOnline: false }).catch(()=>{});
-            }
-        });
-
-        window.firebaseUpdateProfileAuth = async (newName) => {
-            if (auth.currentUser) {
-                await updateProfile(auth.currentUser, { displayName: newName });
-                await updateDoc(doc(db, "users", auth.currentUser.uid), { name: newName });
-            }
-        };
 
         // KONEKSI LOGIN TERPADU KE FIREBASE
         window.handleRealLogin = async () => {
@@ -1975,12 +1960,20 @@
             const pass = document.getElementById('authPassword').value;
             const btn = document.getElementById('btnPrimaryAuth');
             if(!email || !pass) return window.showToast("Lengkapi email & password", "⚠️");
+            
             btn.innerHTML = "Memproses..."; btn.disabled = true;
             try { 
                 await signInWithEmailAndPassword(auth, email, pass); 
                 window.showToast("Berhasil masuk!", "✅"); 
+                // PAKSA pindah ke slide 2 segera setelah sukses
+                if (document.getElementById('screen-onboarding').classList.contains('active')) {
+                    window.goToSlide(2);
+                }
             } 
-            catch (error) { window.showToast("Gagal masuk: Periksa email/password.", "❌"); } 
+            catch (error) { 
+                console.error(error);
+                window.showToast("Gagal masuk: Periksa email/password.", "❌"); 
+            } 
             finally { 
                 btn.innerHTML = `<i data-lucide="log-in" style="width:16px;"></i> <span id="authBtnText">Masuk</span>`; 
                 btn.disabled = false; 
@@ -1995,6 +1988,7 @@
             const name = document.getElementById('authName').value;
             const btn = document.getElementById('btnPrimaryAuth');
             if(!email || !pass || !name) return window.showToast("Lengkapi semua data", "⚠️");
+            
             btn.innerHTML = "Mendaftar..."; btn.disabled = true;
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
@@ -2002,7 +1996,14 @@
                 window.APP_STATE.userName = name;
                 window.updateProfileDisplay();
                 window.showToast("Berhasil mendaftar!", "✅");
-            } catch (error) { window.showToast("Gagal mendaftar: " + error.message, "❌"); } 
+                // PAKSA pindah ke slide 2 segera setelah sukses
+                if (document.getElementById('screen-onboarding').classList.contains('active')) {
+                    window.goToSlide(2);
+                }
+            } catch (error) { 
+                console.error(error);
+                window.showToast("Gagal mendaftar: " + error.message, "❌"); 
+            } 
             finally { 
                 btn.innerHTML = `<i data-lucide="log-in" style="width:16px;"></i> <span id="authBtnText">Daftar</span>`; 
                 btn.disabled = false; 
@@ -2010,10 +2011,21 @@
             }
         };
 
+        // KONEKSI LOGIN GOOGLE
         window.socialLogin = async (provider) => {
             if(provider === 'Google') {
-                try { await signInWithPopup(auth, googleProvider); window.showToast("Berhasil masuk dengan Google!", "✅"); } 
-                catch(error) { window.showToast("Login dibatalkan atau gagal.", "❌"); }
+                try { 
+                    await signInWithPopup(auth, googleProvider); 
+                    window.showToast("Berhasil masuk dengan Google!", "✅"); 
+                    // PAKSA pindah ke slide 2 segera setelah sukses
+                    if (document.getElementById('screen-onboarding').classList.contains('active')) {
+                        window.goToSlide(2);
+                    }
+                } 
+                catch(error) { 
+                    console.error(error);
+                    window.showToast("Login dibatalkan atau gagal.", "❌"); 
+                }
             } else { window.showToast(provider + " login belum tersedia.", "⚠️"); }
         };
 
