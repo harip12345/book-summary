@@ -1151,26 +1151,34 @@
         }
 
         function updateProfileDisplay() {
-            const initial = window.APP_STATE.userName.charAt(0).toUpperCase();
-            document.getElementById('headerAvatar').textContent = initial;
-            if(document.getElementById('headerAvatarCollection')) document.getElementById('headerAvatarCollection').textContent = initial;
-            document.getElementById('profileAvatar').textContent = initial;
-            document.getElementById('profileName').textContent = window.APP_STATE.userName;
-            document.getElementById('profileEmail').textContent = window.APP_STATE.email || 'user@folio.app';
+            const initial = window.APP_STATE.userName ? window.APP_STATE.userName.charAt(0).toUpperCase() : 'U';
+            
+            // Update Avatar di Header Library
+            const headerAvatar = document.getElementById('headerAvatar');
+            if (headerAvatar) headerAvatar.textContent = initial;
+            
+            // Update Avatar di Header Collection
+            const headerAvatarCollection = document.getElementById('headerAvatarCollection');
+            if (headerAvatarCollection) headerAvatarCollection.textContent = initial;
 
+            // Update Avatar di Tab Profil
             const tabAvatar = document.getElementById('profileTabAvatar');
             if(tabAvatar) {
                 tabAvatar.innerHTML = `${initial} <div style="position:absolute; bottom:0; right:0; background:var(--bg-card); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:14px; box-shadow:var(--shadow-sm); cursor:pointer; color: var(--text-primary);" onclick="openEditProfile()"><i data-lucide="pencil" style="width:14px;height:14px;"></i></div>`;
             }
+            
+            // Update Nama di Tab Profil
             const tabName = document.getElementById('profileTabName');
             if(tabName) tabName.textContent = window.APP_STATE.userName;
+            
+            // Update Email di Tab Profil
             const tabEmail = document.getElementById('profileTabEmail');
             if(tabEmail) tabEmail.textContent = window.APP_STATE.email || 'user@folio.app';
             
+            // Cek status Admin
             checkAdminUI(window.APP_STATE.email);
-            lucide.createIcons();
+            if (window.lucide) lucide.createIcons();
         }
-
         function updateReadingGoalDisplay() {
             const goalEl = document.getElementById('profileReadingGoal');
             if (goalEl) {
