@@ -1116,11 +1116,21 @@
         }
 
         function checkAdminUI(email) {
-            window.isCurrentUserAdmin = ADMIN_EMAILS.includes(email);
-            document.getElementById('btnUploadHome').style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
-            document.getElementById('btnUploadCollection').style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
-            document.getElementById('btnDeleteBook').style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
-            document.getElementById('btnAdminPanel').style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
+            if (!email) return;
+
+            // Ubah email menjadi huruf kecil semua agar cocok 100%
+            const userEmail = email.toLowerCase();
+            window.isCurrentUserAdmin = ADMIN_EMAILS.some(e => e.toLowerCase() === userEmail);
+            
+            const btnUploadHome = document.getElementById('btnUploadHome');
+            const btnUploadCollection = document.getElementById('btnUploadCollection');
+            const btnDeleteBook = document.getElementById('btnDeleteBook');
+            const btnAdminPanel = document.getElementById('btnAdminPanel');
+
+            if (btnUploadHome) btnUploadHome.style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
+            if (btnUploadCollection) btnUploadCollection.style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
+            if (btnDeleteBook) btnDeleteBook.style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
+            if (btnAdminPanel) btnAdminPanel.style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
         }
 
         window.addNotification = function(title, desc, time) {
@@ -2030,26 +2040,42 @@
         };
 
         window.handleLogout = async () => {
+            // Update status ke offline (abaikan jika ditolak Firebase)
+            if(auth.currentUser) {
+                updateDoc(doc(db, "users", auth.currentUser.uid), { isOnline: false })
+                    .catch(e => console.warn("Abaikan error status offline", e));
+            }
+
             try {
-                if(auth.currentUser) {
-                    await updateDoc(doc(db, "users", auth.currentUser.uid), { isOnline: false });
-                }
+                // Proses Sign Out Firebase
                 await signOut(auth);
+                
+                // Reset State
                 window.APP_STATE.isLoggedIn = false; 
                 window.APP_STATE.onboardingComplete = false; 
+                
+                // Hapus data login dari browser
                 localStorage.removeItem('folio-onboarding-complete');
                 localStorage.removeItem('folio-user-logged-in');
-                window.closeModal('profileModal'); 
+                
+                // BARIS YANG BIKIN ERROR (closeModal profileModal) SUDAH DIHAPUS DI SINI
+                
+                // Tampilkan notifikasi
                 window.showToast('Berhasil keluar. Sampai jumpa! 👋', '✅');
                 
+                // Kembalikan form ke Login jika sedang di mode Daftar
                 if (typeof authMode !== 'undefined' && authMode === 'register') {
                     window.toggleAuthMode();
                 }
                 
+                // Arahkan kembali ke layar depan (Onboarding)
                 window.showScreen('onboarding');
                 window.goToSlide(1); 
                 
-            } catch (error) { window.showToast("Gagal logout.", "❌"); }
+            } catch (error) { 
+                console.error("Error detail saat sign out:", error);
+                window.showToast("Gagal logout. Cek console.", "❌"); 
+            }
         };
 
         // ADMIN PANEL LISTENER
