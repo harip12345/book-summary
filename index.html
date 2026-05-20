@@ -146,6 +146,18 @@
         .modal-title { font-family: var(--font-display); font-size: 20px; color: var(--text-primary); margin-bottom: 4px; }
         .modal-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
 
+        .fav-list-item { padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+        .fav-list-item:hover { border-color: var(--accent); background: var(--accent-pale); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .fav-list-item-title { font-size: 14px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+        .fav-list-item-author { font-size: 12px; color: var(--text-muted); }
+
+        .reader-body p { transition: background-color 0.2s ease, box-shadow 0.2s ease; border-radius: 4px; }
+        .reader-body.highlight-mode-active p { cursor: pointer; }
+        .reader-body.highlight-mode-active p:hover { background-color: rgba(200,134,58,0.08); box-shadow: 0 0 0 4px rgba(200,134,58,0.08); }
+        .highlighted-text { background-color: rgba(200,134,58,0.25); box-shadow: 0 0 0 4px rgba(200,134,58,0.25); }
+        body.theme-dark .highlighted-text { background-color: rgba(200,134,58,0.35); box-shadow: 0 0 0 4px rgba(200,134,58,0.35); }
+        body.theme-dark .reader-body.highlight-mode-active p:hover { background-color: rgba(255,255,255,0.05); box-shadow: 0 0 0 4px rgba(255,255,255,0.05); }
+
         /* ===== ONBOARDING ===== */
         .onboarding-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; background: #0D0C0A; overflow: hidden; }
         .onboarding-wrapper::before { content: ''; position: absolute; top: -30%; left: -20%; width: 80%; height: 80%; background: radial-gradient(ellipse at center, rgba(200,134,58,0.08) 0%, transparent 70%); pointer-events: none; animation: floatSlow 8s ease-in-out infinite; }
@@ -196,6 +208,8 @@
         .form-input:focus { border-color: var(--accent); background: rgba(200,134,58,0.05); box-shadow: 0 0 0 3px rgba(200,134,58,0.08); }
         .form-input::placeholder { color: rgba(196,186,176,0.4); }
         .form-input.error { border-color: #D45353; animation: shake 0.5s ease; }
+        .form-input.dark-theme-form { background: var(--bg-secondary); border-color: var(--border); color: var(--text-primary); }
+        .form-input.dark-theme-form:focus { border-color: var(--accent); background: var(--bg-primary); }
         
         select.form-input option { background-color: var(--bg-dark); color: var(--text-light); padding: 10px; }
         .form-error { font-size: 11px; color: #D45353; margin-top: 4px; display: none; }
@@ -234,7 +248,7 @@
         .lib-actions { display: flex; gap: 10px; align-items: center; }
         .icon-btn { width: 38px; height: 38px; border-radius: var(--radius-sm); background: var(--bg-secondary); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); color: var(--text-secondary); position: relative; }
         .icon-btn:hover { background: var(--accent-pale); color: var(--accent-dark); border-color: var(--accent); transform: translateY(-1px); }
-        .notification-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg-card); animation: pulse 2s infinite; }
+        .notification-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg-card); animation: pulse 2s infinite; display: none; }
         .avatar-btn { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-dark)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; transition: var(--transition); border: 2px solid transparent; }
         .avatar-btn:hover { border-color: var(--accent-light); transform: scale(1.1); }
         
@@ -297,30 +311,26 @@
         .book-tag.unread { background: var(--accent-pale); color: var(--accent-dark); }
         .fav-badge { position: absolute; top: -8px; right: -8px; background: #D45353; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); z-index: 5;}
 
-        /* ===== BOTTOM FLOATING TAB NAVIGATION ===== */
+        /* ===== BOTTOM FLOATING TAB NAVIGATION (REDESIGNED) ===== */
         .app-bottom-nav {
             position: fixed;
-            bottom: 24px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 380px;
-            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(22, 22, 22, 0.85); /* Dark, premium glass */
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 30px;
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 16px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 8px 12px;
+            border-radius: 100px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.05) inset;
             z-index: 900;
-            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s;
-        }
-        body.theme-dark .app-bottom-nav {
-            background: rgba(30, 30, 30, 0.85);
-            border-color: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            width: fit-content;
+            gap: 8px;
+            transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.5s;
         }
         .app-bottom-nav.hidden {
             transform: translate(-50%, 150%);
@@ -328,31 +338,52 @@
             pointer-events: none;
         }
         .nav-item {
+            position: relative;
             background: transparent;
             border: none;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            padding: 10px 20px;
-            border-radius: 20px;
+            padding: 12px;
+            border-radius: 100px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-            color: var(--text-muted);
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            color: rgba(255, 255, 255, 0.45);
             outline: none;
         }
+        .nav-item:hover { color: rgba(255, 255, 255, 0.8); }
         .nav-item.active {
-            background: var(--accent-pale);
-            color: var(--accent-dark);
+            background: var(--accent); 
+            color: #fff;
+            padding: 12px 24px;
+            box-shadow: 0 4px 15px rgba(200,134,58,0.4);
         }
-        body.theme-dark .nav-item.active {
-            background: rgba(200,134,58,0.15);
-            color: var(--accent-light);
+        .nav-icon { 
+            width: 22px; 
+            height: 22px; 
+            stroke-width: 2.2px;
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
         }
-        .nav-icon { transition: transform 0.3s; width: 22px; height: 22px; }
-        .nav-item.active .nav-icon { transform: translateY(-2px) scale(1.1); }
-        .nav-label { font-size: 10px; font-weight: 600; font-family: var(--font-ui); }
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+        .nav-label { 
+            font-size: 13px; 
+            font-weight: 600; 
+            font-family: var(--font-ui); 
+            max-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            margin-left: 0;
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .nav-item.active .nav-label {
+            max-width: 100px;
+            opacity: 1;
+            margin-left: 8px;
+        }
 
         /* ===== PROFILE STATS BLOCKS ===== */
         .profile-stat-box { background: var(--bg-secondary); padding: 20px; border-radius: var(--radius-xl); border: 1px solid var(--border); flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: var(--shadow-sm); }
@@ -383,11 +414,6 @@
         .reader-quote-block.highlighted { animation: highlightPulse 1.2s ease; background: rgba(200,134,58,0.15); border-left-color: var(--accent-dark); }
         .quote-action-hint { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 11px; font-style: normal; color: var(--accent-dark); font-family: var(--font-ui); opacity: 0; transition: opacity 0.3s; }
         .reader-quote-block:hover .quote-action-hint { opacity: 1; }
-        .chapter-nav-inline { display: flex; justify-content: space-between; margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(128,128,128,0.15); }
-        .chapter-nav-btn-inline { display: flex; flex-direction: column; gap: 4px; cursor: pointer; padding: 14px 18px; border-radius: var(--radius-md); transition: var(--transition); max-width: 48%; background: none; border: none; font-family: var(--font-ui); text-align: left; color: inherit; }
-        .chapter-nav-btn-inline:hover { background: rgba(128,128,128,0.06); }
-        .chapter-nav-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; }
-        .chapter-nav-title { font-family: var(--font-body); font-size: 14px; font-style: italic; opacity: 0.8; }
         
         .reader-bottom-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 90; background: rgba(255,255,255,0.75); backdrop-filter: blur(24px); border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-full); padding: 8px 12px; display: flex; align-items: center; gap: 4px; box-shadow: var(--shadow-float); transition: transform 0.4s ease, opacity 0.4s ease; margin-bottom: 20px; max-width: 95vw; }
         .reader-bottom-bar.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -427,17 +453,17 @@
         .screen { display: none; min-height: 100vh; }
         .screen.active { display: block; }
 
-        /* Login langsung tanpa daftar - username & password sederhana */
-        .quick-login-section {
+        /* Login Section Styles */
+        .auth-section {
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
             padding: 20px;
             margin-top: 16px;
             border: 1px solid rgba(255,255,255,0.08);
         }
-        .quick-login-title {
+        .auth-title {
             font-family: var(--font-display);
-            font-size: 16px;
+            font-size: 18px;
             color: var(--text-light);
             text-align: center;
             margin-bottom: 16px;
@@ -476,13 +502,74 @@
             <div class="filter-chip" onclick="filterNotif(this)" style="font-size:11px;">Dibaca</div>
         </div>
         <div id="notifList" style="display:flex;flex-direction:column;gap:8px;">
-            <div class="notification-item" onclick="markRead(this);showToast('Insight AI baru tersedia!')">
+            <div class="notification-item" onclick="handleNotificationClick(this)">
                 <div class="notification-dot-indicator"></div>
                 <div class="notification-content">
                     <div class="notification-title">Insight AI</div>
-                    <div class="notification-desc">Analisis buku baru Anda telah siap dibaca.</div>
+                    <div class="notification-desc">Analisis buku terakhir Anda telah siap dibaca. Klik di sini!</div>
                     <div class="notification-time">Baru saja</div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT PROFILE -->
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('editProfileModal')"><i data-lucide="x"></i></button>
+            <div class="modal-title" style="color:var(--text-primary);">Edit Profil</div>
+            <div class="modal-subtitle">Perbarui informasi data dirimu.</div>
+            
+            <div class="form-group" style="margin-top: 16px;">
+                <label class="form-label">Nama Tampilan</label>
+                <input type="text" class="form-input dark-theme-form" id="editProfileName" placeholder="Masukkan nama baru">
+            </div>
+            
+            <button class="btn-primary" style="margin-top:24px;" onclick="submitEditProfile()" id="btnSaveProfile"><i data-lucide="save" style="width:16px;"></i> Simpan Perubahan</button>
+        </div>
+    </div>
+
+    <!-- MODAL PREFERENSI MEMBACA -->
+    <div class="modal-overlay" id="preferencesModal">
+        <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
+            <button class="modal-close" onclick="closeModal('preferencesModal')"><i data-lucide="x"></i></button>
+            <div class="modal-title" style="color:var(--text-primary);">Preferensi Membaca</div>
+            <div class="modal-subtitle">Ubah target harianmu kapan saja.</div>
+            
+            <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-bottom:12px;">Target Membaca (Menit/Hari)</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;" id="prefGoalOptions">
+                <div class="genre-card" onclick="selectPrefGoal(this, 10)" style="flex-direction:row;justify-content:space-between;padding:14px 16px;">
+                    <span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--text-light-muted);"><i data-lucide="leaf" style="width:16px;"></i> Ringan</span>
+                    <span style="font-size:13px;color:var(--text-light-muted);">10 mnt</span>
+                </div>
+                <div class="genre-card active" onclick="selectPrefGoal(this, 15)" style="flex-direction:row;justify-content:space-between;padding:14px 16px;">
+                    <span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--accent-light);"><i data-lucide="book" style="width:16px;"></i> Sedang</span>
+                    <span style="font-size:13px;color:var(--accent-light);">15 mnt</span>
+                </div>
+                <div class="genre-card" onclick="selectPrefGoal(this, 30)" style="flex-direction:row;justify-content:space-between;padding:14px 16px;">
+                    <span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--text-light-muted);"><i data-lucide="flame" style="width:16px;"></i> Serius</span>
+                    <span style="font-size:13px;color:var(--text-light-muted);">30 mnt</span>
+                </div>
+                <div class="genre-card" onclick="selectPrefGoal(this, 60)" style="flex-direction:row;justify-content:space-between;padding:14px 16px;">
+                    <span style="font-family:var(--font-ui);font-size:14px;font-weight:500;color:var(--text-light-muted);"><i data-lucide="zap" style="width:16px;"></i> Intens</span>
+                    <span style="font-size:13px;color:var(--text-light-muted);">60 mnt</span>
+                </div>
+            </div>
+            
+            <button class="btn-primary" onclick="savePreferences()"><i data-lucide="save" style="width:16px;"></i> Simpan Pengaturan</button>
+        </div>
+    </div>
+
+    <!-- MODAL DAFTAR BUKU FAVORIT -->
+    <div class="modal-overlay" id="favoritesModal">
+        <div class="modal-content" style="max-height: 85vh; overflow-y: auto; padding: 24px;">
+            <button class="modal-close" onclick="closeModal('favoritesModal')"><i data-lucide="x"></i></button>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom: 20px;">
+                <i data-lucide="heart" style="color: #D45353; width: 22px; height: 22px;"></i>
+                <div class="modal-title" style="color:var(--text-primary); margin-bottom: 0;">Buku Favorit</div>
+            </div>
+            <div id="favoritesList" style="display:flex; flex-direction:column; gap:10px;">
+                <!-- Diisi otomatis oleh JavaScript -->
             </div>
         </div>
     </div>
@@ -497,7 +584,7 @@
                     <div class="modal-subtitle" style="margin-bottom:0;" id="profileEmail">andi@email.com</div>
                 </div>
             </div>
-            <button class="btn-primary" style="margin-top:16px;" onclick="closeModal('profileModal');showToast('Profil diperbarui!', '✅')"><i data-lucide="edit-3" style="width:16px;"></i> Edit Profil</button>
+            <button class="btn-primary" style="margin-top:16px;" onclick="closeModal('profileModal'); openEditProfile();"><i data-lucide="edit-3" style="width:16px;"></i> Edit Profil</button>
             <button class="btn-ghost" style="width:100%;margin-top:8px;color:#D45353;text-decoration-color:#D45353;" onclick="handleLogout()">Keluar</button>
         </div>
     </div>
@@ -524,7 +611,7 @@
         </div>
     </div>
 
-    <!-- ===== SCREEN ONBOARDING DENGAN LOGIN TANPA DAFTAR ===== -->
+    <!-- ===== SCREEN ONBOARDING DENGAN AUTHENTICATION GABUNGAN ===== -->
     <div class="screen active" id="screen-onboarding">
         <div class="onboarding-wrapper">
             <div class="particles">
@@ -557,57 +644,50 @@
                         <button class="btn-ghost" style="margin-top:8px;width:100%;" onclick="skipToLibrary()">Lewati, langsung ke Library</button>
                     </div>
                     
-                    <!-- Slide 1: LOGIN TANPA DAFTAR -->
+                    <!-- Slide 1: LOGIN / DAFTAR TERPADU -->
                     <div class="onboarding-slide" data-slide="1">
                         <div style="margin-bottom:12px;">
-                            <div class="onboarding-title" style="font-size:22px;">Masuk ke<br><em>Folio</em></div>
-                            <div class="onboarding-desc" style="font-size:13px;margin-bottom:12px;">Masukkan username dan password untuk melanjutkan.</div>
+                            <div class="onboarding-title" style="font-size:22px;" id="authMainTitle">Masuk ke<br><em>Folio</em></div>
+                            <div class="onboarding-desc" style="font-size:13px;margin-bottom:12px;" id="authMainDesc">Silakan masuk atau buat akun baru untuk melanjutkan.</div>
                         </div>
                         
-                        <!-- QUICK LOGIN -->
-                        <div class="quick-login-section">
-                            <div class="quick-login-title">Masuk Sekarang</div>
-                            <div class="form-group">
-                                <label class="form-label">Username</label>
-                                <input type="text" class="form-input" placeholder="Masukkan username" id="quickUsername">
+                        <div class="auth-section">
+                            <div class="auth-title" id="authBoxTitle">Masuk Sekarang</div>
+                            
+                            <div class="form-group" id="authNameGroup" style="display: none;">
+                                <label class="form-label">Nama Lengkap</label>
+                                <input type="text" class="form-input" placeholder="Masukkan nama Anda" id="authName">
                             </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" placeholder="nama@email.com" id="authEmail">
+                            </div>
+                            
                             <div class="form-group">
                                 <label class="form-label">Password</label>
                                 <div class="password-wrapper">
-                                    <input type="password" class="form-input" placeholder="Masukkan password" id="quickPassword">
-                                    <button class="password-toggle" onclick="togglePassword('quickPassword',this)" type="button">
+                                    <input type="password" class="form-input" placeholder="Min. 6 karakter" id="authPassword">
+                                    <button class="password-toggle" onclick="togglePassword('authPassword',this)" type="button">
                                         <i data-lucide="eye" style="width:16px;"></i>
                                     </button>
                                 </div>
                             </div>
-                            <button class="btn-primary" onclick="handleQuickLogin()" style="margin-top:8px;">
-                                <i data-lucide="log-in" style="width:16px;"></i> Masuk Sekarang
-                            </button>
-                            <p style="font-size:11px;color:var(--text-light-muted);text-align:center;margin-top:8px;">
-                                Tidak perlu daftar, langsung masuk dengan username & password Anda.
-                            </p>
+                            
+                            <div style="display: flex; gap: 10px; margin-top: 16px;">
+                                <button class="btn-primary" id="btnPrimaryAuth" onclick="processAuth()" style="flex: 1.5; padding: 14px;">
+                                    <i data-lucide="log-in" style="width:16px;" id="authIcon"></i> <span id="authBtnText">Masuk</span>
+                                </button>
+                                <button class="btn-primary" id="btnSwitchAuth" onclick="toggleAuthMode()" style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: var(--text-light); box-shadow: none; padding: 14px;">
+                                    Daftar
+                                </button>
+                            </div>
                         </div>
                         
                         <div class="divider">atau masuk dengan</div>
                         <div class="social-login">
                             <button class="social-btn" onclick="socialLogin('Google')"><i data-lucide="chrome" style="width:16px;"></i> Google</button>
                             <button class="social-btn" onclick="socialLogin('Apple')"><i data-lucide="smartphone" style="width:16px;"></i> Apple</button>
-                        </div>
-                        <div class="divider">atau daftar akun baru</div>
-                        <div style="display:flex;gap:0;margin-bottom:12px;background:rgba(255,255,255,0.03);border-radius:10px;padding:4px;">
-                            <button class="btn-ghost" id="tabLogin" onclick="switchAuthTab('login')" style="flex:1;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-weight:500;background:rgba(200,134,58,0.15);color:var(--accent-light);">Masuk Email</button>
-                            <button class="btn-ghost" id="tabRegister" onclick="switchAuthTab('register')" style="flex:1;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-weight:500;">Daftar</button>
-                        </div>
-                        <div id="loginForm">
-                            <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="nama@email.com" id="loginEmail"></div>
-                            <div class="form-group"><label class="form-label">Password</label><div class="password-wrapper"><input type="password" class="form-input" placeholder="••••••••" id="loginPassword"><button class="password-toggle" onclick="togglePassword('loginPassword',this)" type="button"><i data-lucide="eye" style="width:16px;"></i></button></div></div>
-                            <button class="btn-primary" id="btnLogin" onclick="handleLogin()">Masuk</button>
-                        </div>
-                        <div id="registerForm" style="display:none;">
-                            <div class="form-group"><label class="form-label">Nama Lengkap</label><input type="text" class="form-input" placeholder="Andi Pratama" id="regName"></div>
-                            <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="nama@email.com" id="regEmail"></div>
-                            <div class="form-group"><label class="form-label">Password</label><div class="password-wrapper"><input type="password" class="form-input" placeholder="Min. 6 karakter" id="regPassword"><button class="password-toggle" onclick="togglePassword('regPassword',this)" type="button"><i data-lucide="eye" style="width:16px;"></i></button></div></div>
-                            <button class="btn-primary" id="btnRegister" onclick="handleRegister()">Daftar</button>
                         </div>
                     </div>
                     
@@ -680,16 +760,15 @@
 
     <!-- SCREEN LIBRARY (HOME) -->
     <div class="screen" id="screen-library">
-        <!-- class swipe-area dihapus -->
         <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
-                    <div class="lib-wordmark">F<span>olio</span> by Haripam</div>
+                    <div class="lib-wordmark">F<span>olio</span></div>
                     <div class="lib-actions">
                         <div class="icon-btn" onclick="openModal('addBookModal')" title="Upload Excel" style="background: var(--accent); color: white; border-color: var(--accent);"><i data-lucide="plus"></i></div>
                         <div class="icon-btn" onclick="focusSearch()"><i data-lucide="search"></i></div>
                         <div class="icon-btn" onclick="openDrawer()" style="position:relative;"><i data-lucide="bell"></i><div class="notification-dot"></div></div>
-                        <div class="avatar-btn" onclick="openModal('profileModal')" id="headerAvatar">A</div>
+                        <div class="avatar-btn" onclick="switchMainTab('profile')" id="headerAvatar">A</div>
                     </div>
                 </div>
                 <div class="lib-search" id="searchContainer">
@@ -727,7 +806,6 @@
 
     <!-- SCREEN COLLECTION (LIBRARY) -->
     <div class="screen" id="screen-collection">
-        <!-- class swipe-area dihapus -->
         <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
@@ -755,7 +833,6 @@
 
     <!-- SCREEN PROFILE -->
     <div class="screen" id="screen-profile">
-        <!-- class swipe-area dihapus -->
         <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
@@ -769,7 +846,7 @@
                 
                 <div style="width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-dark));display:flex;align-items:center;justify-content:center;font-size:46px;font-weight:600;color:#fff;box-shadow:var(--shadow-lg);margin-bottom:20px; border: 4px solid var(--bg-card); position:relative;" id="profileTabAvatar">
                     A
-                    <div style="position:absolute; bottom:0; right:0; background:var(--bg-card); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:14px; box-shadow:var(--shadow-sm); cursor:pointer; color: var(--text-primary);" onclick="showToast('Edit foto profil')"><i data-lucide="pencil" style="width:14px;height:14px;"></i></div>
+                    <div style="position:absolute; bottom:0; right:0; background:var(--bg-card); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:14px; box-shadow:var(--shadow-sm); cursor:pointer; color: var(--text-primary);" onclick="openEditProfile()"><i data-lucide="pencil" style="width:14px;height:14px;"></i></div>
                 </div>
                 
                 <h2 style="font-family:var(--font-display);font-size:28px;margin-bottom:4px;color:var(--text-primary);" id="profileTabName">Andi Pratama</h2>
@@ -781,37 +858,40 @@
                         <span style="font-weight:600;font-size:14px;">Target Membaca Harian</span>
                     </div>
                     <div style="font-size:28px;font-weight:700;color:var(--accent-dark);" id="profileReadingGoal">15 menit/hari</div>
-                    <button class="btn-ghost" style="margin-top:8px;text-decoration:none;font-size:12px;" onclick="changeReadingGoal()">
+                    <button class="btn-ghost" style="margin-top:8px;text-decoration:none;font-size:12px;" onclick="openModal('preferencesModal')">
                         <i data-lucide="edit-3" style="width:14px;"></i> Ubah Target
                     </button>
                 </div>
 
-                <div style="display:flex; gap:16px; width:100%; max-width:500px; margin-bottom:36px;">
+                <div style="display:flex; gap:16px; width:100%; max-width:500px; margin-bottom:24px;">
                     <div class="profile-stat-box" onclick="switchMainTab('collection')" style="cursor:pointer;">
                         <div class="profile-stat-val" id="statBookCount">0</div>
                         <div class="profile-stat-label">Buku Dibaca</div>
                     </div>
-                    <div class="profile-stat-box">
+                    <div class="profile-stat-box" onclick="openModal('favoritesModal')" style="cursor:pointer;">
                         <div class="profile-stat-val" id="statFavCount">0</div>
                         <div class="profile-stat-label">Buku Favorit</div>
                     </div>
                 </div>
 
-                <!-- DAFTAR BUKU FAVORIT -->
-                <div style="width:100%;max-width:500px;text-align:left;display:flex;flex-direction:column;gap:12px; margin-bottom: 30px;">
-                    <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px; padding-left:8px;">Buku Favorit</div>
-                    <div id="profileFavoritesGrid" class="book-grid" style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px;">
-                        <!-- Buku favorit akan dimuat di sini oleh JS -->
+                <div class="notification-item" style="align-items:center; width:100%; max-width:500px; margin-bottom: 32px; padding: 16px;" onclick="openModal('favoritesModal')">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(212, 83, 83, 0.1); display: flex; align-items: center; justify-content: center; margin-right: 14px; flex-shrink: 0;">
+                        <i data-lucide="heart" style="color: #D45353; width: 22px; height: 22px;"></i>
                     </div>
+                    <div class="notification-content" style="text-align: left;">
+                        <div class="notification-title" style="font-size: 15px;">Daftar Buku Favorit</div>
+                        <div class="notification-desc" style="font-size: 13px;">Lihat semua buku yang kamu sukai</div>
+                    </div>
+                    <i data-lucide="chevron-right" style="color: var(--text-muted); opacity: 0.5;"></i>
                 </div>
 
                 <div style="width:100%;max-width:500px;text-align:left;display:flex;flex-direction:column;gap:12px;">
                     <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px; padding-left:8px;">Pengaturan Akun</div>
-                    <div class="notification-item" style="align-items:center;" onclick="showToast('Fitur edit biodata segera hadir')">
+                    <div class="notification-item" style="align-items:center;" onclick="openEditProfile()">
                         <i data-lucide="user" style="width:20px;height:20px;margin-right:8px;color:var(--text-secondary);"></i>
                         <div class="notification-content"><div class="notification-title">Informasi Pribadi</div><div class="notification-desc">Edit nama, foto, dan biodata diri</div></div>
                     </div>
-                    <div class="notification-item" style="align-items:center;" onclick="showToast('Preferensi membaca disimpan', '✅')">
+                    <div class="notification-item" style="align-items:center;" onclick="openModal('preferencesModal')">
                         <i data-lucide="settings" style="width:20px;height:20px;margin-right:8px;color:var(--text-secondary);"></i>
                         <div class="notification-content"><div class="notification-title">Preferensi Membaca</div><div class="notification-desc">Target harian & genre favorit</div></div>
                     </div>
@@ -825,7 +905,7 @@
                     </div>
                 </div>
 
-                <div class="app-footer" style="width:100%; border:none; margin-top:30px; padding-bottom:0; color:var(--text-muted); font-size:12px;">Folio — Book Summary App by Hari Pamungkas v1.2</div>
+                <div class="app-footer" style="width:100%; border:none; margin-top:30px; padding-bottom:0; color:var(--text-muted); font-size:12px;">Folio — Book Summary App by Hari Pamungkas v1.4</div>
             </div>
         </div>
     </div>
@@ -881,8 +961,9 @@
             <span class="bottom-bar-page-indicator" id="pageIndicator">0%</span>
             <button class="bottom-bar-btn" id="btnNextChapter" onclick="navigateChapter('next')"><i data-lucide="chevron-right"></i></button>
             <div class="bottom-bar-divider"></div>
+            <!-- Tombol Highlight & Bookmark -->
             <button class="bottom-bar-btn" id="btnHighlight" onclick="toggleHighlightMode()"><i data-lucide="highlighter"></i></button>
-            <button class="bottom-bar-btn" id="btnBookmark" onclick="saveBookmark()"><i data-lucide="bookmark"></i></button>
+            <button class="bottom-bar-btn" id="btnBookmark" onclick="toggleBookmark()"><i data-lucide="bookmark"></i></button>
             <button class="bottom-bar-btn" onclick="toggleSettings()"><i data-lucide="type"></i></button>
             <button class="bottom-bar-btn" onclick="openInsights()"><i data-lucide="sparkles"></i></button>
         </div>
@@ -909,7 +990,7 @@
             <div style="font-family: var(--font-ui); font-size: 13px; opacity: 0.6; margin-bottom: 40px; font-weight: 500;" id="insightSubtitle">Analisis Data · Selesai 0%</div>
             
             <div class="reader-body" id="insightBody">
-                <h3 style="font-family: var(--font-display); font-style: italic; margin-top: 32px; margin-bottom: 16px; font-size: 1.4em; color: var(--accent);">Kesimpulan Menyeluruh</h3>
+                <h3 style="font-family: var(--font-display); font-style: italic; margin-top: 32px; margin-bottom: 16px; font-size: 1.4em; color: var(--accent);">Kesimpulan</h3>
                 <div id="insightKesimpulan"></div>
                 
                 <h3 style="font-family: var(--font-display); font-style: italic; margin-top: 40px; margin-bottom: 16px; font-size: 1.4em; color: var(--accent);">Key Points Utama</h3>
@@ -933,7 +1014,9 @@
         let activeBook = null;
         let activeChapterIdx = 0;
         let activeScreenName = 'onboarding';
-        let previousScreenInfo = { name: 'library', scrollY: 0 }; // Menyimpan state tab sebelumnya
+        let previousScreenInfo = { name: 'library', scrollY: 0 }; 
+        let readingTimer = null; 
+        let authMode = 'login'; // Tambahan Mode Auth
 
         window.APP_STATE = {
             currentSlide: 0,
@@ -960,7 +1043,47 @@
         ];
         let currentQuoteIdx = 0;
 
-        // ===== INISIALISASI =====
+        let paragraphObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting && activeBook) {
+                    let pid = entry.target.id.split('-')[1]; 
+                    activeBook.lastReadChapter = activeChapterIdx;
+                    activeBook.lastReadParagraph = parseInt(pid);
+                    
+                    clearTimeout(window.scrollUpdateTimeout);
+                    window.scrollUpdateTimeout = setTimeout(() => {
+                        if(window.firebaseUpdateScroll) {
+                            window.firebaseUpdateScroll(activeBook.id, activeChapterIdx, parseInt(pid));
+                        }
+                    }, 3000); 
+                }
+            });
+        }, { threshold: 0.5 });
+
+        function startReadingTimer() {
+            if (readingTimer) clearInterval(readingTimer);
+            readingTimer = setInterval(() => {
+                if (activeScreenName === 'reader') {
+                    let today = new Date().toDateString();
+                    let stats = JSON.parse(localStorage.getItem('folio-read-stats') || '{}');
+                    
+                    if (stats.date !== today) { 
+                        stats = { date: today, time: 0, goalReached: false }; 
+                    }
+                    
+                    stats.time += 1; 
+                    let goalSeconds = window.APP_STATE.readingGoal * 60;
+                    
+                    if (stats.time >= goalSeconds && !stats.goalReached) {
+                        stats.goalReached = true;
+                        window.showToast('🎉 Selamat! Target membaca harianmu tercapai.', 'check-circle');
+                        window.addNotification('Target Tercapai 🎯', `Kamu hebat! Telah membaca selama ${window.APP_STATE.readingGoal} menit hari ini.`, 'Baru saja');
+                    }
+                    localStorage.setItem('folio-read-stats', JSON.stringify(stats));
+                }
+            }, 1000);
+        }
+
         function initApp() {
             lucide.createIcons();
             updateProfileDisplay();
@@ -973,7 +1096,24 @@
             }
             renderBooks(currentBooksToDisplay);
             if (window.APP_STATE.onboardingComplete) initReader();
-            // initGestures() dihapus agar slide ke kiri/kanan mati
+            startReadingTimer();
+        }
+
+        window.addNotification = function(title, desc, time) {
+            const list = document.getElementById('notifList');
+            const notif = document.createElement('div');
+            notif.className = 'notification-item slide-next-in';
+            notif.onclick = function() { window.handleNotificationClick(this); };
+            notif.innerHTML = `
+                <div class="notification-dot-indicator"></div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-desc">${desc}</div>
+                    <div class="notification-time">${time}</div>
+                </div>
+            `;
+            list.prepend(notif);
+            document.querySelectorAll('.notification-dot').forEach(d => d.style.display = 'block');
         }
 
         function updateProfileDisplay() {
@@ -986,7 +1126,7 @@
 
             const tabAvatar = document.getElementById('profileTabAvatar');
             if(tabAvatar) {
-                tabAvatar.innerHTML = `${initial} <div style="position:absolute; bottom:0; right:0; background:var(--bg-card); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:14px; box-shadow:var(--shadow-sm); cursor:pointer; color: var(--text-primary);" onclick="showToast('Edit foto profil')"><i data-lucide="pencil" style="width:14px;height:14px;"></i></div>`;
+                tabAvatar.innerHTML = `${initial} <div style="position:absolute; bottom:0; right:0; background:var(--bg-card); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:14px; box-shadow:var(--shadow-sm); cursor:pointer; color: var(--text-primary);" onclick="openEditProfile()"><i data-lucide="pencil" style="width:14px;height:14px;"></i></div>`;
             }
             const tabName = document.getElementById('profileTabName');
             if(tabName) tabName.textContent = window.APP_STATE.userName;
@@ -1003,40 +1143,167 @@
             }
         }
 
-        // ===== CHANGE READING GOAL =====
-        window.changeReadingGoal = function() {
-            const newGoal = prompt('Masukkan target membaca harian (menit):', window.APP_STATE.readingGoal);
-            if (newGoal && !isNaN(newGoal) && parseInt(newGoal) > 0) {
-                window.APP_STATE.readingGoal = parseInt(newGoal);
-                localStorage.setItem('folio-reading-goal', newGoal);
+        window.openEditProfile = function() {
+            document.getElementById('editProfileName').value = window.APP_STATE.userName;
+            openModal('editProfileModal');
+        }
+
+        window.submitEditProfile = async function() {
+            const newName = document.getElementById('editProfileName').value.trim();
+            if (!newName) return showToast('Nama tidak boleh kosong', '⚠️');
+            
+            const btn = document.getElementById('btnSaveProfile');
+            btn.textContent = 'Menyimpan...'; btn.disabled = true;
+            
+            try {
+                if (window.firebaseUpdateProfileAuth) await window.firebaseUpdateProfileAuth(newName);
+                window.APP_STATE.userName = newName;
+                localStorage.setItem('folio-user-name', newName);
+                updateProfileDisplay();
+                closeModal('editProfileModal');
+                showToast('Profil berhasil diperbarui!', '✅');
+            } catch (error) {
+                showToast('Gagal update profil', '❌');
+            } finally {
+                btn.innerHTML = '<i data-lucide="save" style="width:16px;"></i> Simpan Perubahan';
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        window.selectPrefGoal = function(card, minutes) {
+            document.querySelectorAll('#prefGoalOptions .genre-card').forEach(c => {
+                c.classList.remove('active');
+                const spanEls = c.querySelectorAll('span');
+                spanEls.forEach(s => s.style.color = 'var(--text-light-muted)');
+            });
+            
+            card.classList.add('active');
+            const spanEls = card.querySelectorAll('span');
+            spanEls.forEach(s => s.style.color = 'var(--accent-light)');
+            
+            document.getElementById('prefGoalOptions').setAttribute('data-selected-goal', minutes);
+        }
+
+        window.savePreferences = function() {
+            const selectedGoal = document.getElementById('prefGoalOptions').getAttribute('data-selected-goal');
+            if (selectedGoal) {
+                window.APP_STATE.readingGoal = parseInt(selectedGoal);
+                localStorage.setItem('folio-reading-goal', selectedGoal);
                 updateReadingGoalDisplay();
-                showToast('Target membaca diperbarui: ' + newGoal + ' menit/hari', '✅');
+            }
+            window.showToast('Preferensi berhasil disimpan!', '✅');
+            closeModal('preferencesModal');
+        }
+
+        // ===== LOGIKA AUTH TERPADU (Login / Daftar) =====
+        window.toggleAuthMode = function() {
+            authMode = authMode === 'login' ? 'register' : 'login';
+            
+            const mainTitle = document.getElementById('authMainTitle');
+            const boxTitle = document.getElementById('authBoxTitle');
+            const nameGroup = document.getElementById('authNameGroup');
+            const btnText = document.getElementById('authBtnText');
+            const btnSwitch = document.getElementById('btnSwitchAuth');
+            
+            if (authMode === 'register') {
+                mainTitle.innerHTML = 'Daftar ke<br><em>Folio</em>';
+                boxTitle.textContent = 'Buat Akun Baru';
+                nameGroup.style.display = 'block';
+                btnText.textContent = 'Daftar';
+                btnSwitch.textContent = 'Masuk';
+            } else {
+                mainTitle.innerHTML = 'Masuk ke<br><em>Folio</em>';
+                boxTitle.textContent = 'Masuk Sekarang';
+                nameGroup.style.display = 'none';
+                btnText.textContent = 'Masuk';
+                btnSwitch.textContent = 'Daftar';
             }
         }
 
-        // ===== QUICK LOGIN =====
-        window.handleQuickLogin = function() {
-            const username = document.getElementById('quickUsername').value.trim();
-            const password = document.getElementById('quickPassword').value.trim();
-            
-            if (!username || !password) {
-                showToast('Masukkan username dan password', '⚠️');
-                return;
+        window.processAuth = function() {
+            if (authMode === 'login') {
+                if(window.handleRealLogin) window.handleRealLogin();
+            } else {
+                if(window.handleRealRegister) window.handleRealRegister();
             }
-            
-            window.APP_STATE.userName = username;
-            window.APP_STATE.email = username + '@folio.local';
-            window.APP_STATE.isLoggedIn = true;
-            localStorage.setItem('folio-user-name', username);
-            localStorage.setItem('folio-user-email', username + '@folio.local');
-            localStorage.setItem('folio-user-logged-in', 'true');
-            
-            updateProfileDisplay();
-            showToast('Selamat datang, ' + username + '! ✨', '✅');
-            goToSlide(2);
         }
 
-        // ===== SCREEN MANAGEMENT =====
+        window.handleNotificationClick = function(el) {
+            el.classList.add('read');
+            closeDrawer();
+            if(currentBooksToDisplay.length > 0) {
+                activeBook = currentBooksToDisplay.find(b => b.progress > 0) || currentBooksToDisplay[0];
+                activeChapterIdx = 0;
+                openInsights();
+                showToast("Membuka Insights...", "sparkles");
+            } else {
+                showToast("Belum ada buku di library.", "⚠️");
+            }
+        }
+
+        window.toggleHighlightMode = function() {
+            window.APP_STATE.highlightMode = !window.APP_STATE.highlightMode;
+            const btn = document.getElementById('btnHighlight');
+            const readerBody = document.getElementById('readerBody');
+            if (window.APP_STATE.highlightMode) {
+                btn.classList.add('active');
+                readerBody.classList.add('highlight-mode-active');
+                showToast('Mode Highlight AKTIF. Klik paragraf untuk menyorot.', 'highlighter');
+            } else {
+                btn.classList.remove('active');
+                readerBody.classList.remove('highlight-mode-active');
+                showToast('Mode Highlight Nonaktif.', 'highlighter');
+            }
+        }
+
+        window.toggleParagraphHighlight = function(pIndex) {
+            if (!window.APP_STATE.highlightMode || !activeBook) return;
+            if (!activeBook.highlights) activeBook.highlights = {};
+            if (!activeBook.highlights[activeChapterIdx]) activeBook.highlights[activeChapterIdx] = [];
+
+            const arr = activeBook.highlights[activeChapterIdx];
+            const idx = arr.indexOf(pIndex);
+            
+            if (idx > -1) arr.splice(idx, 1);
+            else arr.push(pIndex);
+
+            const pEl = document.getElementById(`para-${pIndex}`);
+            if (pEl) pEl.classList.toggle('highlighted-text');
+
+            if (window.firebaseUpdateHighlights) window.firebaseUpdateHighlights(activeBook.id, activeBook.highlights);
+        }
+
+        window.toggleBookmark = function() {
+            if (!activeBook) return;
+            if (!activeBook.bookmarks) activeBook.bookmarks = [];
+
+            const idx = activeBook.bookmarks.indexOf(activeChapterIdx);
+            if (idx > -1) {
+                activeBook.bookmarks.splice(idx, 1);
+                showToast('Bookmark halaman dihapus.');
+            } else {
+                activeBook.bookmarks.push(activeChapterIdx);
+                showToast('Halaman berhasil ditandai!', '🔖');
+            }
+            updateBookmarkUI();
+            if (window.firebaseUpdateBookmarks) window.firebaseUpdateBookmarks(activeBook.id, activeBook.bookmarks);
+        }
+
+        function updateBookmarkUI() {
+            const btn = document.getElementById('btnBookmark');
+            if (!btn || !activeBook) return;
+            const isBookmarked = activeBook.bookmarks && activeBook.bookmarks.includes(activeChapterIdx);
+            if (isBookmarked) {
+                btn.classList.add('active');
+                btn.innerHTML = '<i data-lucide="bookmark" fill="currentColor"></i>';
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '<i data-lucide="bookmark"></i>';
+            }
+            lucide.createIcons();
+        }
+
         function showScreen(name) {
             activeScreenName = name;
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1097,31 +1364,14 @@
             window.APP_STATE.toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // ===== DRAWER & MODAL =====
-        function openDrawer() { document.getElementById('notifOverlay').classList.add('show'); document.getElementById('notifDrawer').classList.add('open'); }
+        function openDrawer() { 
+            document.getElementById('notifOverlay').classList.add('show'); 
+            document.getElementById('notifDrawer').classList.add('open'); 
+            document.querySelectorAll('.notification-dot').forEach(d => d.style.display = 'none'); 
+        }
         function closeDrawer() { document.getElementById('notifDrawer').classList.remove('open'); setTimeout(() => document.getElementById('notifOverlay').classList.remove('show'), 400); }
         window.openModal = function(id) { document.getElementById(id).classList.add('show'); }
         window.closeModal = function(id) { document.getElementById(id).classList.remove('show'); }
-        function markRead(el) { el.classList.add('read'); }
-
-        // ===== AUTH TABS =====
-        window.switchAuthTab = function(tab) {
-            if(tab === 'login') {
-                document.getElementById('loginForm').style.display = 'block';
-                document.getElementById('registerForm').style.display = 'none';
-                document.getElementById('tabLogin').style.background = 'rgba(200,134,58,0.15)';
-                document.getElementById('tabLogin').style.color = 'var(--accent-light)';
-                document.getElementById('tabRegister').style.background = 'none';
-                document.getElementById('tabRegister').style.color = 'var(--text-light-muted)';
-            } else {
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('registerForm').style.display = 'block';
-                document.getElementById('tabRegister').style.background = 'rgba(200,134,58,0.15)';
-                document.getElementById('tabRegister').style.color = 'var(--accent-light)';
-                document.getElementById('tabLogin').style.background = 'none';
-                document.getElementById('tabLogin').style.color = 'var(--text-light-muted)';
-            }
-        }
 
         window.togglePassword = function(id, btn) {
             const input = document.getElementById(id);
@@ -1135,7 +1385,6 @@
             lucide.createIcons();
         }
 
-        // ===== ONBOARDING =====
         function goToSlide(index) {
             const slides = document.querySelectorAll('.onboarding-slide');
             if (slides[APP_STATE.currentSlide]) {
@@ -1163,7 +1412,6 @@
             setTimeout(() => switchMainTab('library'), 600);
         }
 
-        // ===== TOGGLE GENRE =====
         window.toggleGenre = function(card) {
             card.classList.toggle('active');
             const genreName = card.querySelector('.genre-name').textContent.trim();
@@ -1177,7 +1425,6 @@
             localStorage.setItem('folio-genres', JSON.stringify(window.APP_STATE.selectedGenres));
         }
 
-        // ===== SELECT GOAL =====
         window.selectGoal = function(card, minutes) {
             document.querySelectorAll('#goalOptions .genre-card').forEach(c => {
                 c.classList.remove('active');
@@ -1204,12 +1451,11 @@
             updateReadingGoalDisplay();
         }
 
-        // ===== LIBRARY RENDERING =====
         window.renderBooks = function(books) {
             currentBooksToDisplay = books;
             const gridHome = document.getElementById('bookGrid');
             const gridCollection = document.getElementById('collectionGrid');
-            const gridFavorites = document.getElementById('profileFavoritesGrid');
+            const listFavorites = document.getElementById('favoritesList');
             const totalLabel = document.getElementById('collectionTotalCount');
             const featuredContainer = document.getElementById('featuredBookContainer');
 
@@ -1224,8 +1470,8 @@
                 if (books.length === 0) {
                     featuredContainer.innerHTML = `<div style="text-align:center; padding:30px; background:var(--bg-secondary); border-radius:20px; border:1px dashed var(--border); color:var(--text-muted); font-size:13px;">Belum ada buku di library. Upload buku pertamamu!</div>`;
                 } else {
-                    let featBook = books.find(b => b.progress > 0 && b.progress < 100);
-                    if (!featBook) featBook = books[0];
+                    let sortedBooks = [...books].sort((a, b) => (b.lastReadAt || 0) - (a.lastReadAt || 0));
+                    let featBook = sortedBooks.find(b => b.progress > 0 && b.progress < 100) || sortedBooks[0];
                     featuredContainer.innerHTML = `
                         <div class="lib-featured" onclick="openReader('${featBook.id}')">
                             <div class="feat-cover ${featBook.cover}"><div class="feat-cover-inner"><div class="feat-cover-title">${featBook.title}</div></div></div>
@@ -1263,16 +1509,15 @@
                 </div>`).join('');
             }
 
-            // Render Favorites in Profile Tab
-            if (gridFavorites) {
+            // Render Favorites List (MODAL)
+            if (listFavorites) {
                 if (favBooks.length === 0) {
-                    gridFavorites.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 20px; font-size:13px; color:var(--text-muted); border: 1px dashed var(--border); border-radius: 8px;">Belum ada buku favorit. Buka buku dan tekan ikon hati untuk menambahkan.</div>`;
+                    listFavorites.innerHTML = `<div style="text-align:center; padding: 30px; font-size:13px; color:var(--text-muted); background:var(--bg-secondary); border-radius:8px; border:1px dashed var(--border);">Belum ada buku favorit.</div>`;
                 } else {
-                    gridFavorites.innerHTML = favBooks.map(b => `
-                    <div class="book-card" onclick="openReader('${b.id}')">
-                      <div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>
-                      <div class="book-cover ${b.cover}" style="aspect-ratio: 2/3;"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
-                      <div class="book-title" style="font-size:12px;">${b.title}</div>
+                    listFavorites.innerHTML = favBooks.map(b => `
+                    <div class="fav-list-item" onclick="closeModal('favoritesModal'); openReader('${b.id}')">
+                      <div class="fav-list-item-title">${b.title}</div>
+                      <div class="fav-list-item-author">${b.author}</div>
                     </div>`).join('');
                 }
             }
@@ -1334,7 +1579,6 @@
             }
         }
 
-        // ===== READER FUNCTIONS =====
         function initReader() { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); }
         function applyReaderTheme(theme) { 
             document.body.className = 'theme-' + theme; 
@@ -1366,15 +1610,28 @@
         function closeSettings() { document.getElementById('settingsPopover')?.classList.remove('show'); window.APP_STATE.settingsOpen = false; }
         function setFontSize(size, btn) { applyReaderFontSize(size); window.showToast('Font: ' + size); }
         function setTheme(theme, dot) { applyReaderTheme(theme); closeSettings(); window.showToast('Tema: ' + theme); }
-        function toggleHighlightMode() { window.APP_STATE.highlightMode = !window.APP_STATE.highlightMode; document.getElementById('btnHighlight')?.classList.toggle('active', window.APP_STATE.highlightMode); window.showToast(window.APP_STATE.highlightMode ? 'Mode highlight aktif' : 'Mode highlight nonaktif', 'highlighter'); }
-        function highlightQuote(el) { if (el.classList.contains('highlighted')) return; el.classList.add('highlighted'); window.showToast('Highlight tersimpan!', '★'); }
-        function saveBookmark() { window.showToast('Halaman ditandai', '🔖'); }
+        
+        window.highlightQuote = function(el) { 
+            if(!activeBook) return;
+            if (el.classList.contains('highlighted')) return; 
+            
+            el.classList.add('highlighted'); 
+            const hintText = "Tekan blok ini jika ada kalimat penting yang ingin kamu simpan.";
+            let quoteText = el.innerText.replace(hintText, '').trim();
+            
+            if (!activeBook.savedQuotes) activeBook.savedQuotes = [];
+            activeBook.savedQuotes.push(quoteText || "Kutipan penting tersimpan.");
+            
+            if(window.firebaseUpdateQuotes) {
+                window.firebaseUpdateQuotes(activeBook.id, activeBook.savedQuotes);
+            }
+            window.showToast('Quote berhasil disimpan!', '★'); 
+        }
         
         window.toggleFavorite = function() {
             if(!activeBook) return;
             activeBook.isFavorite = !activeBook.isFavorite;
             
-            // Update UI Tombol
             const btnFav = document.getElementById('btnFavorite');
             if (activeBook.isFavorite) {
                 btnFav.style.color = '#D45353';
@@ -1385,7 +1642,6 @@
             }
             lucide.createIcons();
 
-            // Panggil Firebase
             if(window.firebaseToggleFavorite) {
                 window.firebaseToggleFavorite(activeBook.id, activeBook.isFavorite);
             }
@@ -1472,17 +1728,18 @@
             toggleTOC();
         };
 
-        // ===== SMART BACK BUTTON & OPEN READER =====
         window.openReader = function(bookId) {
-            // Rekam dari tab mana kita datang dan posisi scroll saat ini
             previousScreenInfo.name = activeScreenName;
             previousScreenInfo.scrollY = window.scrollY;
 
             activeBook = currentBooksToDisplay.find(b => b.id === bookId);
             if(!activeBook) return;
-            activeChapterIdx = 0;
             
-            // Set ikon favorit
+            activeBook.lastReadAt = Date.now();
+            if(window.firebaseUpdateLastRead) window.firebaseUpdateLastRead(activeBook.id, activeBook.lastReadAt);
+            
+            activeChapterIdx = activeBook.lastReadChapter !== undefined ? activeBook.lastReadChapter : 0;
+            
             const btnFav = document.getElementById('btnFavorite');
             if (activeBook.isFavorite) {
                 btnFav.style.color = '#D45353';
@@ -1496,12 +1753,10 @@
             renderTOC();
             
             showScreen('reader'); 
-            window.scrollTo(0, 0); 
         }
 
         window.goBackFromReader = function() {
             showScreen(previousScreenInfo.name);
-            // Memberikan sedikit waktu delay agar DOM ter-render dengan display block sebelum kita paksakan scrollnya
             setTimeout(() => {
                 window.scrollTo({ top: previousScreenInfo.scrollY, behavior: 'auto' });
             }, 30);
@@ -1517,23 +1772,45 @@
                 document.getElementById('readerChapterTitle').textContent = chapter.title || "Ringkasan Utama";
                 const paragraphs = chapter.content.split('\n').filter(p => p.trim() !== '');
                 let htmlContent = '';
+                
+                const currentHighlights = (activeBook.highlights && activeBook.highlights[activeChapterIdx]) ? activeBook.highlights[activeChapterIdx] : [];
+
                 paragraphs.forEach((p, index) => {
-                    if (index === 0) { htmlContent += `<p class="drop-cap">${p}</p>`; } else { htmlContent += `<p>${p}</p>`; }
+                    const isHigh = currentHighlights.includes(index) ? 'highlighted-text' : '';
+                    const dropCap = index === 0 ? 'drop-cap' : '';
+                    htmlContent += `<p id="para-${index}" class="${dropCap} ${isHigh}" onclick="toggleParagraphHighlight(${index})">${p}</p>`;
                 });
+                
                 if(paragraphs.length > 2) { htmlContent += `<div class="reader-quote-block" onclick="highlightQuote(this)">Tekan blok ini jika ada kalimat penting yang ingin kamu simpan.<div class="quote-action-hint"><i data-lucide="star" style="width:12px;"></i> Ketuk untuk menyimpan highlight</div></div>`; }
+                
                 document.getElementById('readerBody').innerHTML = htmlContent;
                 lucide.createIcons();
+
+                document.querySelectorAll('#readerBody p').forEach(p => paragraphObserver.observe(p));
+
+                setTimeout(() => {
+                    if (activeBook.lastReadParagraph !== undefined) {
+                        let targetP = document.getElementById(`para-${activeBook.lastReadParagraph}`);
+                        if (targetP) {
+                            targetP.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    } else {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                }, 300);
+
             } else {
                 document.getElementById('readerChapterTitle').textContent = activeBook.title;
                 document.getElementById('readerBody').innerHTML = "<p>Buku ini belum memiliki isi ringkasan bab. Silakan tambahkan konten dari Excel.</p>";
             }
+
+            updateBookmarkUI();
 
             const prevBtn = document.getElementById('btnPrevChapter');
             const nextBtn = document.getElementById('btnNextChapter');
             if(prevBtn) prevBtn.style.opacity = activeChapterIdx > 0 ? "1" : "0.3";
             if(nextBtn) nextBtn.style.opacity = (hasChapters && activeChapterIdx < activeBook.chapters.length - 1) ? "1" : "0.3";
             
-            // Hitung Progress
             let progress = 0;
             if (hasChapters) { 
                 progress = Math.round(((activeChapterIdx + 1) / activeBook.chapters.length) * 100); 
@@ -1541,12 +1818,9 @@
                 progress = 100; 
             }
             
-            // Update UI reader
             document.getElementById('pageIndicator').textContent = `${progress}%`;
             document.getElementById('readerProgressFill').style.width = `${progress}%`;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // Simpan Progress ke Firebase jika progressnya bertambah (maju membaca)
             if (progress > activeBook.progress) {
                 activeBook.progress = progress;
                 if (window.firebaseUpdateProgress) {
@@ -1561,6 +1835,7 @@
             if (dir === 'next' && activeChapterIdx < activeBook.chapters.length - 1) {
                 animator.classList.add('slide-next-out');
                 setTimeout(() => {
+                    activeBook.lastReadParagraph = 0;
                     activeChapterIdx++; 
                     renderChapter(); 
                     renderTOC();
@@ -1571,6 +1846,7 @@
             } else if (dir === 'prev' && activeChapterIdx > 0) {
                 animator.classList.add('slide-prev-out');
                 setTimeout(() => {
+                    activeBook.lastReadParagraph = 0;
                     activeChapterIdx--; 
                     renderChapter(); 
                     renderTOC();
@@ -1583,21 +1859,17 @@
             }
         }
 
-        // ===== KEYBOARD SHORTCUT =====
         document.addEventListener('keydown', (e) => { 
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); focusSearch(); } 
-            if (e.key === 'Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); closeSettings(); } 
+            if (e.key === 'Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); window.closeModal('editProfileModal'); window.closeModal('preferencesModal'); window.closeModal('favoritesModal'); closeSettings(); } 
         });
 
-        // ===== EXPORT FUNCTIONS TO WINDOW =====
         window.goToSlide = goToSlide;
         window.showScreen = showScreen;
         window.resetOnboardingSlides = resetOnboardingSlides;
         window.updateProfileDisplay = updateProfileDisplay;
         window.openDrawer = openDrawer;
         window.closeDrawer = closeDrawer;
-        window.markRead = markRead;
-        window.handleQuickLogin = handleQuickLogin;
         window.toggleGenre = toggleGenre;
         window.selectGoal = selectGoal;
         window.openReader = openReader;
@@ -1650,24 +1922,39 @@
             }
         });
 
-        window.handleLogin = async () => {
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPassword').value;
-            const btn = document.getElementById('btnLogin');
-            if(!email || !pass) return window.showToast("Lengkapi email & password", "⚠️");
-            btn.textContent = "Memproses..."; btn.disabled = true;
-            try { await signInWithEmailAndPassword(auth, email, pass); window.showToast("Berhasil masuk!", "✅"); } 
-            catch (error) { window.showToast("Gagal masuk: Periksa email/password.", "❌"); } 
-            finally { btn.textContent = "Masuk"; btn.disabled = false; }
+        window.firebaseUpdateProfileAuth = async (newName) => {
+            if (auth.currentUser) {
+                await updateProfile(auth.currentUser, { displayName: newName });
+            }
         };
 
-        window.handleRegister = async () => {
-            const email = document.getElementById('regEmail').value;
-            const pass = document.getElementById('regPassword').value;
-            const name = document.getElementById('regName').value;
-            const btn = document.getElementById('btnRegister');
+        // KONEKSI LOGIN TERPADU KE FIREBASE
+        window.handleRealLogin = async () => {
+            const email = document.getElementById('authEmail').value;
+            const pass = document.getElementById('authPassword').value;
+            const btn = document.getElementById('btnPrimaryAuth');
+            if(!email || !pass) return window.showToast("Lengkapi email & password", "⚠️");
+            btn.innerHTML = "Memproses..."; btn.disabled = true;
+            try { 
+                await signInWithEmailAndPassword(auth, email, pass); 
+                window.showToast("Berhasil masuk!", "✅"); 
+            } 
+            catch (error) { window.showToast("Gagal masuk: Periksa email/password.", "❌"); } 
+            finally { 
+                btn.innerHTML = `<i data-lucide="log-in" style="width:16px;"></i> <span id="authBtnText">Masuk</span>`; 
+                btn.disabled = false; 
+                lucide.createIcons(); 
+            }
+        };
+
+        // KONEKSI DAFTAR TERPADU KE FIREBASE
+        window.handleRealRegister = async () => {
+            const email = document.getElementById('authEmail').value;
+            const pass = document.getElementById('authPassword').value;
+            const name = document.getElementById('authName').value;
+            const btn = document.getElementById('btnPrimaryAuth');
             if(!email || !pass || !name) return window.showToast("Lengkapi semua data", "⚠️");
-            btn.textContent = "Mendaftar..."; btn.disabled = true;
+            btn.innerHTML = "Mendaftar..."; btn.disabled = true;
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
                 await updateProfile(userCredential.user, { displayName: name });
@@ -1675,7 +1962,11 @@
                 window.updateProfileDisplay();
                 window.showToast("Berhasil mendaftar!", "✅");
             } catch (error) { window.showToast("Gagal mendaftar: " + error.message, "❌"); } 
-            finally { btn.textContent = "Daftar"; btn.disabled = false; }
+            finally { 
+                btn.innerHTML = `<i data-lucide="log-in" style="width:16px;"></i> <span id="authBtnText">Daftar</span>`; 
+                btn.disabled = false; 
+                lucide.createIcons(); 
+            }
         };
 
         window.socialLogin = async (provider) => {
@@ -1698,22 +1989,32 @@
             } catch (error) { window.showToast("Gagal logout.", "❌"); }
         };
 
-        // FUngsi Firebase untuk Update Progress
         window.firebaseUpdateProgress = async (bookId, newProgress) => {
-            try {
-                await updateDoc(doc(db, "buku_bacaan", bookId), { progress: newProgress });
-            } catch (error) {
-                console.error("Gagal update progress di Firebase", error);
-            }
+            try { await updateDoc(doc(db, "buku_bacaan", bookId), { progress: newProgress }); } catch (error) { console.error(error); }
         }
         
-        // Fungsi Firebase untuk Toggle Favorit
         window.firebaseToggleFavorite = async (bookId, isFav) => {
-            try {
-                await updateDoc(doc(db, "buku_bacaan", bookId), { isFavorite: isFav });
-            } catch (error) {
-                console.error("Gagal update favorit di Firebase", error);
-            }
+            try { await updateDoc(doc(db, "buku_bacaan", bookId), { isFavorite: isFav }); } catch (error) { console.error(error); }
+        }
+
+        window.firebaseUpdateHighlights = async (bookId, newHighlightsObj) => { 
+            try { await updateDoc(doc(db, "buku_bacaan", bookId), { highlights: newHighlightsObj }); } catch (error) { console.error(error); } 
+        }
+
+        window.firebaseUpdateBookmarks = async (bookId, newBookmarksArr) => { 
+            try { await updateDoc(doc(db, "buku_bacaan", bookId), { bookmarks: newBookmarksArr }); } catch (error) { console.error(error); } 
+        }
+
+        window.firebaseUpdateLastRead = async (bookId, timestamp) => {
+            try { await updateDoc(doc(db, "buku_bacaan", bookId), { lastReadAt: timestamp }); } catch (error) { console.error(error); }
+        }
+
+        window.firebaseUpdateScroll = async (bookId, chapterIdx, paraIdx) => {
+            try { await updateDoc(doc(db, "buku_bacaan", bookId), { lastReadChapter: chapterIdx, lastReadParagraph: paraIdx }); } catch (error) { console.error(error); }
+        }
+
+        window.firebaseUpdateQuotes = async (bookId, quotes) => {
+            try { await updateDoc(doc(db, "buku_bacaan", bookId), { savedQuotes: quotes }); } catch (error) { console.error(error); }
         }
 
         const addBookForm = document.getElementById('addBookForm');
@@ -1799,17 +2100,26 @@
                             langkahAksi: book.langkahAksi,
                             cover: randomCover, 
                             progress: 0, 
-                            isFavorite: false, // Default tidak favorit
+                            isFavorite: false,
+                            highlights: {},
+                            bookmarks: [],
                             tag: "Belum Dibaca", 
                             chapters: book.chapters.length > 0 ? book.chapters : [{ title: "Ringkasan", content: "Belum ada isi bab." }], 
-                            createdAt: serverTimestamp()
+                            createdAt: serverTimestamp(),
+                            lastReadAt: 0,
+                            lastReadChapter: 0,
+                            lastReadParagraph: 0,
+                            savedQuotes: []
                         });
                         savedCount++;
                     }
                     
                     let finalMessage = `Berhasil menyimpan ${savedCount} buku!`;
                     if(skippedCount > 0) finalMessage += ` (${skippedCount} buku dilewati karena duplikat)`;
+                    
                     if(window.showToast) window.showToast(finalMessage, "✅");
+                    if(window.addNotification && savedCount > 0) window.addNotification('Buku Baru Siap! 📚', finalMessage, 'Baru saja');
+                    
                     window.closeModal('addBookModal'); addBookForm.reset();
                 } catch (error) { if(window.showToast) window.showToast("Gagal memproses. Pastikan format kolom sesuai.", "❌"); } 
                 finally { btnSubmitBook.innerHTML = `<i data-lucide="upload-cloud" style="width:18px;"></i> Proses & Simpan ke Firebase`; btnSubmitBook.disabled = false; lucide.createIcons(); }
@@ -1834,7 +2144,13 @@
                     progress: data.progress || 0, 
                     isFavorite: data.isFavorite || false, 
                     tag: data.tag || "Belum Dibaca", 
-                    chapters: data.chapters || []
+                    chapters: data.chapters || [],
+                    highlights: data.highlights || {},
+                    bookmarks: data.bookmarks || [],
+                    lastReadAt: data.lastReadAt || 0,
+                    lastReadChapter: data.lastReadChapter || 0,
+                    lastReadParagraph: data.lastReadParagraph || 0,
+                    savedQuotes: data.savedQuotes || []
                 });
             });
             if (window.renderBooks) window.renderBooks(bukuDariFirebase);
