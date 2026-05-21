@@ -72,34 +72,22 @@
         @keyframes highlightPulse { 0% { background: rgba(200,134,58,0); } 40% { background: rgba(200,134,58,0.25); } 100% { background: rgba(200,134,58,0.1); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
-        /* ===== EFEK TRANSISI HALAMAN BUKU (PAGE TURN) ===== */
-        @keyframes pageTurnNextOut {
-            0% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: left center; box-shadow: none; }
-            100% { transform: perspective(1200px) rotateY(-90deg); opacity: 0; transform-origin: left center; box-shadow: 15px 0 30px rgba(0,0,0,0.15); }
-        }
-        @keyframes pageTurnNextIn {
-            0% { transform: perspective(1200px) rotateY(90deg); opacity: 0; transform-origin: right center; box-shadow: -15px 0 30px rgba(0,0,0,0.15); }
-            100% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: right center; box-shadow: none; }
-        }
-        @keyframes pageTurnPrevOut {
-            0% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: right center; box-shadow: none; }
-            100% { transform: perspective(1200px) rotateY(90deg); opacity: 0; transform-origin: right center; box-shadow: -15px 0 30px rgba(0,0,0,0.15); }
-        }
-        @keyframes pageTurnPrevIn {
-            0% { transform: perspective(1200px) rotateY(-90deg); opacity: 0; transform-origin: left center; box-shadow: 15px 0 30px rgba(0,0,0,0.15); }
-            100% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: left center; box-shadow: none; }
-        }
+        .splash-screen { position: fixed; inset: 0; z-index: 99999; background: #0D0C0A; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s; }
+        .splash-screen.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+        .splash-logo { font-family: var(--font-display); font-size: 56px; color: var(--text-light); animation: scaleIn 0.8s cubic-bezier(0.34,1.56,0.64,1), pulseLogo 2s infinite alternate; }
+        .splash-logo span { color: var(--accent); font-style: italic; }
+        @keyframes pulseLogo { from { opacity: 1; transform: scale(1); text-shadow: 0 0 10px rgba(200,134,58,0.2); } to { opacity: 0.8; transform: scale(0.98); text-shadow: 0 0 30px rgba(200,134,58,0.6); } }
 
+        @keyframes pageTurnNextOut { 0% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: left center; } 100% { transform: perspective(1200px) rotateY(-90deg); opacity: 0; transform-origin: left center; box-shadow: 15px 0 30px rgba(0,0,0,0.15); } }
+        @keyframes pageTurnNextIn { 0% { transform: perspective(1200px) rotateY(90deg); opacity: 0; transform-origin: right center; box-shadow: -15px 0 30px rgba(0,0,0,0.15); } 100% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: right center; } }
+        @keyframes pageTurnPrevOut { 0% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: right center; } 100% { transform: perspective(1200px) rotateY(90deg); opacity: 0; transform-origin: right center; box-shadow: -15px 0 30px rgba(0,0,0,0.15); } }
+        @keyframes pageTurnPrevIn { 0% { transform: perspective(1200px) rotateY(-90deg); opacity: 0; transform-origin: left center; box-shadow: 15px 0 30px rgba(0,0,0,0.15); } 100% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: left center; } }
         .page-turn-next-out { animation: pageTurnNextOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         .page-turn-next-in { animation: pageTurnNextIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         .page-turn-prev-out { animation: pageTurnPrevOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         .page-turn-prev-in { animation: pageTurnPrevIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        /* ================================================= */
 
-        @keyframes jumpPulse {
-            0% { box-shadow: 0 0 0 0 rgba(200,134,58,0.8); background-color: rgba(200,134,58,0.3); }
-            100% { box-shadow: 0 0 0 10px rgba(200,134,58,0); background-color: transparent; }
-        }
+        @keyframes jumpPulse { 0% { box-shadow: 0 0 0 0 rgba(200,134,58,0.8); background-color: rgba(200,134,58,0.3); } 100% { box-shadow: 0 0 0 10px rgba(200,134,58,0); background-color: transparent; } }
         .jump-pulse { animation: jumpPulse 1.5s ease-out; border-radius: 4px; }
         .slide-next-in { animation: slideNextIn 0.4s var(--transition-smooth); }
         @keyframes slideNextIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -160,7 +148,7 @@
         .fav-list-item { padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
         .fav-list-item:hover { border-color: var(--accent); background: var(--accent-pale); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
         .fav-list-item-title { font-size: 14px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
-        .fav-list-item-author { font-size: 12px; color: var(--text-muted); }
+        .fav-list-item-author { font-size: 12px; color: var(--text-muted); display:flex; justify-content:space-between; }
 
         .reader-body p { transition: background-color 0.2s ease, box-shadow 0.2s ease; border-radius: 4px; }
         .reader-body.highlight-mode-active p { cursor: pointer; }
@@ -169,7 +157,6 @@
         body.theme-dark .highlighted-text { background-color: rgba(200,134,58,0.35); box-shadow: 0 0 0 4px rgba(200,134,58,0.35); }
         body.theme-dark .reader-body.highlight-mode-active p:hover { background-color: rgba(255,255,255,0.05); box-shadow: 0 0 0 4px rgba(255,255,255,0.05); }
 
-        /* ===== ONBOARDING ===== */
         .onboarding-wrapper { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom)); position: relative; background: #0D0C0A; overflow: hidden; }
         .onboarding-wrapper::before { content: ''; position: absolute; top: -30%; left: -20%; width: 80%; height: 80%; background: radial-gradient(ellipse at center, rgba(200,134,58,0.08) 0%, transparent 70%); pointer-events: none; animation: floatSlow 8s ease-in-out infinite; }
         .particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
@@ -210,6 +197,7 @@
         .btn-primary { width: 100%; padding: 15px 20px; background: var(--accent); border: none; border-radius: var(--radius-md); color: #fff; font-family: var(--font-ui); font-size: 15px; font-weight: 600; cursor: pointer; letter-spacing: 0.01em; transition: var(--transition-spring); display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(200,134,58,0.4); }
         .btn-primary:active { transform: scale(0.97); }
+        .btn-primary:disabled { background: #555; cursor: not-allowed; transform: none; box-shadow: none; }
         
         .btn-ghost { background: none; border: none; color: var(--text-light-muted); font-family: var(--font-ui); font-size: 13px; cursor: pointer; padding: 8px; transition: var(--transition); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(200,186,176,0.3); }
         .btn-ghost:hover { color: var(--text-light); text-decoration-color: var(--accent-light); }
@@ -245,7 +233,6 @@
         .password-wrapper { position: relative; }
         .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-light-muted); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
 
-        /* ===== LIBRARY & MAIN SCREENS ===== */
         .library-shell { background: var(--bg-primary); min-height: 100dvh; padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
         
         .lib-topbar { background: var(--bg-primary); padding: calc(24px + env(safe-area-inset-top)) 32px 0; position: sticky; top: 0; z-index: 10; }
@@ -265,13 +252,15 @@
         .lib-search input { background: none; border: none; outline: none; font-family: var(--font-ui); font-size: 14px; color: var(--text-primary); flex: 1; }
         .lib-search input::placeholder { color: var(--text-muted); }
         .search-shortcut { font-size: 11px; color: var(--text-muted); background: var(--bg-card); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; }
+        
+        /* Dropdown Search */
         .search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); max-height: 300px; overflow-y: auto; display: none; z-index: 20; margin-top: 4px; }
         .search-dropdown.show { display: block; }
         .search-item { padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: var(--transition); border-bottom: 1px solid var(--border); }
         .search-item:hover { background: var(--accent-pale); }
         
         .lib-filter-row { display: flex; gap: 8px; padding-bottom: 16px; overflow-x: auto; }
-        .filter-chip { padding: 7px 18px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; transition: var(--transition); white-space: nowrap; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-secondary); }
+        .filter-chip { padding: 7px 18px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; transition: var(--transition); white-space: nowrap; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-secondary); text-transform: capitalize; }
         .filter-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
         .filter-chip:hover:not(.active) { border-color: var(--accent); color: var(--accent-dark); background: var(--accent-pale); }
         
@@ -287,7 +276,7 @@
         .feat-meta { display: flex; flex-direction: column; gap: 6px; }
         .feat-badge { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-light); }
         .feat-title { font-family: var(--font-display); font-size: 20px; color: var(--text-light); line-height: 1.2; font-style: italic; }
-        .feat-author { font-size: 13px; color: var(--text-light-muted); }
+        .feat-author { font-size: 13px; color: var(--text-light-muted); display:flex; align-items:center; gap:6px; }
         .progress-label { display: flex; justify-content: space-between; margin-bottom: 6px; }
         .progress-label span { font-size: 11px; color: var(--text-light-muted); }
         .progress-label strong { font-size: 11px; color: var(--accent-light); font-weight: 500; }
@@ -314,12 +303,12 @@
         .book-progress-mini { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.15); }
         .book-progress-mini-fill { height: 100%; background: rgba(255,255,255,0.6); }
         .book-title { font-size: 13px; font-weight: 500; color: var(--text-primary); }
-        .book-author-name { font-size: 11px; color: var(--text-muted); }
-        .book-tag { display: inline-block; margin-top: 4px; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 500; background: var(--sage-pale); color: var(--sage); }
+        .book-author-name { font-size: 11px; color: var(--text-muted); display:flex; flex-direction:column; align-items:flex-start; gap:2px; margin-top:4px; }
+        .book-genre-label { font-size:9px; font-weight:600; text-transform:uppercase; color:var(--accent); letter-spacing:0.02em; width: fit-content; }
+        .book-tag { display: inline-block; margin-top: 6px; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 500; background: var(--sage-pale); color: var(--sage); }
         .book-tag.unread { background: var(--accent-pale); color: var(--accent-dark); }
         .fav-badge { position: absolute; top: -8px; right: -8px; background: #D45353; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); z-index: 5;}
 
-        /* ===== BOTTOM FLOATING TAB NAVIGATION ===== */
         .app-bottom-nav {
             position: fixed; 
             bottom: calc(16px + env(safe-area-inset-bottom)); 
@@ -339,82 +328,38 @@
         .nav-label { font-size: 13px; font-weight: 600; font-family: var(--font-ui); max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; margin-left: 0; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); }
         .nav-item.active .nav-label { max-width: 100px; opacity: 1; margin-left: 8px; }
 
-        /* ===== PROFILE STATS BLOCKS ===== */
         .profile-stat-box { background: var(--bg-secondary); padding: 20px; border-radius: var(--radius-xl); border: 1px solid var(--border); flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: var(--shadow-sm); }
         .profile-stat-val { font-size: 28px; font-weight: 700; color: var(--accent); font-family: var(--font-display); line-height: 1; }
         .profile-stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; font-weight: 500; }
 
-        /* ===== READER & INSIGHTS SCROLL ===== */
         .reader-progress-top { position: fixed; top: env(safe-area-inset-top); left: 0; right: 0; height: 2.5px; background: rgba(0,0,0,0.1); z-index: 101; }
         .reader-progress-fill { height: 100%; background: #2C2416; width: 0%; border-radius: 0 2px 2px 0; transition: width 0.15s linear; }
         
         .reader-topbar {
-            position: fixed; 
-            top: 0; left: 0; right: 0; 
-            z-index: 100;
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
             padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
             background: linear-gradient(135deg, #D4B595, #C6A17A);
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: transform 0.4s ease;
+            border-bottom: 1px solid rgba(0,0,0,0.08); box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         
         .reader-topbar-left { display: flex; align-items: center; flex-shrink: 0; }
-        .reader-topbar-center {
-            flex: 1; text-align: center; overflow: hidden; padding: 0 10px;
-            display: flex; flex-direction: column; justify-content: center;
-        }
-        .reader-book-title {
-            font-family: var(--font-display); font-size: 16px; font-weight: normal;
-            color: #2C2416; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            line-height: 1.2;
-        }
-        .reader-book-author {
-            font-family: var(--font-ui); font-size: 11px; font-weight: 600;
-            color: #5C4A3D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            margin-top: 2px;
-        }
+        .reader-topbar-center { flex: 1; text-align: center; overflow: hidden; padding: 0 10px; display: flex; flex-direction: column; justify-content: center; }
+        .reader-book-title { font-family: var(--font-display); font-size: 16px; font-weight: normal; color: #2C2416; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
+        .reader-book-author { font-family: var(--font-ui); font-size: 11px; font-weight: 600; color: #5C4A3D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
         
         .reader-top-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-        .reader-top-btn {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: transparent; border: none;
-            display: flex; align-items: center; justify-content: center;
-            color: #2C2416; cursor: pointer; transition: 0.2s;
-        }
+        .reader-top-btn { width: 36px; height: 36px; border-radius: 50%; background: transparent; border: none; display: flex; align-items: center; justify-content: center; color: #2C2416; cursor: pointer; transition: 0.2s; }
         .reader-top-btn:hover { background: rgba(0,0,0,0.06); }
 
-        /* ===== CONTAINER UTAMA MEMBACA (DISATUKAN PADDINGNYA) ===== */
-        .reader-container { 
-            max-width: 720px; 
-            margin: 0 auto; 
-            /* Padding Samping Desktop 32px */
-            padding: calc(85px + env(safe-area-inset-top)) 32px calc(160px + env(safe-area-inset-bottom)); 
-            transition: padding 0.3s ease; 
-        }
-        
-        #readerContentAnimator {
-            /* Dihilangkan padding sampingnya, diserahkan ke .reader-container */
-            padding: 20px 0;
-            border-radius: 8px;
-            min-height: 85vh;
-            background-color: inherit; 
-            transform-style: preserve-3d;
-        }
-
+        .reader-container { max-width: 720px; margin: 0 auto; padding: calc(85px + env(safe-area-inset-top)) 32px calc(160px + env(safe-area-inset-bottom)); transition: padding 0.3s ease; }
+        #readerContentAnimator { padding: 20px 0; border-radius: 8px; min-height: 85vh; background-color: inherit; transform-style: preserve-3d; }
         body.theme-parchment #readerContentAnimator { background-color: var(--bg-parchment); }
         body.theme-white #readerContentAnimator { background-color: var(--bg-white); }
         body.theme-sepia #readerContentAnimator { background-color: var(--bg-sepia); }
         body.theme-dark #readerContentAnimator { background-color: var(--bg-dark); }
 
-        .reader-chapter-title { 
-            font-family: var(--font-display); font-size: 36px; line-height: 1.15; 
-            margin-bottom: 40px; font-style: italic; letter-spacing: -0.01em;
-        }
-        
+        .reader-chapter-title { font-family: var(--font-display); font-size: 36px; line-height: 1.15; margin-bottom: 40px; font-style: italic; letter-spacing: -0.01em; }
         .reader-body { font-family: var(--font-body); font-size: 18px; line-height: 1.9; text-align: justify; word-spacing: 0.02em; transition: font-size 0.3s ease, line-height 0.3s ease; }
         .reader-body p { margin-bottom: 1.6em; }
         .reader-body .drop-cap::first-letter { float: left; font-family: var(--font-display); font-size: 4.2em; line-height: 0.75; padding-right: 10px; padding-top: 4px; color: var(--accent); font-style: italic; }
@@ -469,7 +414,6 @@
             .onboarding-slide { padding: 16px 20px 24px; }
             .onboarding-title { font-size: 22px; }
             
-            /* PADDING READER DI MOBILE DIPERLEBAR (28px kiri-kanan) */
             .reader-container { padding: calc(80px + env(safe-area-inset-top)) 28px calc(160px + env(safe-area-inset-bottom)); max-width: 100%; }
             #readerContentAnimator { padding: 10px 0; }
             
@@ -489,8 +433,18 @@
 </head>
 <body>
 
+    <!-- ===== SPLASH SCREEN ===== -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-logo" style="display:flex; flex-direction:column; align-items:center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+            <div style="line-height: 1;">F<span>olio</span></div>
+            <div style="font-size: 12px; font-family: var(--font-ui); color: rgba(255,255,255,0.6); font-style: normal; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; margin-top: 10px; text-shadow: none;">Book Summaries</div>
+        </div>
+    </div>
+
     <div class="toast" id="toast"><span id="toastIcon"><i data-lucide="book-open"></i></span><span id="toastMessage"></span></div>
 
+    <!-- NOTIF DRAWER -->
     <div class="drawer-overlay" id="notifOverlay" onclick="closeDrawer()"></div>
     <div class="drawer" id="notifDrawer">
         <div class="drawer-header">
@@ -594,32 +548,93 @@
         </div>
     </div>
 
-    <!-- MODAL ADD BOOK EXCEL -->
+    <!-- UPDATE UI/UX 1: MODAL ADD BOOK (HYBRID - 2 TABS) -->
     <div class="modal-overlay" id="addBookModal">
-        <div class="modal-content" style="background: var(--bg-dark); color: var(--text-light); border-color: rgba(255,255,255,0.1);">
-            <button class="modal-close" onclick="closeModal('addBookModal')" style="background: rgba(255,255,255,0.05); color: #fff;"><i data-lucide="x"></i></button>
-            <div class="modal-title" style="color: #fff;">Upload Buku (Excel)</div>
-            <div class="modal-subtitle" style="color: var(--text-light-muted);">Unggah file .xlsx untuk menambahkan buku beserta isinya sekaligus.</div>
+        <div class="modal-content" style="background: var(--bg-dark); color: var(--text-light); border-color: rgba(255,255,255,0.1); width: 95%; max-width: 680px; padding: 0;">
+            <button class="modal-close" onclick="closeModal('addBookModal')" style="background: rgba(255,255,255,0.05); color: #fff; top: 16px; right: 16px; z-index: 10;"><i data-lucide="x"></i></button>
             
-            <div style="background: rgba(200,134,58,0.1); border: 1px dashed rgba(200,134,58,0.4); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
-                <div style="font-size: 11px; color: var(--accent-light); margin-bottom: 8px; font-weight: bold;">FORMAT KOLOM EXCEL (Baris 1):</div>
-                <div style="font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace;">Judul | Penulis | Kategori | Kesimpulan | Key Points | Langkah Aksi | Judul Bab 1 | Isi Bab 1 | ... s/d Bab 10</div>
-                <div style="font-size: 10px; color: var(--text-light-muted); margin-top: 8px; font-style: italic;">*Gunakan tanda titik koma (;) atau Enter untuk memisahkan Key Points dan Langkah Aksi.</div>
+            <div style="padding: 24px 24px 16px;">
+                <div class="modal-title" style="color: #fff;">Tambah Buku Baru</div>
+                <div class="modal-subtitle" style="color: var(--text-light-muted); margin-bottom: 16px;">Pilih metode untuk mengunggah buku ke database.</div>
+                
+                <!-- Tab Navigasi -->
+                <div class="modal-tabs" style="display: flex; gap: 8px; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 8px; margin-bottom: 16px;">
+                    <button class="modal-tab active" onclick="switchAddBookTab('manual')" id="tabBtnManual" style="flex: 1; padding: 10px; border: none; background: var(--accent); color: #fff; border-radius: 6px; font-family: var(--font-ui); font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s;">Input Manual (CMS)</button>
+                    <button class="modal-tab" onclick="switchAddBookTab('excel')" id="tabBtnExcel" style="flex: 1; padding: 10px; border: none; background: transparent; color: var(--text-light-muted); border-radius: 6px; font-family: var(--font-ui); font-size: 13px; font-weight: 500; cursor: pointer; transition: 0.3s;">Upload Excel</button>
+                </div>
             </div>
 
-            <form id="addBookForm">
-                <div class="form-group">
-                    <label class="form-label" style="color: var(--text-light-muted);">Pilih File Excel (.xlsx)</label>
-                    <input type="file" class="form-input" id="excelFileInput" accept=".xlsx, .xls" required style="background: rgba(255,255,255,0.05); color: #fff; padding: 10px;">
+            <div style="padding: 0 24px 24px; max-height: 65vh; overflow-y: auto;">
+                <!-- TAB 1: MANUAL (CMS) -->
+                <div id="tabManual" class="tab-pane active" style="display: block;">
+                    <form id="manualBookForm" onsubmit="handleManualBookSubmit(event)">
+                        <div class="form-group">
+                            <label class="form-label" style="color: var(--text-light-muted);">Judul Buku *</label>
+                            <input type="text" class="form-input" id="manJudul" required style="background: rgba(255,255,255,0.05); color: #fff;">
+                        </div>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            <div class="form-group" style="flex: 1; min-width: 140px;">
+                                <label class="form-label" style="color: var(--text-light-muted);">Penulis *</label>
+                                <input type="text" class="form-input" id="manPenulis" required style="background: rgba(255,255,255,0.05); color: #fff;">
+                            </div>
+                            <div class="form-group" style="flex: 1; min-width: 140px;">
+                                <label class="form-label" style="color: var(--text-light-muted);">Kategori *</label>
+                                <input type="text" class="form-input" id="manKategori" placeholder="Cth: Psikologi" required style="background: rgba(255,255,255,0.05); color: #fff;">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" style="color: var(--text-light-muted);">Kesimpulan Buku</label>
+                            <textarea class="form-input" id="manKesimpulan" rows="2" style="background: rgba(255,255,255,0.05); color: #fff; resize: vertical;"></textarea>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            <div class="form-group" style="flex: 1; min-width: 200px;">
+                                <label class="form-label" style="color: var(--text-light-muted);">Key Points (Poin Penting)</label>
+                                <textarea class="form-input" id="manKeyPoints" rows="2" placeholder="Pisahkan dengan Enter atau Semicolon (;)" style="background: rgba(255,255,255,0.05); color: #fff; resize: vertical;"></textarea>
+                            </div>
+                            <div class="form-group" style="flex: 1; min-width: 200px;">
+                                <label class="form-label" style="color: var(--text-light-muted);">Langkah Aksi</label>
+                                <textarea class="form-input" id="manLangkahAksi" rows="2" placeholder="Pisahkan dengan Enter atau Semicolon (;)" style="background: rgba(255,255,255,0.05); color: #fff; resize: vertical;"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Area Tambah Bab Dinamis -->
+                        <div style="margin: 24px 0 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                            <div style="font-size: 14px; font-weight: 600; color: var(--accent-light); margin-bottom: 16px; display:flex; justify-content: space-between; align-items:center;">
+                                Isi Bab Buku
+                                <button type="button" onclick="addChapterField()" style="background: rgba(200,134,58,0.2); color: var(--accent-light); border: 1px solid var(--accent); border-radius: 4px; padding: 6px 12px; font-size: 12px; font-weight:600; cursor:pointer; display:flex; gap:6px; align-items:center;"><i data-lucide="plus" style="width:14px;"></i> Tambah Bab</button>
+                            </div>
+                            
+                            <!-- Wadah Bab -->
+                            <div id="chapterList" style="display: flex; flex-direction: column; gap: 16px;"></div>
+                        </div>
+                        
+                        <button type="submit" id="btnSubmitManual" class="btn-primary" style="margin-top:24px; position: sticky; bottom: 0;"><i data-lucide="save" style="width:18px;"></i> Simpan Buku ke Firebase</button>
+                    </form>
                 </div>
-                <button type="submit" id="btnSubmitBook" class="btn-primary" style="margin-top:24px;"><i data-lucide="upload-cloud" style="width:18px;"></i> Proses & Simpan ke Firebase</button>
-            </form>
+
+                <!-- TAB 2: EXCEL -->
+                <div id="tabExcel" class="tab-pane" style="display: none;">
+                    <div style="background: rgba(200,134,58,0.1); border: 1px dashed rgba(200,134,58,0.4); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="font-size: 11px; color: var(--accent-light); margin-bottom: 8px; font-weight: bold;">FORMAT KOLOM EXCEL (Baris 1):</div>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace;">Judul | Penulis | Kategori | Kesimpulan | Key Points | Langkah Aksi | Judul Bab 1 | Isi Bab 1 | ... s/d Bab 10</div>
+                    </div>
+
+                    <form id="addBookForm">
+                        <div class="form-group">
+                            <label class="form-label" style="color: var(--text-light-muted);">Pilih File Excel (.xlsx)</label>
+                            <input type="file" class="form-input" id="excelFileInput" accept=".xlsx, .xls" required style="background: rgba(255,255,255,0.05); color: #fff; padding: 10px;">
+                        </div>
+                        <button type="submit" id="btnSubmitBook" class="btn-primary" style="margin-top:24px;"><i data-lucide="upload-cloud" style="width:18px;"></i> Proses Excel ke Firebase</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- ===== SCREEN ONBOARDING ===== -->
     <div class="screen active" id="screen-onboarding">
-        <!-- Kode Onboarding Tetap Sama -->
         <div class="onboarding-wrapper">
             <div class="particles">
                 <div class="particle"></div><div class="particle"></div><div class="particle"></div>
@@ -694,7 +709,7 @@
                                     <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
                                     <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
                                     <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-                                </svg> Google
+                                </svg Google
                             </button>
                             <button class="social-btn" onclick="socialLogin('Apple')"><i data-lucide="smartphone" style="width:16px;"></i> Apple</button>
                         </div>
@@ -771,30 +786,26 @@
                 <div class="lib-header">
                     <div class="lib-wordmark">F<span>olio</span></div>
                     <div class="lib-actions">
-                        <div class="icon-btn" id="btnUploadHome" onclick="openModal('addBookModal')" title="Upload Excel" style="display:none; background: var(--accent); color: white; border-color: var(--accent);"><i data-lucide="plus"></i></div>
+                        <div class="icon-btn" id="btnUploadHome" onclick="openModal('addBookModal')" title="Tambah Buku" style="display:none; background: var(--accent); color: white; border-color: var(--accent);"><i data-lucide="plus"></i></div>
                         <div class="icon-btn" onclick="focusSearch()"><i data-lucide="search"></i></div>
                         <div class="icon-btn" onclick="openDrawer()" style="position:relative;"><i data-lucide="bell"></i><div class="notification-dot"></div></div>
                         <div class="avatar-btn" onclick="switchMainTab('profile')" id="headerAvatar">A</div>
                     </div>
                 </div>
+                
                 <div class="lib-search" id="searchContainer">
                     <i data-lucide="search" style="opacity:0.5; width:16px;"></i>
-                    <input type="text" id="searchInput" placeholder="Cari judul, penulis, atau topik…" oninput="handleSearch(this.value)" onfocus="handleSearch(this.value)" onblur="setTimeout(()=>document.getElementById('searchDropdown').classList.remove('show'),200)">
+                    <input type="text" id="searchInput" placeholder="Cari judul, penulis, atau topik…" oninput="handleSearch(this.value)" onfocus="handleSearch(this.value)" onblur="setTimeout(()=>document.getElementById('searchDropdown').classList.remove('show'),250)">
                     <span class="search-shortcut" onclick="focusSearch()">⌘K</span>
                     <div class="search-dropdown" id="searchDropdown"></div>
                 </div>
-                <div class="lib-filter-row">
-                    <div class="filter-chip active" onclick="filterBooks(this)">Semua</div>
-                    <div class="filter-chip" onclick="filterBooks(this)">Sedang Dibaca</div>
-                    <div class="filter-chip" onclick="filterBooks(this)">Selesai</div>
-                    <div class="filter-chip" onclick="filterBooks(this)">Bisnis</div>
-                    <div class="filter-chip" onclick="filterBooks(this)">Psikologi</div>
-                    <div class="filter-chip" onclick="filterBooks(this)">Sejarah</div>
-                    <div class="filter-chip" onclick="filterBooks(this)">Keuangan</div>
-                    <div class="filter-chip" onclick="filterBooks(this)">Filsafat</div>
-                    <div class="filter-chip" onclick="filterBooks(this)">Pengembangan Diri</div>
-                    <div class="filter-chip" onclick="filterBooks(this)">Sains & Teknologi</div>
+                
+                <div class="lib-filter-row" id="homeFilterRow">
+                    <div class="filter-chip active" onclick="filterHomeBooks(this, 'semua')">Semua</div>
+                    <div class="filter-chip" onclick="filterHomeBooks(this, 'sedang dibaca')">Sedang Dibaca</div>
+                    <div class="filter-chip" onclick="filterHomeBooks(this, 'selesai')">Selesai</div>
                 </div>
+                
             </div>
             <div class="lib-body">
                 <div class="lib-section-title">Lanjutkan Membaca</div>
@@ -813,15 +824,20 @@
                 <div class="lib-header">
                     <div class="lib-wordmark">Semua <span>Buku</span></div>
                     <div class="lib-actions">
-                        <div class="icon-btn" id="btnUploadCollection" onclick="openModal('addBookModal')" title="Upload Excel" style="display:none; background: var(--accent); color: white; border-color: var(--accent);"><i data-lucide="plus"></i></div>
+                        <div class="icon-btn" id="btnUploadCollection" onclick="openModal('addBookModal')" title="Tambah Buku" style="display:none; background: var(--accent); color: white; border-color: var(--accent);"><i data-lucide="plus"></i></div>
                         <div class="icon-btn" onclick="focusSearchCollection()"><i data-lucide="search"></i></div>
                         <div class="avatar-btn" onclick="switchMainTab('profile')" id="headerAvatarCollection">A</div>
                     </div>
                 </div>
-                <div class="lib-search" id="searchContainerCollection" style="margin-bottom: 24px;">
+                <div class="lib-search" id="searchContainerCollection" style="margin-bottom: 16px;">
                     <i data-lucide="search" style="opacity:0.5; width:16px;"></i>
                     <input type="text" id="searchInputCollection" placeholder="Cari di seluruh library..." oninput="handleSearch(this.value)">
                 </div>
+
+                <div class="lib-filter-row" id="dynamicFilterRow" style="padding-bottom: 24px;">
+                    <div class="filter-chip active" onclick="filterCollectionBooks(this, 'semua')">Semua</div>
+                </div>
+
             </div>
             <div class="lib-body">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -941,7 +957,6 @@
 
     <!-- SCREEN READER -->
     <div class="screen" id="screen-reader">
-        
         <!-- HEADER TOP BAR FIXED -->
         <div class="reader-topbar" id="readerTopBar">
             <div class="reader-progress-top"><div class="reader-progress-fill" id="readerProgressFill"></div></div>
@@ -1127,18 +1142,26 @@
         }
 
         function initApp() {
+            setTimeout(() => {
+                const splash = document.getElementById('splashScreen');
+                if (splash) splash.classList.add('hide');
+            }, 1500);
+
             lucide.createIcons();
             updateProfileDisplay();
             updateReadingGoalDisplay();
+            
             if (window.APP_STATE.onboardingComplete) { 
                 switchMainTab('library'); 
             } else { 
                 showScreen('onboarding'); 
                 resetOnboardingSlides(); 
             }
-            renderBooks(currentBooksToDisplay);
             if (window.APP_STATE.onboardingComplete) initReader();
             startReadingTimer();
+
+            // UPDATE UI 1: Menyiapkan wadah bab dinamis di modal
+            window.addChapterField(); // memanggil 1 wadah bab kosong secara default
         }
 
         function checkAdminUI(email) {
@@ -1530,6 +1553,35 @@
             updateReadingGoalDisplay();
         }
 
+        window.generateBookCard = function(b) {
+            return `
+            <div class="book-card" onclick="openReader('${b.id}')">
+              ${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}
+              <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
+              <div class="book-title">${b.title}</div>
+              <div class="book-author-name"><span>${b.author}</span><span class="book-genre-label">${b.category}</span></div>
+              <span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
+            </div>`;
+        }
+
+        window.updateDynamicFilters = function(books) {
+            const filterRow = document.getElementById('dynamicFilterRow');
+            if (!filterRow) return;
+            
+            const categories = [...new Set(books.map(b => (b.category || 'lainnya').toLowerCase()))].filter(Boolean);
+            const activeChip = filterRow.querySelector('.filter-chip.active');
+            const activeText = activeChip ? activeChip.textContent.trim().toLowerCase() : 'semua';
+
+            let html = `<div class="filter-chip ${activeText === 'semua' ? 'active' : ''}" onclick="filterCollectionBooks(this, 'semua')">Semua</div>`;
+
+            categories.forEach(cat => {
+                const catLabel = cat.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                html += `<div class="filter-chip ${activeText === cat ? 'active' : ''}" onclick="filterCollectionBooks(this, '${cat}')">${catLabel}</div>`;
+            });
+
+            filterRow.innerHTML = html;
+        };
+
         window.renderBooks = function(books) {
             currentBooksToDisplay = books;
             const gridHome = document.getElementById('bookGrid');
@@ -1546,7 +1598,7 @@
 
             if (featuredContainer) {
                 if (books.length === 0) {
-                    featuredContainer.innerHTML = `<div style="text-align:center; padding:30px; background:var(--bg-secondary); border-radius:20px; border:1px dashed var(--border); color:var(--text-muted); font-size:13px;">Belum ada buku di library. Upload buku pertamamu!</div>`;
+                    featuredContainer.innerHTML = `<div style="text-align:center; padding:30px; background:var(--bg-secondary); border-radius:20px; border:1px dashed var(--border); color:var(--text-muted); font-size:13px;">Belum ada buku di library. Tambahkan buku pertamamu!</div>`;
                 } else {
                     let sortedBooks = [...books].sort((a, b) => (b.lastReadAt || 0) - (a.lastReadAt || 0));
                     let featBook = sortedBooks.find(b => b.progress > 0 && b.progress < 100) || sortedBooks[0];
@@ -1556,7 +1608,7 @@
                             <div class="feat-meta">
                                 <div class="feat-badge">✦ ${featBook.progress > 0 ? 'SEDANG DIBACA' : 'BUKU BARU'}</div>
                                 <div class="feat-title">${featBook.title}</div>
-                                <div class="feat-author">${featBook.author}</div>
+                                <div class="feat-author">${featBook.author} &bull; <span style="color:var(--accent); text-transform:capitalize;">${featBook.category}</span></div>
                                 <div class="progress-label"><span>Progres Membaca</span><strong>${featBook.progress}%</strong></div>
                                 <div class="progress-track"><div class="progress-fill" style="width:${featBook.progress}%"></div></div>
                                 <button class="feat-read-btn">${featBook.progress > 0 ? 'Lanjutkan Membaca' : 'Mulai Membaca'} <i data-lucide="arrow-right" style="width:14px;"></i></button>
@@ -1568,21 +1620,11 @@
 
             if (gridHome) {
                 const homeBooks = books.slice(0, 6);
-                gridHome.innerHTML = homeBooks.map(b => `
-                <div class="book-card" onclick="openReader('${b.id}')">
-                  ${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}
-                  <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
-                  <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
-                </div>`).join('');
+                gridHome.innerHTML = homeBooks.map(b => generateBookCard(b)).join('');
             }
 
             if (gridCollection) {
-                gridCollection.innerHTML = books.map(b => `
-                <div class="book-card" onclick="openReader('${b.id}')">
-                  ${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}
-                  <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
-                  <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
-                </div>`).join('');
+                gridCollection.innerHTML = books.map(b => generateBookCard(b)).join('');
             }
 
             if (listFavorites) {
@@ -1592,7 +1634,7 @@
                     listFavorites.innerHTML = favBooks.map(b => `
                     <div class="fav-list-item" onclick="closeModal('favoritesModal'); openReader('${b.id}')">
                       <div class="fav-list-item-title">${b.title}</div>
-                      <div class="fav-list-item-author">${b.author}</div>
+                      <div class="fav-list-item-author"><span>${b.author}</span><span style="color:var(--accent); text-transform:capitalize;">${b.category}</span></div>
                     </div>`).join('');
                 }
             }
@@ -1600,27 +1642,38 @@
             lucide.createIcons();
         }
 
-        function filterBooks(chip) {
+        window.filterHomeBooks = function(chip, filterType) {
             const parent = chip.parentElement;
             parent.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
-            const f = chip.textContent.trim().toLowerCase();
+
             let filtered = currentBooksToDisplay;
-            if (f === 'sedang dibaca') {
+            if (filterType === 'sedang dibaca') {
                 filtered = currentBooksToDisplay.filter(b => b.progress > 0 && b.progress < 100);
-            } else if (f === 'selesai') {
+            } else if (filterType === 'selesai') {
                 filtered = currentBooksToDisplay.filter(b => b.progress === 100);
-            } else if (f !== 'semua') {
-                filtered = currentBooksToDisplay.filter(b => b.category.toLowerCase() === f);
             }
+
             const grid = document.getElementById('bookGrid');
             if(grid) {
-                grid.innerHTML = filtered.slice(0,6).map(b => `
-                <div class="book-card" onclick="openReader('${b.id}')">
-                ${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}
-                <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
-                <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
-                </div>`).join('');
+                grid.innerHTML = filtered.slice(0,6).map(b => generateBookCard(b)).join('');
+            }
+            lucide.createIcons();
+        }
+
+        window.filterCollectionBooks = function(chip, filterType) {
+            const parent = chip.parentElement;
+            parent.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+
+            let filtered = currentBooksToDisplay;
+            if (filterType !== 'semua') {
+                filtered = currentBooksToDisplay.filter(b => b.category.toLowerCase() === filterType);
+            }
+
+            const grid = document.getElementById('collectionGrid');
+            if(grid) {
+                grid.innerHTML = filtered.map(b => generateBookCard(b)).join('');
             }
             lucide.createIcons();
         }
@@ -1628,30 +1681,44 @@
         function focusSearch() { document.getElementById('searchInput')?.focus(); }
         function focusSearchCollection() { document.getElementById('searchInputCollection')?.focus(); }
         
+        window.clickSearchItem = function(id) {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchDropdown').classList.remove('show');
+            setTimeout(() => { openReader(id); }, 50);
+        }
+
         function handleSearch(query) {
             const isCollectionTab = (activeScreenName === 'collection');
             const dd = document.getElementById('searchDropdown');
             const colGrid = document.getElementById('collectionGrid');
+            
             if (!query.trim()) { 
                 dd.classList.remove('show'); 
-                if(isCollectionTab) renderBooks(currentBooksToDisplay); 
+                if(isCollectionTab) {
+                    const activeChip = document.querySelector('#dynamicFilterRow .filter-chip.active');
+                    const filterType = activeChip ? activeChip.textContent.trim().toLowerCase() : 'semua';
+                    if(activeChip) filterCollectionBooks(activeChip, filterType);
+                    else renderBooks(currentBooksToDisplay);
+                } 
                 return; 
             }
-            const results = currentBooksToDisplay.filter(b => b.title.toLowerCase().includes(query.toLowerCase()) || b.author.toLowerCase().includes(query.toLowerCase()));
+            
+            const results = currentBooksToDisplay.filter(b => b.title.toLowerCase().includes(query.toLowerCase()) || b.author.toLowerCase().includes(query.toLowerCase()) || b.category.toLowerCase().includes(query.toLowerCase()));
+            
             if (isCollectionTab) {
-                colGrid.innerHTML = results.length > 0 ? results.map(b => `
-                <div class="book-card" onclick="openReader('${b.id}')">
-                <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
-                <div class="book-title">${b.title}</div><div class="book-author-name">${b.author}</div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
-                </div>`).join('') : '<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-muted);">Tidak ada buku yang ditemukan.</div>';
+                colGrid.innerHTML = results.length > 0 ? results.map(b => generateBookCard(b)).join('') : '<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-muted);">Tidak ada buku yang ditemukan.</div>';
             } else {
                 dd.innerHTML = results.length > 0 ? results.map(b => `
-                <div class="search-item" onclick="document.getElementById('searchInput').value=''; document.getElementById('searchDropdown').classList.remove('show'); openReader('${b.id}');">
-                <div class="book-cover ${b.cover}" style="width:28px;height:42px;border-radius:2px 4px 4px 2px;flex-shrink:0;"></div>
-                <div><div style="font-size:13px;font-weight:500;">${b.title}</div><div style="font-size:11px;color:var(--text-muted);">${b.author}</div></div>
+                <div class="search-item" onmousedown="clickSearchItem('${b.id}')" ontouchstart="clickSearchItem('${b.id}')">
+                    <div class="book-cover ${b.cover}" style="width:28px;height:42px;border-radius:2px 4px 4px 2px;flex-shrink:0;"></div>
+                    <div style="flex:1;">
+                        <div style="font-size:13px;font-weight:500;">${b.title}</div>
+                        <div style="font-size:11px;color:var(--text-muted); display:flex; justify-content:space-between;"><span>${b.author}</span><span style="color:var(--accent); text-transform:capitalize;">${b.category}</span></div>
+                    </div>
                 </div>`).join('') : '<div style="padding:16px;text-align:center;color:var(--text-muted);">Tidak ditemukan</div>';
                 dd.classList.add('show');
             }
+            lucide.createIcons();
         }
 
         function initReader() { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); }
@@ -1747,7 +1814,7 @@
             if (activeBook.kesimpulan && activeBook.kesimpulan.trim() !== '') {
                 elKesimpulan.innerHTML = activeBook.kesimpulan.split('\n').map(p => `<p style="margin-bottom:1.2em;">${p}</p>`).join('');
             } else {
-                elKesimpulan.innerHTML = "<p><em>Buku ini belum memiliki kesimpulan yang diinput dari Excel.</em></p>";
+                elKesimpulan.innerHTML = "<p><em>Buku ini belum memiliki kesimpulan yang diinput.</em></p>";
             }
 
             const elKeyPoints = document.getElementById('insightKeyPoints');
@@ -1763,7 +1830,7 @@
                 const steps = activeBook.langkahAksi.split(/\n|;/).filter(p => p.trim() !== '');
                 elLangkahAksi.innerHTML = steps.map(p => `<li style="margin-bottom:12px;">${p.trim()}</li>`).join('');
             } else {
-                elLangkahAksi.innerHTML = '<li><em>Belum ada langkah aksi yang dicatat dari Excel.</em></li>';
+                elLangkahAksi.innerHTML = '<li><em>Belum ada langkah aksi yang dicatat.</em></li>';
             }
 
             applyReaderFontSize(window.APP_STATE.readerFontSize);
@@ -1874,7 +1941,7 @@
             if(!activeBook) return;
             
             document.getElementById('topbarBookTitle').textContent = activeBook.title;
-            document.getElementById('topbarBookAuthor').textContent = activeBook.author;
+            document.getElementById('topbarBookAuthor').innerHTML = `${activeBook.author} &bull; <span style="text-transform:capitalize; opacity: 0.9;">${activeBook.category}</span>`;
 
             activeBook.lastReadAt = Date.now();
             if(window.firebaseUpdateLastRead) window.firebaseUpdateLastRead(activeBook.id, activeBook.lastReadAt);
@@ -1964,7 +2031,7 @@
 
             } else {
                 document.getElementById('readerChapterTitle').textContent = activeBook.title;
-                document.getElementById('readerBody').innerHTML = "<p>Buku ini belum memiliki isi ringkasan bab. Silakan tambahkan konten dari Excel.</p>";
+                document.getElementById('readerBody').innerHTML = "<p>Buku ini belum memiliki isi ringkasan bab. Silakan tambahkan konten.</p>";
                 window.scrollTo({ top: 0, behavior: 'auto' });
             }
 
@@ -2035,6 +2102,118 @@
                 
             } else { 
                 window.showToast(dir === 'next' ? 'Ini adalah bab terakhir.' : 'Ini adalah bab pertama.', 'book-open'); 
+            }
+        }
+
+        // UPDATE UI 1: Fungsi Tab Navigasi di Modal
+        window.switchAddBookTab = function(tab) {
+            const btnManual = document.getElementById('tabBtnManual');
+            const btnExcel = document.getElementById('tabBtnExcel');
+            const paneManual = document.getElementById('tabManual');
+            const paneExcel = document.getElementById('tabExcel');
+
+            if (tab === 'manual') {
+                btnManual.style.background = 'var(--accent)';
+                btnManual.style.color = '#fff';
+                btnExcel.style.background = 'transparent';
+                btnExcel.style.color = 'var(--text-light-muted)';
+                paneManual.style.display = 'block';
+                paneExcel.style.display = 'none';
+            } else {
+                btnExcel.style.background = 'var(--accent)';
+                btnExcel.style.color = '#fff';
+                btnManual.style.background = 'transparent';
+                btnManual.style.color = 'var(--text-light-muted)';
+                paneExcel.style.display = 'block';
+                paneManual.style.display = 'none';
+            }
+        }
+
+        // UPDATE UI 1: Fungsi Menambahkan Elemen Form Bab Secara Dinamis
+        let chapterCount = 0;
+        window.addChapterField = function() {
+            chapterCount++;
+            const list = document.getElementById('chapterList');
+            const div = document.createElement('div');
+            div.className = 'chapter-item';
+            div.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; position: relative; animation: slideNextIn 0.3s ease;';
+            div.innerHTML = `
+                <button type="button" onclick="this.parentElement.remove()" style="position: absolute; top: 12px; right: 12px; background: rgba(212,83,83,0.1); border: 1px solid rgba(212,83,83,0.3); border-radius: 4px; color: #D45353; padding: 4px; cursor: pointer; display: flex; align-items:center; justify-content:center;"><i data-lucide="trash-2" style="width: 14px;"></i></button>
+                <div class="form-group" style="margin-bottom: 12px; padding-right: 36px;">
+                    <label class="form-label" style="color: var(--text-light-muted);">Judul Bab ${chapterCount}</label>
+                    <input type="text" class="form-input chapter-title-input" placeholder="Cth: Pendahuluan" required style="background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.1); color: #fff;">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="color: var(--text-light-muted);">Isi Teks Bab</label>
+                    <textarea class="form-input chapter-content-input" rows="8" placeholder="Paste (Tempel) teks paragraf bab di sini..." required style="background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.1); color: #fff; resize: vertical; line-height: 1.6;"></textarea>
+                </div>
+            `;
+            list.appendChild(div);
+            lucide.createIcons();
+        }
+
+        // UPDATE UI 1: Fungsi Menyusun Form Manual dan mengirim ke Firebase
+        window.handleManualBookSubmit = function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitManual');
+            btn.innerHTML = "Menyimpan ke server..."; btn.disabled = true;
+
+            const title = document.getElementById('manJudul').value.trim();
+            const author = document.getElementById('manPenulis').value.trim();
+            const category = document.getElementById('manKategori').value.trim().toLowerCase() || 'lainnya';
+            const kesimpulan = document.getElementById('manKesimpulan').value.trim();
+            const keyPoints = document.getElementById('manKeyPoints').value.trim();
+            const langkahAksi = document.getElementById('manLangkahAksi').value.trim();
+
+            const chapterItems = document.querySelectorAll('.chapter-item');
+            let chapters = [];
+            
+            // Loop form bab yang ada
+            chapterItems.forEach(item => {
+                const cTitle = item.querySelector('.chapter-title-input').value.trim();
+                const cContent = item.querySelector('.chapter-content-input').value.trim();
+                if (cTitle || cContent) {
+                    chapters.push({ title: cTitle, content: cContent });
+                }
+            });
+
+            // Validasi jika belum ada bab yang diisi
+            if (chapters.length === 0) {
+                chapters.push({ title: "Ringkasan", content: "Isi buku belum ditambahkan." });
+            }
+
+            const covers = ['bc1', 'bc2', 'bc3', 'bc4', 'bc5', 'bc6'];
+            const randomCover = covers[Math.floor(Math.random() * covers.length)];
+
+            // Susun menjadi satu objek buku utuh
+            const bookData = {
+                title: title, 
+                author: author, 
+                category: category, 
+                kesimpulan: kesimpulan, 
+                keyPoints: keyPoints, 
+                langkahAksi: langkahAksi,
+                cover: randomCover, 
+                progress: 0, 
+                isFavorite: false,
+                highlights: {},
+                bookmarks: [],
+                chapterNotes: {}, 
+                tag: "Belum Dibaca", 
+                chapters: chapters, 
+                lastReadAt: 0,
+                lastReadChapter: 0,
+                lastReadParagraph: 0,
+                savedQuotes: []
+            };
+
+            // Kirim ke module Firebase
+            if(window.firebaseSaveManualBook) {
+                window.firebaseSaveManualBook(bookData);
+            } else {
+                window.showToast("Koneksi Firebase gagal", "❌");
+                btn.innerHTML = `<i data-lucide="save" style="width:18px;"></i> Simpan Buku ke Firebase`;
+                btn.disabled = false;
             }
         }
 
@@ -2313,6 +2492,32 @@
             try { await updateDoc(doc(db, "buku_bacaan", bookId), { chapterNotes: notesObj }); } catch (error) { console.error(error); }
         }
 
+        // UPDATE UI 1: Menangkap data dari form manual, tambahkan timestamp Server, dan Upload
+        window.firebaseSaveManualBook = async (bookData) => {
+            try {
+                bookData.createdAt = serverTimestamp(); // Assign timestamp dari server firebase
+                await addDoc(collection(db, "buku_bacaan"), bookData);
+                
+                if(window.showToast) window.showToast("Buku berhasil ditambahkan!", "✅");
+                window.closeModal('addBookModal');
+                
+                // Reset form kembali bersih
+                document.getElementById('manualBookForm').reset();
+                document.getElementById('chapterList').innerHTML = '';
+                chapterCount = 0;
+                window.addChapterField(); // memanggil wadah bab kosong lagi
+
+            } catch (error) {
+                console.error(error);
+                if(window.showToast) window.showToast("Gagal menyimpan buku.", "❌");
+            } finally {
+                const btn = document.getElementById('btnSubmitManual');
+                btn.innerHTML = `<i data-lucide="save" style="width:18px;"></i> Simpan Buku ke Firebase`;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        };
+
         const addBookForm = document.getElementById('addBookForm');
         const btnSubmitBook = document.getElementById('btnSubmitBook');
 
@@ -2419,7 +2624,7 @@
                     
                     window.closeModal('addBookModal'); addBookForm.reset();
                 } catch (error) { if(window.showToast) window.showToast("Gagal memproses. Pastikan format kolom sesuai.", "❌"); } 
-                finally { btnSubmitBook.innerHTML = `<i data-lucide="upload-cloud" style="width:18px;"></i> Proses & Simpan ke Firebase`; btnSubmitBook.disabled = false; lucide.createIcons(); }
+                finally { btnSubmitBook.innerHTML = `<i data-lucide="upload-cloud" style="width:18px;"></i> Proses Excel ke Firebase`; btnSubmitBook.disabled = false; lucide.createIcons(); }
             };
             reader.readAsArrayBuffer(file);
         });
@@ -2451,6 +2656,8 @@
                     savedQuotes: data.savedQuotes || []
                 });
             });
+            
+            if (window.updateDynamicFilters) window.updateDynamicFilters(bukuDariFirebase);
             if (window.renderBooks) window.renderBooks(bukuDariFirebase);
         }, (error) => { console.warn("Gagal membaca Firebase secara otomatis.", error.message); });
 
