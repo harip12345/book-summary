@@ -322,7 +322,6 @@
         /* ===== BOTTOM FLOATING TAB NAVIGATION ===== */
         .app-bottom-nav {
             position: fixed; 
-            /* Diubah: Posisi bottom diturunkan agar lebih nyaman di iPhone */
             bottom: calc(16px + env(safe-area-inset-bottom)); 
             left: 50%; transform: translateX(-50%);
             display: flex; align-items: center; justify-content: space-between;
@@ -349,7 +348,6 @@
         .reader-progress-top { position: fixed; top: env(safe-area-inset-top); left: 0; right: 0; height: 2.5px; background: rgba(0,0,0,0.1); z-index: 101; }
         .reader-progress-fill { height: 100%; background: #2C2416; width: 0%; border-radius: 0 2px 2px 0; transition: width 0.15s linear; }
         
-        /* ===== TOP BAR BARU (COKLAT MUDA PREMIUM) ===== */
         .reader-topbar {
             position: fixed; 
             top: 0; left: 0; right: 0; 
@@ -358,7 +356,6 @@
             align-items: center; 
             justify-content: space-between;
             padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
-            /* Diubah: Warna Coklat Muda Premium Elegan */
             background: linear-gradient(135deg, #D4B595, #C6A17A);
             border-bottom: 1px solid rgba(0,0,0,0.08);
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
@@ -372,13 +369,11 @@
         }
         .reader-book-title {
             font-family: var(--font-display); font-size: 16px; font-weight: normal;
-            /* Diubah: Teks coklat gelap elegan agar kontras dengan background coklat muda */
             color: #2C2416; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
             line-height: 1.2;
         }
         .reader-book-author {
             font-family: var(--font-ui); font-size: 11px; font-weight: 600;
-            /* Diubah: Teks coklat medium agar serasi */
             color: #5C4A3D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
             margin-top: 2px;
         }
@@ -388,17 +383,22 @@
             width: 36px; height: 36px; border-radius: 50%;
             background: transparent; border: none;
             display: flex; align-items: center; justify-content: center;
-            /* Diubah: Warna ikon coklat gelap */
             color: #2C2416; cursor: pointer; transition: 0.2s;
         }
         .reader-top-btn:hover { background: rgba(0,0,0,0.06); }
-        /* ======================================= */
 
-        /* PADDING DISESUAIKAN AGAR KONTEN TIDAK TERTUTUP TOPBAR */
-        .reader-container { max-width: 720px; margin: 0 auto; padding: calc(85px + env(safe-area-inset-top)) 10px calc(160px + env(safe-area-inset-bottom)); transition: padding 0.3s ease; }
+        /* ===== CONTAINER UTAMA MEMBACA (DISATUKAN PADDINGNYA) ===== */
+        .reader-container { 
+            max-width: 720px; 
+            margin: 0 auto; 
+            /* Padding Samping Desktop 32px */
+            padding: calc(85px + env(safe-area-inset-top)) 32px calc(160px + env(safe-area-inset-bottom)); 
+            transition: padding 0.3s ease; 
+        }
         
         #readerContentAnimator {
-            padding: 20px 22px;
+            /* Dihilangkan padding sampingnya, diserahkan ke .reader-container */
+            padding: 20px 0;
             border-radius: 8px;
             min-height: 85vh;
             background-color: inherit; 
@@ -469,13 +469,13 @@
             .onboarding-slide { padding: 16px 20px 24px; }
             .onboarding-title { font-size: 22px; }
             
-            /* PADDING READER DI MOBILE */
-            .reader-container { padding: calc(80px + env(safe-area-inset-top)) 0 calc(160px + env(safe-area-inset-bottom)); max-width: 100%; }
-            #readerContentAnimator { padding: 10px 20px; }
+            /* PADDING READER DI MOBILE DIPERLEBAR (28px kiri-kanan) */
+            .reader-container { padding: calc(80px + env(safe-area-inset-top)) 28px calc(160px + env(safe-area-inset-bottom)); max-width: 100%; }
+            #readerContentAnimator { padding: 10px 0; }
+            
             .reader-chapter-title { font-size: 26px; }
             .reader-body { font-size: 16px; line-height: 1.8; }
             
-            /* Diubah: Posisi Nav Mobile lebih natural (lebih bawah) */
             .app-bottom-nav { bottom: calc(12px + env(safe-area-inset-bottom)); }
             
             .reader-bottom-bar { padding: 6px 10px; gap: 2px; }
@@ -1090,7 +1090,6 @@
                     let pid = entry.target.id.split('-')[1]; 
                     
                     activeBook.lastReadChapter = activeChapterIdx;
-                    // Tetap di-save di database, tapi tidak akan dibaca saat load agar posisi mentok atas
                     activeBook.lastReadParagraph = parseInt(pid);
                     
                     clearTimeout(window.scrollUpdateTimeout);
@@ -1859,7 +1858,6 @@
             activeChapterIdx = idx;
             if(activeBook) {
                 activeBook.lastReadChapter = idx;
-                // Tetap di reset ke 0 secara logika
                 activeBook.lastReadParagraph = 0; 
             }
             window.scrollTo({ top: 0, behavior: 'auto' });
@@ -1875,7 +1873,6 @@
             activeBook = currentBooksToDisplay.find(b => b.id === bookId);
             if(!activeBook) return;
             
-            // Set judul ke header fixed
             document.getElementById('topbarBookTitle').textContent = activeBook.title;
             document.getElementById('topbarBookAuthor').textContent = activeBook.author;
 
@@ -1893,7 +1890,6 @@
                 btnFav.innerHTML = '<i data-lucide="heart" style="width:16px;"></i>';
             }
 
-            // Pastikan mutlak di atas ketika baru dibuka
             window.scrollTo({ top: 0, behavior: 'auto' });
 
             renderChapter();
@@ -1943,7 +1939,6 @@
 
                 document.querySelectorAll('#readerBody p').forEach(p => paragraphObserver.observe(p));
 
-                // ===== LOGIKA SCROLL (REVISI KE ATAS) =====
                 setTimeout(() => {
                     let isJumpingHighlight = window.targetHighlightParagraph !== undefined;
 
@@ -1961,12 +1956,11 @@
                             window.scrollTo({ top: 0, behavior: 'auto' });
                         }
                     } else {
-                        // Secara MUTLAK selalu tampilkan ke paling atas
                         window.scrollTo({ top: 0, behavior: 'auto' });
                     }
                     
                     window.targetHighlightParagraph = undefined;
-                }, 50); // Waktu di-set cepat agar tidak berasa loncat
+                }, 50);
 
             } else {
                 document.getElementById('readerChapterTitle').textContent = activeBook.title;
