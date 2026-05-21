@@ -54,15 +54,26 @@
 
         .lucide { width: 18px; height: 18px; stroke-width: 1.5px; }
 
+        /* UPDATE SCROLLBAR: Dibuat lebih tebal agar mudah diseret (draggable) */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.03); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.45); border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); background-clip: border-box; border: none; }
+        body.theme-dark ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+        body.theme-dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border: 2px solid transparent; background-clip: content-box; }
+        body.theme-dark ::-webkit-scrollbar-thumb:hover { background: var(--accent); background-clip: border-box; border: none; }
+        
+        /* Scrollbar khusus untuk Textarea CMS Manual */
+        textarea::-webkit-scrollbar { width: 12px; }
+        textarea::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 6px; }
+        textarea::-webkit-scrollbar-thumb { background: rgba(200,134,58,0.5); border-radius: 6px; border: 2px solid transparent; background-clip: content-box; }
+        textarea::-webkit-scrollbar-thumb:hover { background: rgba(200,134,58,0.9); background-clip: border-box; border: none; }
+
         body.theme-parchment { background: var(--bg-parchment); color: var(--text-parchment); }
         body.theme-white { background: var(--bg-white); color: var(--text-white); }
         body.theme-sepia { background: var(--bg-sepia); color: var(--text-sepia); }
         body.theme-dark { background: var(--bg-dark); color: var(--text-dark); }
         body.app-mode { background: var(--bg-primary); color: var(--text-primary); }
-
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.3); border-radius: 10px; }
 
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
@@ -253,7 +264,6 @@
         .lib-search input::placeholder { color: var(--text-muted); }
         .search-shortcut { font-size: 11px; color: var(--text-muted); background: var(--bg-card); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; }
         
-        /* Dropdown Search */
         .search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); max-height: 300px; overflow-y: auto; display: none; z-index: 20; margin-top: 4px; }
         .search-dropdown.show { display: block; }
         .search-item { padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: var(--transition); border-bottom: 1px solid var(--border); }
@@ -271,6 +281,7 @@
         .lib-featured:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
         .feat-cover { width: 90px; height: 130px; border-radius: 6px 10px 10px 6px; overflow: hidden; box-shadow: 6px 6px 20px rgba(0,0,0,0.4); position: relative; }
         .feat-cover-inner { width: 100%; height: 100%; background: linear-gradient(160deg, #C8863A 0%, #7A5A3A 100%); display: flex; align-items: center; justify-content: center; padding: 8px; position: relative; }
+        .feat-cover-inner.has-image { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%); align-items: flex-end; padding-bottom: 12px; }
         .feat-cover-inner::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: rgba(0,0,0,0.3); }
         .feat-cover-title { font-family: var(--font-display); font-size: 9px; color: rgba(255,255,255,0.9); text-align: center; font-style: italic; }
         .feat-meta { display: flex; flex-direction: column; gap: 6px; }
@@ -291,6 +302,7 @@
         .book-card:hover { transform: translateY(-4px); }
         .book-cover { aspect-ratio: 2/3; border-radius: 4px 8px 8px 4px; margin-bottom: 10px; box-shadow: var(--shadow-md); overflow: hidden; position: relative; }
         .book-cover-inner { width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px 12px; justify-content: space-between; position: relative; }
+        .book-cover-inner.has-image { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%); justify-content: flex-end; gap: 4px; padding-bottom: 14px; }
         .book-cover-inner::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: rgba(0,0,0,0.25); }
         .bc1 { background: linear-gradient(160deg, #7A8C6E 0%, #4A5A40 100%); }
         .bc2 { background: linear-gradient(160deg, #5A7A8C 0%, #2A4A5C 100%); }
@@ -548,7 +560,7 @@
         </div>
     </div>
 
-    <!-- UPDATE UI/UX 1: MODAL ADD BOOK (HYBRID - 2 TABS) -->
+    <!-- MODAL ADD BOOK (HYBRID - 2 TABS) -->
     <div class="modal-overlay" id="addBookModal">
         <div class="modal-content" style="background: var(--bg-dark); color: var(--text-light); border-color: rgba(255,255,255,0.1); width: 95%; max-width: 680px; padding: 0;">
             <button class="modal-close" onclick="closeModal('addBookModal')" style="background: rgba(255,255,255,0.05); color: #fff; top: 16px; right: 16px; z-index: 10;"><i data-lucide="x"></i></button>
@@ -557,7 +569,6 @@
                 <div class="modal-title" style="color: #fff;">Tambah Buku Baru</div>
                 <div class="modal-subtitle" style="color: var(--text-light-muted); margin-bottom: 16px;">Pilih metode untuk mengunggah buku ke database.</div>
                 
-                <!-- Tab Navigasi -->
                 <div class="modal-tabs" style="display: flex; gap: 8px; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 8px; margin-bottom: 16px;">
                     <button class="modal-tab active" onclick="switchAddBookTab('manual')" id="tabBtnManual" style="flex: 1; padding: 10px; border: none; background: var(--accent); color: #fff; border-radius: 6px; font-family: var(--font-ui); font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s;">Input Manual (CMS)</button>
                     <button class="modal-tab" onclick="switchAddBookTab('excel')" id="tabBtnExcel" style="flex: 1; padding: 10px; border: none; background: transparent; color: var(--text-light-muted); border-radius: 6px; font-family: var(--font-ui); font-size: 13px; font-weight: 500; cursor: pointer; transition: 0.3s;">Upload Excel</button>
@@ -568,6 +579,12 @@
                 <!-- TAB 1: MANUAL (CMS) -->
                 <div id="tabManual" class="tab-pane active" style="display: block;">
                     <form id="manualBookForm" onsubmit="handleManualBookSubmit(event)">
+                        <!-- UPDATE: Kolom Cover URL di Input Manual -->
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label class="form-label" style="color: var(--accent-light);">URL Foto Cover Buku (Opsional)</label>
+                            <input type="url" class="form-input" id="manCoverUrl" placeholder="Contoh: https://i.imgur.com/gambar.jpg" style="background: rgba(200,134,58,0.05); border-color: rgba(200,134,58,0.3); color: #fff;">
+                        </div>
+
                         <div class="form-group">
                             <label class="form-label" style="color: var(--text-light-muted);">Judul Buku *</label>
                             <input type="text" class="form-input" id="manJudul" required style="background: rgba(255,255,255,0.05); color: #fff;">
@@ -605,8 +622,6 @@
                                 Isi Bab Buku
                                 <button type="button" onclick="addChapterField()" style="background: rgba(200,134,58,0.2); color: var(--accent-light); border: 1px solid var(--accent); border-radius: 4px; padding: 6px 12px; font-size: 12px; font-weight:600; cursor:pointer; display:flex; gap:6px; align-items:center;"><i data-lucide="plus" style="width:14px;"></i> Tambah Bab</button>
                             </div>
-                            
-                            <!-- Wadah Bab -->
                             <div id="chapterList" style="display: flex; flex-direction: column; gap: 16px;"></div>
                         </div>
                         
@@ -617,8 +632,9 @@
                 <!-- TAB 2: EXCEL -->
                 <div id="tabExcel" class="tab-pane" style="display: none;">
                     <div style="background: rgba(200,134,58,0.1); border: 1px dashed rgba(200,134,58,0.4); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+                        <!-- UPDATE: Instruksi format Excel ditambah URL Cover -->
                         <div style="font-size: 11px; color: var(--accent-light); margin-bottom: 8px; font-weight: bold;">FORMAT KOLOM EXCEL (Baris 1):</div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace;">Judul | Penulis | Kategori | Kesimpulan | Key Points | Langkah Aksi | Judul Bab 1 | Isi Bab 1 | ... s/d Bab 10</div>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace;">Judul | Penulis | Kategori | URL Cover | Kesimpulan | Key Points | Langkah Aksi | Judul Bab 1 | Isi Bab 1 | ...</div>
                     </div>
 
                     <form id="addBookForm">
@@ -635,6 +651,7 @@
 
     <!-- ===== SCREEN ONBOARDING ===== -->
     <div class="screen active" id="screen-onboarding">
+        <!-- ... [KODE ONBOARDING SAMA SEPERTI SEBELUMNYA] ... -->
         <div class="onboarding-wrapper">
             <div class="particles">
                 <div class="particle"></div><div class="particle"></div><div class="particle"></div>
@@ -781,6 +798,7 @@
 
     <!-- SCREEN LIBRARY (HOME) -->
     <div class="screen" id="screen-library">
+        <!-- ... [KODE LIBRARY HOME SAMA] ... -->
         <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
@@ -819,6 +837,7 @@
 
     <!-- SCREEN COLLECTION (LIBRARY) -->
     <div class="screen" id="screen-collection">
+        <!-- ... [KODE COLLECTION SAMA] ... -->
         <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
@@ -851,6 +870,7 @@
 
     <!-- SCREEN PROFILE -->
     <div class="screen" id="screen-profile">
+        <!-- ... [KODE PROFILE SAMA] ... -->
         <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
@@ -969,6 +989,8 @@
                 <div class="reader-book-author" id="topbarBookAuthor">Memuat Penulis...</div>
             </div>
             <div class="reader-top-actions">
+                <!-- UPDATE: Tombol Ke Penanda Posisi Terakhir -->
+                <button class="reader-top-btn" onclick="goToExplicitBookmark()" title="Ke Posisi yang Ditandai"><i data-lucide="map-pin" style="width:16px;"></i></button>
                 <button class="reader-top-btn" onclick="toggleFavorite()" id="btnFavorite" title="Simpan ke Favorit"><i data-lucide="heart" style="width:16px;"></i></button>
                 <button class="reader-top-btn" id="btnDeleteBook" onclick="deleteActiveBook()" style="display:none; color: #D45353;" title="Hapus Buku"><i data-lucide="trash-2" style="width:16px;"></i></button>
                 <button class="reader-top-btn" onclick="toggleBookmarksDrawer()" title="Sorotan & Bookmark"><i data-lucide="book-marked" style="width:16px;"></i></button> 
@@ -1009,10 +1031,12 @@
             <span class="bottom-bar-page-indicator" id="pageIndicator">0%</span>
             <button class="bottom-bar-btn" id="btnNextChapter" onclick="navigateChapter('next')"><i data-lucide="chevron-right"></i></button>
             <div class="bottom-bar-divider"></div>
-            <button class="bottom-bar-btn" id="btnHighlight" onclick="toggleHighlightMode()"><i data-lucide="highlighter"></i></button>
-            <button class="bottom-bar-btn" id="btnBookmark" onclick="toggleBookmark()"><i data-lucide="bookmark"></i></button>
-            <button class="bottom-bar-btn" onclick="toggleSettings()"><i data-lucide="type"></i></button>
-            <button class="bottom-bar-btn" onclick="openInsights()"><i data-lucide="sparkles"></i></button>
+            <button class="bottom-bar-btn" id="btnHighlight" onclick="toggleHighlightMode()" title="Mode Sorotan"><i data-lucide="highlighter"></i></button>
+            <button class="bottom-bar-btn" id="btnBookmark" onclick="toggleBookmark()" title="Tandai Bab"><i data-lucide="bookmark"></i></button>
+            <!-- UPDATE: Tombol Tandai Posisi Paragraf Spesifik -->
+            <button class="bottom-bar-btn" onclick="setExplicitBookmark()" title="Tandai Paragraf Saat Ini"><i data-lucide="pin"></i></button>
+            <button class="bottom-bar-btn" onclick="toggleSettings()" title="Pengaturan Teks"><i data-lucide="type"></i></button>
+            <button class="bottom-bar-btn" onclick="openInsights()" title="Insight AI"><i data-lucide="sparkles"></i></button>
         </div>
         
         <div class="settings-popover" id="settingsPopover">
@@ -1099,6 +1123,7 @@
         ];
         let currentQuoteIdx = 0;
 
+        // Observer untuk menyimpan paragraf mana yang sedang aktif dibaca
         let paragraphObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if(entry.isIntersecting && activeBook) {
@@ -1116,6 +1141,55 @@
                 }
             });
         }, { threshold: 0.5 });
+
+        // UPDATE: Fungsi Menyimpan Bookmark Spesifik Paragraf (Pin)
+        window.setExplicitBookmark = function() {
+            if(!activeBook) return;
+            const cIdx = activeChapterIdx;
+            const pIdx = activeBook.lastReadParagraph || 0;
+            
+            activeBook.savedPin = { chapter: cIdx, paragraph: pIdx };
+            
+            if(window.firebaseUpdatePin) {
+                window.firebaseUpdatePin(activeBook.id, activeBook.savedPin);
+            }
+            
+            window.showToast(`Paragraf ditandai!`, 'pin');
+            
+            // Berikan efek visual ke paragraf tersebut selama 2 detik
+            const pEl = document.getElementById(`para-${pIdx}`);
+            if(pEl) {
+                pEl.style.borderLeft = "4px solid var(--accent)";
+                pEl.style.paddingLeft = "12px";
+                pEl.style.transition = "all 0.3s";
+                setTimeout(() => {
+                    pEl.style.borderLeft = "";
+                    pEl.style.paddingLeft = "";
+                }, 2000);
+            }
+        }
+
+        // UPDATE: Fungsi Melompat ke Bookmark (Pin)
+        window.goToExplicitBookmark = function() {
+            if(!activeBook || !activeBook.savedPin) {
+                return window.showToast('Belum ada posisi yang ditandai.', '⚠️');
+            }
+            const pin = activeBook.savedPin;
+            window.targetHighlightParagraph = pin.paragraph; // Memanfaatkan variabel pelompat eksisting
+            
+            if(activeChapterIdx !== pin.chapter) {
+                jumpToChapter(pin.chapter);
+            } else {
+                const targetP = document.getElementById(`para-${pin.paragraph}`);
+                if(targetP) {
+                    const y = targetP.getBoundingClientRect().top + window.scrollY - 95;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                    targetP.classList.add('jump-pulse');
+                    setTimeout(() => targetP.classList.remove('jump-pulse'), 1500);
+                }
+            }
+            window.showToast('Kembali ke posisi yang ditandai.', 'map-pin');
+        }
 
         function startReadingTimer() {
             if (readingTimer) clearInterval(readingTimer);
@@ -1160,8 +1234,7 @@
             if (window.APP_STATE.onboardingComplete) initReader();
             startReadingTimer();
 
-            // UPDATE UI 1: Menyiapkan wadah bab dinamis di modal
-            window.addChapterField(); // memanggil 1 wadah bab kosong secara default
+            window.addChapterField(); 
         }
 
         function checkAdminUI(email) {
@@ -1383,10 +1456,10 @@
             const idx = activeBook.bookmarks.indexOf(activeChapterIdx);
             if (idx > -1) {
                 activeBook.bookmarks.splice(idx, 1);
-                showToast('Bookmark halaman dihapus.');
+                showToast('Bookmark bab dihapus.');
             } else {
                 activeBook.bookmarks.push(activeChapterIdx);
-                showToast('Halaman berhasil ditandai!', '🔖');
+                showToast('Bab berhasil ditandai!', '🔖');
             }
             updateBookmarkUI();
             if (window.firebaseUpdateBookmarks) window.firebaseUpdateBookmarks(activeBook.id, activeBook.bookmarks);
@@ -1553,11 +1626,20 @@
             updateReadingGoalDisplay();
         }
 
+        // UPDATE: Logika generate card dengan mempertimbangkan custom Cover URL
         window.generateBookCard = function(b) {
+            const style = b.coverUrl ? `background-image: url('${b.coverUrl}'); background-size: cover; background-position: center;` : '';
+            const innerClass = b.coverUrl ? 'has-image' : '';
             return `
             <div class="book-card" onclick="openReader('${b.id}')">
               ${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}
-              <div class="book-cover ${b.cover}"><div class="book-cover-inner"><div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div></div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div>
+              <div class="book-cover ${b.coverUrl ? '' : b.cover}" style="${style}">
+                <div class="book-cover-inner ${innerClass}">
+                  <div class="book-cover-text">${b.title}</div>
+                  <div class="book-cover-author">${b.author}</div>
+                </div>
+                <div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div>
+              </div>
               <div class="book-title">${b.title}</div>
               <div class="book-author-name"><span>${b.author}</span><span class="book-genre-label">${b.category}</span></div>
               <span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span>
@@ -1602,9 +1684,15 @@
                 } else {
                     let sortedBooks = [...books].sort((a, b) => (b.lastReadAt || 0) - (a.lastReadAt || 0));
                     let featBook = sortedBooks.find(b => b.progress > 0 && b.progress < 100) || sortedBooks[0];
+                    
+                    const featStyle = featBook.coverUrl ? `background-image: url('${featBook.coverUrl}'); background-size: cover; background-position: center;` : '';
+                    const featInnerClass = featBook.coverUrl ? 'has-image' : '';
+
                     featuredContainer.innerHTML = `
                         <div class="lib-featured" onclick="openReader('${featBook.id}')">
-                            <div class="feat-cover ${featBook.cover}"><div class="feat-cover-inner"><div class="feat-cover-title">${featBook.title}</div></div></div>
+                            <div class="feat-cover ${featBook.coverUrl ? '' : featBook.cover}" style="${featStyle}">
+                                <div class="feat-cover-inner ${featInnerClass}"><div class="feat-cover-title">${featBook.title}</div></div>
+                            </div>
                             <div class="feat-meta">
                                 <div class="feat-badge">✦ ${featBook.progress > 0 ? 'SEDANG DIBACA' : 'BUKU BARU'}</div>
                                 <div class="feat-title">${featBook.title}</div>
@@ -1708,14 +1796,17 @@
             if (isCollectionTab) {
                 colGrid.innerHTML = results.length > 0 ? results.map(b => generateBookCard(b)).join('') : '<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-muted);">Tidak ada buku yang ditemukan.</div>';
             } else {
-                dd.innerHTML = results.length > 0 ? results.map(b => `
-                <div class="search-item" onmousedown="clickSearchItem('${b.id}')" ontouchstart="clickSearchItem('${b.id}')">
-                    <div class="book-cover ${b.cover}" style="width:28px;height:42px;border-radius:2px 4px 4px 2px;flex-shrink:0;"></div>
-                    <div style="flex:1;">
-                        <div style="font-size:13px;font-weight:500;">${b.title}</div>
-                        <div style="font-size:11px;color:var(--text-muted); display:flex; justify-content:space-between;"><span>${b.author}</span><span style="color:var(--accent); text-transform:capitalize;">${b.category}</span></div>
-                    </div>
-                </div>`).join('') : '<div style="padding:16px;text-align:center;color:var(--text-muted);">Tidak ditemukan</div>';
+                dd.innerHTML = results.length > 0 ? results.map(b => {
+                    const style = b.coverUrl ? `background-image: url('${b.coverUrl}'); background-size: cover; background-position: center;` : '';
+                    return `
+                    <div class="search-item" onmousedown="clickSearchItem('${b.id}')" ontouchstart="clickSearchItem('${b.id}')">
+                        <div class="book-cover ${b.coverUrl?'':b.cover}" style="${style} width:28px;height:42px;border-radius:2px 4px 4px 2px;flex-shrink:0;"></div>
+                        <div style="flex:1;">
+                            <div style="font-size:13px;font-weight:500;">${b.title}</div>
+                            <div style="font-size:11px;color:var(--text-muted); display:flex; justify-content:space-between;"><span>${b.author}</span><span style="color:var(--accent); text-transform:capitalize;">${b.category}</span></div>
+                        </div>
+                    </div>`
+                }).join('') : '<div style="padding:16px;text-align:center;color:var(--text-muted);">Tidak ditemukan</div>';
                 dd.classList.add('show');
             }
             lucide.createIcons();
@@ -2105,7 +2196,6 @@
             }
         }
 
-        // UPDATE UI 1: Fungsi Tab Navigasi di Modal
         window.switchAddBookTab = function(tab) {
             const btnManual = document.getElementById('tabBtnManual');
             const btnExcel = document.getElementById('tabBtnExcel');
@@ -2129,7 +2219,6 @@
             }
         }
 
-        // UPDATE UI 1: Fungsi Menambahkan Elemen Form Bab Secara Dinamis
         let chapterCount = 0;
         window.addChapterField = function() {
             chapterCount++;
@@ -2152,12 +2241,12 @@
             lucide.createIcons();
         }
 
-        // UPDATE UI 1: Fungsi Menyusun Form Manual dan mengirim ke Firebase
         window.handleManualBookSubmit = function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnSubmitManual');
             btn.innerHTML = "Menyimpan ke server..."; btn.disabled = true;
 
+            const coverUrl = document.getElementById('manCoverUrl').value.trim();
             const title = document.getElementById('manJudul').value.trim();
             const author = document.getElementById('manPenulis').value.trim();
             const category = document.getElementById('manKategori').value.trim().toLowerCase() || 'lainnya';
@@ -2168,7 +2257,6 @@
             const chapterItems = document.querySelectorAll('.chapter-item');
             let chapters = [];
             
-            // Loop form bab yang ada
             chapterItems.forEach(item => {
                 const cTitle = item.querySelector('.chapter-title-input').value.trim();
                 const cContent = item.querySelector('.chapter-content-input').value.trim();
@@ -2177,7 +2265,6 @@
                 }
             });
 
-            // Validasi jika belum ada bab yang diisi
             if (chapters.length === 0) {
                 chapters.push({ title: "Ringkasan", content: "Isi buku belum ditambahkan." });
             }
@@ -2185,7 +2272,6 @@
             const covers = ['bc1', 'bc2', 'bc3', 'bc4', 'bc5', 'bc6'];
             const randomCover = covers[Math.floor(Math.random() * covers.length)];
 
-            // Susun menjadi satu objek buku utuh
             const bookData = {
                 title: title, 
                 author: author, 
@@ -2194,6 +2280,7 @@
                 keyPoints: keyPoints, 
                 langkahAksi: langkahAksi,
                 cover: randomCover, 
+                coverUrl: coverUrl, // Kolom Cover URL ditambahkan
                 progress: 0, 
                 isFavorite: false,
                 highlights: {},
@@ -2204,10 +2291,10 @@
                 lastReadAt: 0,
                 lastReadChapter: 0,
                 lastReadParagraph: 0,
+                savedPin: null, // Kolom posisi bookmark (pin)
                 savedQuotes: []
             };
 
-            // Kirim ke module Firebase
             if(window.firebaseSaveManualBook) {
                 window.firebaseSaveManualBook(bookData);
             } else {
@@ -2492,20 +2579,23 @@
             try { await updateDoc(doc(db, "buku_bacaan", bookId), { chapterNotes: notesObj }); } catch (error) { console.error(error); }
         }
 
-        // UPDATE UI 1: Menangkap data dari form manual, tambahkan timestamp Server, dan Upload
+        // UPDATE: Fungsi menyimpan titik bookmark spesifik paragraf
+        window.firebaseUpdatePin = async (bookId, pinObj) => {
+            try { await updateDoc(doc(db, "buku_bacaan", bookId), { savedPin: pinObj }); } catch (error) { console.error(error); }
+        }
+
         window.firebaseSaveManualBook = async (bookData) => {
             try {
-                bookData.createdAt = serverTimestamp(); // Assign timestamp dari server firebase
+                bookData.createdAt = serverTimestamp();
                 await addDoc(collection(db, "buku_bacaan"), bookData);
                 
                 if(window.showToast) window.showToast("Buku berhasil ditambahkan!", "✅");
                 window.closeModal('addBookModal');
                 
-                // Reset form kembali bersih
                 document.getElementById('manualBookForm').reset();
                 document.getElementById('chapterList').innerHTML = '';
                 chapterCount = 0;
-                window.addChapterField(); // memanggil wadah bab kosong lagi
+                window.addChapterField();
 
             } catch (error) {
                 console.error(error);
@@ -2561,6 +2651,7 @@
                                 title: title, 
                                 author: author, 
                                 category: row['Kategori'] || 'lainnya', 
+                                coverUrl: row['URL Cover'] || '',
                                 kesimpulan: row['Kesimpulan'] || '', 
                                 keyPoints: row['Key Points'] || '', 
                                 langkahAksi: row['Langkah Aksi'] || '',
@@ -2600,6 +2691,7 @@
                             keyPoints: book.keyPoints, 
                             langkahAksi: book.langkahAksi,
                             cover: randomCover, 
+                            coverUrl: book.coverUrl,
                             progress: 0, 
                             isFavorite: false,
                             highlights: {},
@@ -2611,6 +2703,7 @@
                             lastReadAt: 0,
                             lastReadChapter: 0,
                             lastReadParagraph: 0,
+                            savedPin: null,
                             savedQuotes: []
                         });
                         savedCount++;
@@ -2643,6 +2736,7 @@
                     keyPoints: data.keyPoints || "", 
                     langkahAksi: data.langkahAksi || "",
                     cover: data.cover || "bc1", 
+                    coverUrl: data.coverUrl || "",
                     progress: data.progress || 0, 
                     isFavorite: data.isFavorite || false, 
                     tag: data.tag || "Belum Dibaca", 
@@ -2653,6 +2747,7 @@
                     lastReadAt: data.lastReadAt || 0,
                     lastReadChapter: data.lastReadChapter || 0,
                     lastReadParagraph: data.lastReadParagraph || 0,
+                    savedPin: data.savedPin || null,
                     savedQuotes: data.savedQuotes || []
                 });
             });
