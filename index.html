@@ -902,7 +902,7 @@
         <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
-                    <div class="lib-wordmark">L<span>ibrary</span></div>
+                    <div class="lib-wordmark">Semua <span>Buku</span></div>
                     <div class="lib-actions">
                         <div class="icon-btn" id="btnUploadCollection" onclick="openModal('addBookModal')" title="Tambah Buku" style="display:none; background: var(--accent); color: white; border-color: var(--accent);"><i data-lucide="plus"></i></div>
                         <div class="icon-btn" onclick="focusSearchCollection()"><i data-lucide="search"></i></div>
@@ -2516,7 +2516,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB9VMAwS4xrIVkEbQDgs8j9hLtXSigY39I",
@@ -2532,7 +2532,18 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const googleProvider = new GoogleAuthProvider();
-
+// Tangkap hasil setelah kembali dari halaman login Google
+getRedirectResult(auth).then((result) => {
+    if (result && result.user) {
+        window.showToast("Berhasil masuk dengan Google!", "✅");
+        if (document.getElementById('screen-onboarding').classList.contains('active')) {
+            window.goToSlide(2);
+        }
+    }
+}).catch((error) => {
+    console.error("Redirect error:", error);
+    window.showToast("Gagal login dengan Google.", "❌");
+});
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.APP_STATE.isLoggedIn = true;
@@ -2628,20 +2639,17 @@
         };
 
         window.socialLogin = async (provider) => {
-            if(provider === 'Google') {
-                try { 
-                    await signInWithPopup(auth, googleProvider); 
-                    window.showToast("Berhasil masuk dengan Google!", "✅"); 
-                    if (document.getElementById('screen-onboarding').classList.contains('active')) {
-                        window.goToSlide(2);
-                    }
-                } 
-                catch(error) { 
-                    console.error(error);
-                    window.showToast("Login dibatalkan atau gagal.", "❌"); 
-                }
-            } else { window.showToast(provider + " login belum tersedia.", "⚠️"); }
-        };
+    if(provider === 'Google') {
+        try { 
+            // Menggunakan redirect yang ramah iOS/Safari
+            await signInWithRedirect(auth, googleProvider); 
+        } 
+        catch(error) { 
+            console.error(error);
+            window.showToast("Gagal memulai login Google.", "❌"); 
+        }
+    } else { window.showToast(provider + " login belum tersedia.", "⚠️"); }
+};
 
         window.handleLogout = async () => {
             if(auth.currentUser) {
