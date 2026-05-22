@@ -54,7 +54,7 @@
 
         .lucide { width: 18px; height: 18px; stroke-width: 1.5px; }
 
-        /* UPDATE SCROLLBAR: Dibuat lebih tebal agar mudah diseret (draggable) */
+        /* SCROLLBAR */
         ::-webkit-scrollbar { width: 10px; height: 10px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.03); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.45); border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
@@ -63,7 +63,6 @@
         body.theme-dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border: 2px solid transparent; background-clip: content-box; }
         body.theme-dark ::-webkit-scrollbar-thumb:hover { background: var(--accent); background-clip: border-box; border: none; }
         
-        /* Scrollbar khusus untuk Textarea CMS Manual */
         textarea::-webkit-scrollbar { width: 12px; }
         textarea::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 6px; }
         textarea::-webkit-scrollbar-thumb { background: rgba(200,134,58,0.5); border-radius: 6px; border: 2px solid transparent; background-clip: content-box; }
@@ -167,6 +166,10 @@
         .highlighted-text { background-color: rgba(200,134,58,0.25); box-shadow: 0 0 0 4px rgba(200,134,58,0.25); }
         body.theme-dark .highlighted-text { background-color: rgba(200,134,58,0.35); box-shadow: 0 0 0 4px rgba(200,134,58,0.35); }
         body.theme-dark .reader-body.highlight-mode-active p:hover { background-color: rgba(255,255,255,0.05); box-shadow: 0 0 0 4px rgba(255,255,255,0.05); }
+
+        /* KELAS KHUSUS PARAGRAF PIN */
+        .pinned-paragraph { border-left: 4px solid var(--accent); padding-left: 12px; transition: all 0.3s ease; }
+        body.theme-dark .pinned-paragraph { border-left: 4px solid var(--accent-light); }
 
         .onboarding-wrapper { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom)); position: relative; background: #0D0C0A; overflow: hidden; }
         .onboarding-wrapper::before { content: ''; position: absolute; top: -30%; left: -20%; width: 80%; height: 80%; background: radial-gradient(ellipse at center, rgba(200,134,58,0.08) 0%, transparent 70%); pointer-events: none; animation: floatSlow 8s ease-in-out infinite; }
@@ -281,7 +284,10 @@
         .lib-featured:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
         .feat-cover { width: 90px; height: 130px; border-radius: 6px 10px 10px 6px; overflow: hidden; box-shadow: 6px 6px 20px rgba(0,0,0,0.4); position: relative; }
         .feat-cover-inner { width: 100%; height: 100%; background: linear-gradient(160deg, #C8863A 0%, #7A5A3A 100%); display: flex; align-items: center; justify-content: center; padding: 8px; position: relative; }
-        .feat-cover-inner.has-image { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%); align-items: flex-end; padding-bottom: 12px; }
+        
+        /* 🔥 REVISI: MENGHILANGKAN EFEK GELAP PADA COVER YANG MENGGUNAKAN GAMBAR URL */
+        .feat-cover-inner.has-image { background: transparent; align-items: flex-end; padding-bottom: 12px; }
+        
         .feat-cover-inner::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: rgba(0,0,0,0.3); }
         .feat-cover-title { font-family: var(--font-display); font-size: 9px; color: rgba(255,255,255,0.9); text-align: center; font-style: italic; }
         .feat-meta { display: flex; flex-direction: column; gap: 6px; }
@@ -302,7 +308,10 @@
         .book-card:hover { transform: translateY(-4px); }
         .book-cover { aspect-ratio: 2/3; border-radius: 4px 8px 8px 4px; margin-bottom: 10px; box-shadow: var(--shadow-md); overflow: hidden; position: relative; }
         .book-cover-inner { width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px 12px; justify-content: space-between; position: relative; }
-        .book-cover-inner.has-image { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%); justify-content: flex-end; gap: 4px; padding-bottom: 14px; }
+        
+        /* 🔥 REVISI: MENGHILANGKAN EFEK GELAP PADA COVER BUKU LISTING YANG MENGGUNAKAN GAMBAR URL */
+        .book-cover-inner.has-image { background: transparent; justify-content: flex-end; gap: 4px; padding-bottom: 14px; }
+        
         .book-cover-inner::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: rgba(0,0,0,0.25); }
         .bc1 { background: linear-gradient(160deg, #7A8C6E 0%, #4A5A40 100%); }
         .bc2 { background: linear-gradient(160deg, #5A7A8C 0%, #2A4A5C 100%); }
@@ -579,7 +588,6 @@
                 <!-- TAB 1: MANUAL (CMS) -->
                 <div id="tabManual" class="tab-pane active" style="display: block;">
                     <form id="manualBookForm" onsubmit="handleManualBookSubmit(event)">
-                        <!-- UPDATE: Kolom Cover URL di Input Manual -->
                         <div class="form-group" style="margin-bottom: 16px;">
                             <label class="form-label" style="color: var(--accent-light);">URL Foto Cover Buku (Opsional)</label>
                             <input type="url" class="form-input" id="manCoverUrl" placeholder="Contoh: https://i.imgur.com/gambar.jpg" style="background: rgba(200,134,58,0.05); border-color: rgba(200,134,58,0.3); color: #fff;">
@@ -616,11 +624,10 @@
                             </div>
                         </div>
 
-                        <!-- Area Tambah Bab Dinamis -->
                         <div style="margin: 24px 0 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
                             <div style="font-size: 14px; font-weight: 600; color: var(--accent-light); margin-bottom: 16px; display:flex; justify-content: space-between; align-items:center;">
                                 Isi Bab Buku
-                                <button type="button" onclick="addChapterField()" style="background: rgba(200,134,58,0.2); color: var(--accent-light); border: 1px solid var(--accent); border-radius: 4px; padding: 6px 12px; font-size: 12px; font-weight:600; cursor:pointer; display:flex; gap:6px; align-items:center;"><i data-lucide="plus" style="width:14px;"></i> Tambah Bab</button>
+                                <button type="button" onclick="addChapterField('chapterList')" style="background: rgba(200,134,58,0.2); color: var(--accent-light); border: 1px solid var(--accent); border-radius: 4px; padding: 6px 12px; font-size: 12px; font-weight:600; cursor:pointer; display:flex; gap:6px; align-items:center;"><i data-lucide="plus" style="width:14px;"></i> Tambah Bab</button>
                             </div>
                             <div id="chapterList" style="display: flex; flex-direction: column; gap: 16px;"></div>
                         </div>
@@ -632,7 +639,6 @@
                 <!-- TAB 2: EXCEL -->
                 <div id="tabExcel" class="tab-pane" style="display: none;">
                     <div style="background: rgba(200,134,58,0.1); border: 1px dashed rgba(200,134,58,0.4); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
-                        <!-- UPDATE: Instruksi format Excel ditambah URL Cover -->
                         <div style="font-size: 11px; color: var(--accent-light); margin-bottom: 8px; font-weight: bold;">FORMAT KOLOM EXCEL (Baris 1):</div>
                         <div style="font-size: 11px; color: rgba(255,255,255,0.7); font-family: monospace;">Judul | Penulis | Kategori | URL Cover | Kesimpulan | Key Points | Langkah Aksi | Judul Bab 1 | Isi Bab 1 | ...</div>
                     </div>
@@ -649,9 +655,70 @@
         </div>
     </div>
 
+    <!-- UPDATE UI 2: MODAL EDIT BUKU -->
+    <div class="modal-overlay" id="editBookModal">
+        <div class="modal-content" style="background: var(--bg-dark); color: var(--text-light); border-color: rgba(255,255,255,0.1); width: 95%; max-width: 680px; padding: 0;">
+            <button class="modal-close" onclick="closeModal('editBookModal')" style="background: rgba(255,255,255,0.05); color: #fff; top: 16px; right: 16px; z-index: 10;"><i data-lucide="x"></i></button>
+            
+            <div style="padding: 24px 24px 16px;">
+                <div class="modal-title" style="color: #fff;">Edit Buku</div>
+                <div class="modal-subtitle" style="color: var(--text-light-muted); margin-bottom: 16px;">Revisi informasi atau isi buku ini.</div>
+            </div>
+
+            <div style="padding: 0 24px 24px; max-height: 65vh; overflow-y: auto;">
+                <form id="editBookForm" onsubmit="handleEditBookSubmit(event)">
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label class="form-label" style="color: var(--accent-light);">URL Foto Cover Buku (Opsional)</label>
+                        <input type="url" class="form-input" id="editCoverUrl" placeholder="Contoh: https://i.imgur.com/gambar.jpg" style="background: rgba(200,134,58,0.05); border-color: rgba(200,134,58,0.3); color: #fff;">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" style="color: var(--text-light-muted);">Judul Buku *</label>
+                        <input type="text" class="form-input" id="editJudul" required style="background: rgba(255,255,255,0.05); color: #fff;">
+                    </div>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <div class="form-group" style="flex: 1; min-width: 140px;">
+                            <label class="form-label" style="color: var(--text-light-muted);">Penulis *</label>
+                            <input type="text" class="form-input" id="editPenulis" required style="background: rgba(255,255,255,0.05); color: #fff;">
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 140px;">
+                            <label class="form-label" style="color: var(--text-light-muted);">Kategori *</label>
+                            <input type="text" class="form-input" id="editKategori" placeholder="Cth: Psikologi" required style="background: rgba(255,255,255,0.05); color: #fff;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" style="color: var(--text-light-muted);">Kesimpulan Buku</label>
+                        <textarea class="form-input" id="editKesimpulan" rows="2" style="background: rgba(255,255,255,0.05); color: #fff; resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label class="form-label" style="color: var(--text-light-muted);">Key Points (Poin Penting)</label>
+                            <textarea class="form-input" id="editKeyPoints" rows="2" placeholder="Pisahkan dengan Enter atau Semicolon (;)" style="background: rgba(255,255,255,0.05); color: #fff; resize: vertical;"></textarea>
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label class="form-label" style="color: var(--text-light-muted);">Langkah Aksi</label>
+                            <textarea class="form-input" id="editLangkahAksi" rows="2" placeholder="Pisahkan dengan Enter atau Semicolon (;)" style="background: rgba(255,255,255,0.05); color: #fff; resize: vertical;"></textarea>
+                        </div>
+                    </div>
+
+                    <div style="margin: 24px 0 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                        <div style="font-size: 14px; font-weight: 600; color: var(--accent-light); margin-bottom: 16px; display:flex; justify-content: space-between; align-items:center;">
+                            Isi Bab Buku
+                            <button type="button" onclick="addChapterField('editChapterList')" style="background: rgba(200,134,58,0.2); color: var(--accent-light); border: 1px solid var(--accent); border-radius: 4px; padding: 6px 12px; font-size: 12px; font-weight:600; cursor:pointer; display:flex; gap:6px; align-items:center;"><i data-lucide="plus" style="width:14px;"></i> Tambah Bab</button>
+                        </div>
+                        <div id="editChapterList" style="display: flex; flex-direction: column; gap: 16px;"></div>
+                    </div>
+                    
+                    <button type="submit" id="btnSubmitEdit" class="btn-primary" style="margin-top:24px; position: sticky; bottom: 0;"><i data-lucide="save" style="width:18px;"></i> Simpan Perubahan ke Server</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== SCREEN ONBOARDING ===== -->
     <div class="screen active" id="screen-onboarding">
-        <!-- ... [KODE ONBOARDING SAMA SEPERTI SEBELUMNYA] ... -->
         <div class="onboarding-wrapper">
             <div class="particles">
                 <div class="particle"></div><div class="particle"></div><div class="particle"></div>
@@ -798,7 +865,6 @@
 
     <!-- SCREEN LIBRARY (HOME) -->
     <div class="screen" id="screen-library">
-        <!-- ... [KODE LIBRARY HOME SAMA] ... -->
         <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
@@ -837,7 +903,6 @@
 
     <!-- SCREEN COLLECTION (LIBRARY) -->
     <div class="screen" id="screen-collection">
-        <!-- ... [KODE COLLECTION SAMA] ... -->
         <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
@@ -870,7 +935,6 @@
 
     <!-- SCREEN PROFILE -->
     <div class="screen" id="screen-profile">
-        <!-- ... [KODE PROFILE SAMA] ... -->
         <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
@@ -989,11 +1053,12 @@
                 <div class="reader-book-author" id="topbarBookAuthor">Memuat Penulis...</div>
             </div>
             <div class="reader-top-actions">
-                <!-- UPDATE: Tombol Ke Penanda Posisi Terakhir -->
                 <button class="reader-top-btn" onclick="goToExplicitBookmark()" title="Ke Posisi yang Ditandai"><i data-lucide="map-pin" style="width:16px;"></i></button>
                 <button class="reader-top-btn" onclick="toggleFavorite()" id="btnFavorite" title="Simpan ke Favorit"><i data-lucide="heart" style="width:16px;"></i></button>
+                <!-- UPDATE UI 2: Tombol Edit -->
+                <button class="reader-top-btn" id="btnEditBook" onclick="openEditBookModal()" style="display:none; color:var(--accent);" title="Edit Buku"><i data-lucide="edit" style="width:16px;"></i></button>
                 <button class="reader-top-btn" id="btnDeleteBook" onclick="deleteActiveBook()" style="display:none; color: #D45353;" title="Hapus Buku"><i data-lucide="trash-2" style="width:16px;"></i></button>
-                <button class="reader-top-btn" onclick="toggleBookmarksDrawer()" title="Sorotan & Bookmark"><i data-lucide="book-marked" style="width:16px;"></i></button> 
+                <button class="reader-top-btn" onclick="toggleBookmarksDrawer()" title="Sorotan Pembaca"><i data-lucide="book-marked" style="width:16px;"></i></button> 
                 <button class="reader-top-btn" onclick="toggleTOC()" title="Daftar Isi"><i data-lucide="list" style="width:16px;"></i></button>
             </div>
         </div>
@@ -1032,9 +1097,7 @@
             <button class="bottom-bar-btn" id="btnNextChapter" onclick="navigateChapter('next')"><i data-lucide="chevron-right"></i></button>
             <div class="bottom-bar-divider"></div>
             <button class="bottom-bar-btn" id="btnHighlight" onclick="toggleHighlightMode()" title="Mode Sorotan"><i data-lucide="highlighter"></i></button>
-            <button class="bottom-bar-btn" id="btnBookmark" onclick="toggleBookmark()" title="Tandai Bab"><i data-lucide="bookmark"></i></button>
-            <!-- UPDATE: Tombol Tandai Posisi Paragraf Spesifik -->
-            <button class="bottom-bar-btn" onclick="setExplicitBookmark()" title="Tandai Paragraf Saat Ini"><i data-lucide="pin"></i></button>
+            <button class="bottom-bar-btn" onclick="setExplicitBookmark()" title="Tandai Paragraf Saat Ini (Pin)"><i data-lucide="pin"></i></button>
             <button class="bottom-bar-btn" onclick="toggleSettings()" title="Pengaturan Teks"><i data-lucide="type"></i></button>
             <button class="bottom-bar-btn" onclick="openInsights()" title="Insight AI"><i data-lucide="sparkles"></i></button>
         </div>
@@ -1123,7 +1186,6 @@
         ];
         let currentQuoteIdx = 0;
 
-        // Observer untuk menyimpan paragraf mana yang sedang aktif dibaca
         let paragraphObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if(entry.isIntersecting && activeBook) {
@@ -1142,7 +1204,7 @@
             });
         }, { threshold: 0.5 });
 
-        // UPDATE: Fungsi Menyimpan Bookmark Spesifik Paragraf (Pin)
+        // Fitur menyematkan (Pin) posisi baca
         window.setExplicitBookmark = function() {
             if(!activeBook) return;
             const cIdx = activeChapterIdx;
@@ -1156,26 +1218,23 @@
             
             window.showToast(`Paragraf ditandai!`, 'pin');
             
-            // Berikan efek visual ke paragraf tersebut selama 2 detik
+            // Bersihkan indikator lama, pindahkan ke yang baru
+            document.querySelectorAll('#readerBody p').forEach(p => p.classList.remove('pinned-paragraph'));
             const pEl = document.getElementById(`para-${pIdx}`);
             if(pEl) {
-                pEl.style.borderLeft = "4px solid var(--accent)";
-                pEl.style.paddingLeft = "12px";
+                pEl.classList.add('pinned-paragraph');
                 pEl.style.transition = "all 0.3s";
-                setTimeout(() => {
-                    pEl.style.borderLeft = "";
-                    pEl.style.paddingLeft = "";
-                }, 2000);
+                pEl.style.backgroundColor = "rgba(200,134,58,0.2)";
+                setTimeout(() => pEl.style.backgroundColor = "", 1500);
             }
         }
 
-        // UPDATE: Fungsi Melompat ke Bookmark (Pin)
         window.goToExplicitBookmark = function() {
             if(!activeBook || !activeBook.savedPin) {
                 return window.showToast('Belum ada posisi yang ditandai.', '⚠️');
             }
             const pin = activeBook.savedPin;
-            window.targetHighlightParagraph = pin.paragraph; // Memanfaatkan variabel pelompat eksisting
+            window.targetHighlightParagraph = pin.paragraph; 
             
             if(activeChapterIdx !== pin.chapter) {
                 jumpToChapter(pin.chapter);
@@ -1234,7 +1293,7 @@
             if (window.APP_STATE.onboardingComplete) initReader();
             startReadingTimer();
 
-            window.addChapterField(); 
+            window.addChapterField('chapterList'); 
         }
 
         function checkAdminUI(email) {
@@ -1245,11 +1304,13 @@
             const btnUploadHome = document.getElementById('btnUploadHome');
             const btnUploadCollection = document.getElementById('btnUploadCollection');
             const btnDeleteBook = document.getElementById('btnDeleteBook');
+            const btnEditBook = document.getElementById('btnEditBook');
             const btnAdminPanel = document.getElementById('btnAdminPanel');
 
             if (btnUploadHome) btnUploadHome.style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
             if (btnUploadCollection) btnUploadCollection.style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
             if (btnDeleteBook) btnDeleteBook.style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
+            if (btnEditBook) btnEditBook.style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
             if (btnAdminPanel) btnAdminPanel.style.display = window.isCurrentUserAdmin ? 'flex' : 'none';
         }
 
@@ -1449,36 +1510,6 @@
             if (window.firebaseUpdateHighlights) window.firebaseUpdateHighlights(activeBook.id, activeBook.highlights);
         }
 
-        window.toggleBookmark = function() {
-            if (!activeBook) return;
-            if (!activeBook.bookmarks) activeBook.bookmarks = [];
-
-            const idx = activeBook.bookmarks.indexOf(activeChapterIdx);
-            if (idx > -1) {
-                activeBook.bookmarks.splice(idx, 1);
-                showToast('Bookmark bab dihapus.');
-            } else {
-                activeBook.bookmarks.push(activeChapterIdx);
-                showToast('Bab berhasil ditandai!', '🔖');
-            }
-            updateBookmarkUI();
-            if (window.firebaseUpdateBookmarks) window.firebaseUpdateBookmarks(activeBook.id, activeBook.bookmarks);
-        }
-
-        function updateBookmarkUI() {
-            const btn = document.getElementById('btnBookmark');
-            if (!btn || !activeBook) return;
-            const isBookmarked = activeBook.bookmarks && activeBook.bookmarks.includes(activeChapterIdx);
-            if (isBookmarked) {
-                btn.classList.add('active');
-                btn.innerHTML = '<i data-lucide="bookmark" fill="currentColor"></i>';
-            } else {
-                btn.classList.remove('active');
-                btn.innerHTML = '<i data-lucide="bookmark"></i>';
-            }
-            lucide.createIcons();
-        }
-
         function showScreen(name) {
             activeScreenName = name;
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1528,7 +1559,8 @@
             else if(iconCode === '❌') lucideIcon = 'x-circle';
             else if(iconCode === '⚠️') lucideIcon = 'alert-triangle';
             else if(iconCode === '🗑️') lucideIcon = 'trash-2';
-            else if(iconCode === '🔖') lucideIcon = 'bookmark';
+            else if(iconCode === 'pin') lucideIcon = 'pin';
+            else if(iconCode === 'map-pin') lucideIcon = 'map-pin';
             else if(iconCode === '★') lucideIcon = 'star';
             
             document.getElementById('toastIcon').innerHTML = `<i data-lucide="${lucideIcon}"></i>`;
@@ -1626,17 +1658,19 @@
             updateReadingGoalDisplay();
         }
 
-        // UPDATE: Logika generate card dengan mempertimbangkan custom Cover URL
         window.generateBookCard = function(b) {
             const style = b.coverUrl ? `background-image: url('${b.coverUrl}'); background-size: cover; background-position: center;` : '';
             const innerClass = b.coverUrl ? 'has-image' : '';
+            const coverTextHtml = b.coverUrl ? '' : `
+                <div class="book-cover-text">${b.title}</div>
+                <div class="book-cover-author">${b.author}</div>
+            `;
             return `
             <div class="book-card" onclick="openReader('${b.id}')">
               ${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}
               <div class="book-cover ${b.coverUrl ? '' : b.cover}" style="${style}">
                 <div class="book-cover-inner ${innerClass}">
-                  <div class="book-cover-text">${b.title}</div>
-                  <div class="book-cover-author">${b.author}</div>
+                  ${coverTextHtml}
                 </div>
                 <div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div>
               </div>
@@ -1687,11 +1721,12 @@
                     
                     const featStyle = featBook.coverUrl ? `background-image: url('${featBook.coverUrl}'); background-size: cover; background-position: center;` : '';
                     const featInnerClass = featBook.coverUrl ? 'has-image' : '';
+                    const featCoverText = featBook.coverUrl ? '' : `<div class="feat-cover-title">${featBook.title}</div>`;
 
                     featuredContainer.innerHTML = `
                         <div class="lib-featured" onclick="openReader('${featBook.id}')">
                             <div class="feat-cover ${featBook.coverUrl ? '' : featBook.cover}" style="${featStyle}">
-                                <div class="feat-cover-inner ${featInnerClass}"><div class="feat-cover-title">${featBook.title}</div></div>
+                                <div class="feat-cover-inner ${featInnerClass}">${featCoverText}</div>
                             </div>
                             <div class="feat-meta">
                                 <div class="feat-badge">✦ ${featBook.progress > 0 ? 'SEDANG DIBACA' : 'BUKU BARU'}</div>
@@ -2074,11 +2109,17 @@
                 let htmlContent = '';
                 
                 const currentHighlights = (activeBook.highlights && activeBook.highlights[activeChapterIdx]) ? activeBook.highlights[activeChapterIdx] : [];
+                
+                let pinnedPara = -1;
+                if (activeBook.savedPin && activeBook.savedPin.chapter === activeChapterIdx) {
+                    pinnedPara = activeBook.savedPin.paragraph;
+                }
 
                 paragraphs.forEach((p, index) => {
                     const isHigh = currentHighlights.includes(index) ? 'highlighted-text' : '';
+                    const isPinned = (index === pinnedPara) ? 'pinned-paragraph' : '';
                     const dropCap = index === 0 ? 'drop-cap' : '';
-                    htmlContent += `<p id="para-${index}" class="${dropCap} ${isHigh}" onclick="toggleParagraphHighlight(${index})">${p}</p>`;
+                    htmlContent += `<p id="para-${index}" class="${dropCap} ${isHigh} ${isPinned}" onclick="toggleParagraphHighlight(${index})">${p}</p>`;
                 });
                 
                 let existingNote = (activeBook.chapterNotes && activeBook.chapterNotes[activeChapterIdx]) ? activeBook.chapterNotes[activeChapterIdx] : '';
@@ -2125,8 +2166,6 @@
                 document.getElementById('readerBody').innerHTML = "<p>Buku ini belum memiliki isi ringkasan bab. Silakan tambahkan konten.</p>";
                 window.scrollTo({ top: 0, behavior: 'auto' });
             }
-
-            updateBookmarkUI();
 
             const prevBtn = document.getElementById('btnPrevChapter');
             const nextBtn = document.getElementById('btnNextChapter');
@@ -2219,17 +2258,16 @@
             }
         }
 
-        let chapterCount = 0;
-        window.addChapterField = function() {
-            chapterCount++;
-            const list = document.getElementById('chapterList');
+        window.addChapterField = function(containerId) {
+            const list = document.getElementById(containerId);
+            const count = list.children.length + 1;
             const div = document.createElement('div');
             div.className = 'chapter-item';
             div.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; position: relative; animation: slideNextIn 0.3s ease;';
             div.innerHTML = `
                 <button type="button" onclick="this.parentElement.remove()" style="position: absolute; top: 12px; right: 12px; background: rgba(212,83,83,0.1); border: 1px solid rgba(212,83,83,0.3); border-radius: 4px; color: #D45353; padding: 4px; cursor: pointer; display: flex; align-items:center; justify-content:center;"><i data-lucide="trash-2" style="width: 14px;"></i></button>
                 <div class="form-group" style="margin-bottom: 12px; padding-right: 36px;">
-                    <label class="form-label" style="color: var(--text-light-muted);">Judul Bab ${chapterCount}</label>
+                    <label class="form-label" style="color: var(--text-light-muted);">Judul Bab</label>
                     <input type="text" class="form-input chapter-title-input" placeholder="Cth: Pendahuluan" required style="background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.1); color: #fff;">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
@@ -2239,6 +2277,113 @@
             `;
             list.appendChild(div);
             lucide.createIcons();
+        }
+
+        // UPDATE UI 2: Fungsi Modal Edit Buku
+        window.openEditBookModal = function() {
+            if(!activeBook) return;
+            document.getElementById('editCoverUrl').value = activeBook.coverUrl || '';
+            document.getElementById('editJudul').value = activeBook.title || '';
+            document.getElementById('editPenulis').value = activeBook.author || '';
+            document.getElementById('editKategori').value = activeBook.category || '';
+            document.getElementById('editKesimpulan').value = activeBook.kesimpulan || '';
+            document.getElementById('editKeyPoints').value = activeBook.keyPoints || '';
+            document.getElementById('editLangkahAksi').value = activeBook.langkahAksi || '';
+
+            const list = document.getElementById('editChapterList');
+            list.innerHTML = '';
+            
+            if(activeBook.chapters && activeBook.chapters.length > 0) {
+                activeBook.chapters.forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = 'chapter-item';
+                    div.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; position: relative; margin-bottom: 16px;';
+                    div.innerHTML = `
+                        <button type="button" onclick="this.parentElement.remove()" style="position: absolute; top: 12px; right: 12px; background: rgba(212,83,83,0.1); border: 1px solid rgba(212,83,83,0.3); border-radius: 4px; color: #D45353; padding: 4px; cursor: pointer; display: flex; align-items:center; justify-content:center;"><i data-lucide="trash-2" style="width: 14px;"></i></button>
+                        <div class="form-group" style="margin-bottom: 12px; padding-right: 36px;">
+                            <label class="form-label" style="color: var(--text-light-muted);">Judul Bab</label>
+                            <input type="text" class="form-input chapter-title-input" value="${c.title}" required style="background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.1); color: #fff;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label" style="color: var(--text-light-muted);">Isi Teks Bab</label>
+                            <textarea class="form-input chapter-content-input" rows="8" required style="background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.1); color: #fff; resize: vertical; line-height: 1.6;">${c.content}</textarea>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+                lucide.createIcons();
+            } else {
+                window.addChapterField('editChapterList');
+            }
+            openModal('editBookModal');
+        }
+
+        window.handleEditBookSubmit = function(e) {
+            e.preventDefault();
+            if(!activeBook) return;
+            const btn = document.getElementById('btnSubmitEdit');
+            btn.innerHTML = "Menyimpan Perubahan..."; btn.disabled = true;
+
+            const coverUrl = document.getElementById('editCoverUrl').value.trim();
+            const title = document.getElementById('editJudul').value.trim();
+            const author = document.getElementById('editPenulis').value.trim();
+            const category = document.getElementById('editKategori').value.trim().toLowerCase() || 'lainnya';
+            const kesimpulan = document.getElementById('editKesimpulan').value.trim();
+            const keyPoints = document.getElementById('editKeyPoints').value.trim();
+            const langkahAksi = document.getElementById('editLangkahAksi').value.trim();
+
+            const chapterItems = document.querySelectorAll('#editChapterList .chapter-item');
+            let chapters = [];
+            chapterItems.forEach(item => {
+                const cTitle = item.querySelector('.chapter-title-input').value.trim();
+                const cContent = item.querySelector('.chapter-content-input').value.trim();
+                if (cTitle || cContent) chapters.push({ title: cTitle, content: cContent });
+            });
+
+            if (chapters.length === 0) {
+                chapters.push({ title: "Ringkasan", content: "Isi buku belum ditambahkan." });
+            }
+
+            const updatedData = {
+                title: title, 
+                author: author, 
+                category: category, 
+                kesimpulan: kesimpulan, 
+                keyPoints: keyPoints, 
+                langkahAksi: langkahAksi,
+                coverUrl: coverUrl,
+                chapters: chapters
+            };
+
+            if(window.firebaseUpdateFullBook) {
+                window.firebaseUpdateFullBook(activeBook.id, updatedData).then(() => {
+                    // Update objek lokal agar langsung terasa perubahannya tanpa nunggu server
+                    activeBook.title = title;
+                    activeBook.author = author;
+                    activeBook.category = category;
+                    activeBook.kesimpulan = kesimpulan;
+                    activeBook.keyPoints = keyPoints;
+                    activeBook.langkahAksi = langkahAksi;
+                    activeBook.coverUrl = coverUrl;
+                    activeBook.chapters = chapters;
+                    
+                    document.getElementById('topbarBookTitle').textContent = activeBook.title;
+                    document.getElementById('topbarBookAuthor').innerHTML = `${activeBook.author} &bull; <span style="text-transform:capitalize; opacity: 0.9;">${activeBook.category}</span>`;
+                    
+                    renderChapter();
+                    renderTOC();
+                    
+                    window.showToast("Buku berhasil diperbarui!", "✅");
+                    closeModal('editBookModal');
+                    btn.innerHTML = `<i data-lucide="save" style="width:18px;"></i> Simpan Perubahan ke Server`;
+                    btn.disabled = false;
+                    lucide.createIcons();
+                });
+            } else {
+                window.showToast("Koneksi Firebase gagal", "❌");
+                btn.innerHTML = `<i data-lucide="save" style="width:18px;"></i> Simpan Perubahan ke Server`;
+                btn.disabled = false;
+            }
         }
 
         window.handleManualBookSubmit = function(e) {
@@ -2254,7 +2399,7 @@
             const keyPoints = document.getElementById('manKeyPoints').value.trim();
             const langkahAksi = document.getElementById('manLangkahAksi').value.trim();
 
-            const chapterItems = document.querySelectorAll('.chapter-item');
+            const chapterItems = document.querySelectorAll('#chapterList .chapter-item');
             let chapters = [];
             
             chapterItems.forEach(item => {
@@ -2280,18 +2425,17 @@
                 keyPoints: keyPoints, 
                 langkahAksi: langkahAksi,
                 cover: randomCover, 
-                coverUrl: coverUrl, // Kolom Cover URL ditambahkan
+                coverUrl: coverUrl, 
                 progress: 0, 
                 isFavorite: false,
                 highlights: {},
-                bookmarks: [],
                 chapterNotes: {}, 
                 tag: "Belum Dibaca", 
                 chapters: chapters, 
                 lastReadAt: 0,
                 lastReadChapter: 0,
                 lastReadParagraph: 0,
-                savedPin: null, // Kolom posisi bookmark (pin)
+                savedPin: null, 
                 savedQuotes: []
             };
 
@@ -2306,7 +2450,7 @@
 
         document.addEventListener('keydown', (e) => { 
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); focusSearch(); } 
-            if (e.key === 'Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); window.closeModal('editProfileModal'); window.closeModal('preferencesModal'); window.closeModal('favoritesModal'); window.closeModal('adminModal'); closeSettings(); toggleBookmarksDrawer(); } 
+            if (e.key === 'Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); window.closeModal('editProfileModal'); window.closeModal('preferencesModal'); window.closeModal('favoritesModal'); window.closeModal('adminModal'); window.closeModal('editBookModal'); closeSettings(); toggleBookmarksDrawer(); } 
         });
 
         window.goToSlide = goToSlide;
@@ -2559,10 +2703,6 @@
             try { await updateDoc(doc(db, "buku_bacaan", bookId), { highlights: newHighlightsObj }); } catch (error) { console.error(error); } 
         }
 
-        window.firebaseUpdateBookmarks = async (bookId, newBookmarksArr) => { 
-            try { await updateDoc(doc(db, "buku_bacaan", bookId), { bookmarks: newBookmarksArr }); } catch (error) { console.error(error); } 
-        }
-
         window.firebaseUpdateLastRead = async (bookId, timestamp) => {
             try { await updateDoc(doc(db, "buku_bacaan", bookId), { lastReadAt: timestamp }); } catch (error) { console.error(error); }
         }
@@ -2579,9 +2719,13 @@
             try { await updateDoc(doc(db, "buku_bacaan", bookId), { chapterNotes: notesObj }); } catch (error) { console.error(error); }
         }
 
-        // UPDATE: Fungsi menyimpan titik bookmark spesifik paragraf
         window.firebaseUpdatePin = async (bookId, pinObj) => {
             try { await updateDoc(doc(db, "buku_bacaan", bookId), { savedPin: pinObj }); } catch (error) { console.error(error); }
+        }
+
+        // UPDATE UI 2: Update database saat buku diedit
+        window.firebaseUpdateFullBook = async (bookId, dataObj) => {
+            try { await updateDoc(doc(db, "buku_bacaan", bookId), dataObj); } catch (error) { console.error(error); throw error; }
         }
 
         window.firebaseSaveManualBook = async (bookData) => {
@@ -2595,7 +2739,7 @@
                 document.getElementById('manualBookForm').reset();
                 document.getElementById('chapterList').innerHTML = '';
                 chapterCount = 0;
-                window.addChapterField();
+                window.addChapterField('chapterList');
 
             } catch (error) {
                 console.error(error);
@@ -2695,7 +2839,6 @@
                             progress: 0, 
                             isFavorite: false,
                             highlights: {},
-                            bookmarks: [],
                             chapterNotes: {}, 
                             tag: "Belum Dibaca", 
                             chapters: book.chapters.length > 0 ? book.chapters : [{ title: "Ringkasan", content: "Belum ada isi bab." }], 
@@ -2742,7 +2885,6 @@
                     tag: data.tag || "Belum Dibaca", 
                     chapters: data.chapters || [],
                     highlights: data.highlights || {},
-                    bookmarks: data.bookmarks || [],
                     chapterNotes: data.chapterNotes || {}, 
                     lastReadAt: data.lastReadAt || 0,
                     lastReadChapter: data.lastReadChapter || 0,
