@@ -160,7 +160,7 @@
         .fav-list-item-title { font-size: 14px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
         .fav-list-item-author { font-size: 12px; color: var(--text-muted); display:flex; justify-content:space-between; }
 
-        /* 🔥 INTERACTIVE MODE (GABUNGAN PIN & HIGHLIGHT) 🔥 */
+        /* 🔥 INTERACTIVE MODE (PIN & HIGHLIGHT SEKALI KLIK) 🔥 */
         .reader-body p { transition: background-color 0.2s ease, box-shadow 0.2s ease; border-radius: 4px; }
         .reader-body.interactive-mode-active p { cursor: pointer; }
         .reader-body.interactive-mode-active p:hover { background-color: rgba(200,134,58,0.08); box-shadow: 0 0 0 4px rgba(200,134,58,0.08); }
@@ -169,7 +169,7 @@
         .highlighted-text { background-color: rgba(200,134,58,0.25); box-shadow: 0 0 0 4px rgba(200,134,58,0.25); }
         body.theme-dark .highlighted-text { background-color: rgba(200,134,58,0.35); box-shadow: 0 0 0 4px rgba(200,134,58,0.35); }
 
-        /* 🔥 KELAS KHUSUS PARAGRAF PIN (REVISI GARIS BAWAH) 🔥 */
+        /* 🔥 EFEK GARIS BAWAH UNTUK PIN 🔥 */
         .pinned-paragraph { border-bottom: 2.5px solid var(--accent); padding-bottom: 4px; transition: all 0.3s ease; }
         body.theme-dark .pinned-paragraph { border-bottom: 2.5px solid var(--accent-light); }
 
@@ -1091,7 +1091,7 @@
             <span class="bottom-bar-page-indicator" id="pageIndicator">0%</span>
             <button class="bottom-bar-btn" id="btnNextChapter" onclick="navigateChapter('next')"><i data-lucide="chevron-right"></i></button>
             <div class="bottom-bar-divider"></div>
-            <!-- 🔥 REVISI TOMBOL INTERAKTIF (SEKALI KLIK) 🔥 -->
+            <!-- 🔥 TOMBOL INTERAKTIF (SEKALI KLIK) 🔥 -->
             <button class="bottom-bar-btn" id="btnHighlight" onclick="toggleHighlightMode()" title="Sorot Paragraf (Highlight)"><i data-lucide="highlighter"></i></button>
             <button class="bottom-bar-btn" id="btnPin" onclick="togglePinMode()" title="Tandai Paragraf (Pin)"><i data-lucide="pin"></i></button>
             
@@ -1170,7 +1170,7 @@
             readerFontSize: localStorage.getItem('folio-reader-fontSize') || 'medium',
             readerTheme: localStorage.getItem('folio-reader-theme') || 'parchment',
             highlightMode: false,
-            pinMode: false, // 🔥 REVISI: State baru untuk mode penanda (Pin)
+            pinMode: false,
             settingsOpen: false,
             toastTimeout: null,
         };
@@ -1202,7 +1202,6 @@
             });
         }, { threshold: 0.5 });
 
-        // 🔥 REVISI: PENGENDALI MODE INTERAKTIF (SEKALI KLIK) 🔥
         function updateInteractiveModes() {
             const btnHL = document.getElementById('btnHighlight');
             const btnPin = document.getElementById('btnPin');
@@ -1641,9 +1640,9 @@
                 if (i === index) dot.classList.add('active');
             });
         }
-        function resetOnboardingSlides() { goToSlide(0); }
-        function skipToLibrary() { window.showToast('Langsung ke Library...', 'book-open'); setTimeout(() => switchMainTab('library'), 500); }
-        function finishOnboarding() {
+        window.resetOnboardingSlides = function() { goToSlide(0); }
+        window.skipToLibrary = function() { window.showToast('Langsung ke Library...', 'book-open'); setTimeout(() => switchMainTab('library'), 500); }
+        window.finishOnboarding = function() {
             APP_STATE.onboardingComplete = true; 
             localStorage.setItem('folio-onboarding-complete', 'true');
             localStorage.setItem('folio-reading-goal', APP_STATE.readingGoal);
@@ -2151,7 +2150,6 @@
                     const isHigh = currentHighlights.includes(index) ? 'highlighted-text' : '';
                     const isPinned = (index === pinnedPara) ? 'pinned-paragraph' : '';
                     const dropCap = index === 0 ? 'drop-cap' : '';
-                    // 🔥 REVISI: Menggunakan fungsi tunggal handleParagraphClick 🔥
                     htmlContent += `<p id="para-${index}" class="${dropCap} ${isHigh} ${isPinned}" onclick="handleParagraphClick(${index})">${p}</p>`;
                 });
                 
@@ -2312,7 +2310,6 @@
             lucide.createIcons();
         }
 
-        // UPDATE UI 2: Fungsi Modal Edit Buku
         window.openEditBookModal = function() {
             if(!activeBook) return;
             document.getElementById('editCoverUrl').value = activeBook.coverUrl || '';
@@ -2330,7 +2327,7 @@
                 activeBook.chapters.forEach(c => {
                     const div = document.createElement('div');
                     div.className = 'chapter-item';
-                    div.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin-bottom: 16px; position: relative;';
+                    div.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; position: relative; margin-bottom: 16px;';
                     div.innerHTML = `
                         <button type="button" onclick="this.parentElement.remove()" style="position: absolute; top: 12px; right: 12px; background: rgba(212,83,83,0.1); border: 1px solid rgba(212,83,83,0.3); border-radius: 4px; color: #D45353; padding: 4px; cursor: pointer; display: flex; align-items:center; justify-content:center;"><i data-lucide="trash-2" style="width: 14px;"></i></button>
                         <div class="form-group" style="margin-bottom: 12px; padding-right: 36px;">
@@ -2390,7 +2387,6 @@
 
             if(window.firebaseUpdateFullBook) {
                 window.firebaseUpdateFullBook(activeBook.id, updatedData).then(() => {
-                    // Update objek lokal agar langsung terasa perubahannya tanpa nunggu server
                     activeBook.title = title;
                     activeBook.author = author;
                     activeBook.category = category;
@@ -2488,7 +2484,6 @@
 
         window.goToSlide = goToSlide;
         window.showScreen = showScreen;
-        window.resetOnboardingSlides = resetOnboardingSlides;
         window.updateProfileDisplay = updateProfileDisplay;
         window.openDrawer = openDrawer;
         window.closeDrawer = closeDrawer;
@@ -2504,7 +2499,6 @@
         window.openInsights = openInsights;
         window.toggleTOC = toggleTOC;
         window.deleteActiveBook = deleteActiveBook;
-        
         window.toggleBookmarksDrawer = toggleBookmarksDrawer;
         window.renderBookmarksList = renderBookmarksList;
         window.jumpToHighlight = jumpToHighlight;
@@ -2514,9 +2508,9 @@
 
     <!-- ===== FIREBASE INTEGRATION ===== -->
     <script type="module">
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB9VMAwS4xrIVkEbQDgs8j9hLtXSigY39I",
@@ -2532,18 +2526,27 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const googleProvider = new GoogleAuthProvider();
-// Tangkap hasil setelah kembali dari halaman login Google
-getRedirectResult(auth).then((result) => {
-    if (result && result.user) {
-        window.showToast("Berhasil masuk dengan Google!", "✅");
-        if (document.getElementById('screen-onboarding').classList.contains('active')) {
-            window.goToSlide(2);
-        }
-    }
-}).catch((error) => {
-    console.error("Redirect error:", error);
-    window.showToast("Gagal login dengan Google.", "❌");
-});
+
+        // 1. TANGKAP HASIL REDIRECT (Sangat penting untuk iOS/Safari)
+        getRedirectResult(auth).then((result) => {
+            if (result && result.user) {
+                window.showToast("Berhasil masuk dengan Google!", "✅");
+                // Jika user login namun belum menyelesaikan onboarding, lompat ke slide 2
+                if (!window.APP_STATE.onboardingComplete) {
+                    window.showScreen('onboarding');
+                    setTimeout(() => window.goToSlide(2), 300); 
+                } else {
+                    window.switchMainTab('library');
+                }
+            }
+        }).catch((error) => {
+            console.error("Redirect Error:", error);
+            if(error.code !== 'auth/redirect-cancelled-by-user') {
+                window.showToast("Gagal login dengan Google.", "❌");
+            }
+        });
+
+        // 2. LISTENER STATUS LOGIN (Global Auth State)
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.APP_STATE.isLoggedIn = true;
@@ -2563,11 +2566,48 @@ getRedirectResult(auth).then((result) => {
                     lastActive: serverTimestamp()
                 }, { merge: true }).catch(e => console.warn("Firebase rules/permission memblokir status online", e));
 
+                // Jika sedang di halaman form login manual, paksa pindah ke slide berikutnya
                 if (document.getElementById('screen-onboarding').classList.contains('active') && window.APP_STATE.currentSlide === 1) {
                     window.goToSlide(2);
                 }
             }
         });
+
+        // 3. FUNGSI TOMBOL LOGIN GOOGLE HYBRID
+        window.socialLogin = async (provider) => {
+            if(provider === 'Google') {
+                try { 
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                    
+                    // Jika terdeteksi produk Apple, pakai Redirect untuk menembus Popup Blocker
+                    if (isIOS || isSafari) {
+                        await signInWithRedirect(auth, googleProvider); 
+                    } else {
+                        // Gunakan Popup untuk Laptop Windows / Android (Sangat cepat tanpa refresh halaman)
+                        await signInWithPopup(auth, googleProvider); 
+                        window.showToast("Berhasil masuk dengan Google!", "✅"); 
+                        
+                        // Validasi apakah dia sudah pernah menyelesaikan onboarding
+                        if (!window.APP_STATE.onboardingComplete) {
+                            window.goToSlide(2);
+                        } else {
+                            window.switchMainTab('library');
+                        }
+                    }
+                } 
+                catch(error) { 
+                    // Fallback jika Popup diblokir (di browser desktop tertentu)
+                    if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+                        console.log("Popup diblokir, beralih ke Redirect...");
+                        await signInWithRedirect(auth, googleProvider);
+                    } else {
+                        console.error(error);
+                        window.showToast("Login dibatalkan atau gagal.", "❌"); 
+                    }
+                }
+            } else { window.showToast(provider + " login belum tersedia.", "⚠️"); }
+        };
 
         window.firebaseResetPassword = async (email) => {
             try {
@@ -2637,19 +2677,6 @@ getRedirectResult(auth).then((result) => {
                 lucide.createIcons(); 
             }
         };
-
-        window.socialLogin = async (provider) => {
-    if(provider === 'Google') {
-        try { 
-            // Menggunakan redirect yang ramah iOS/Safari
-            await signInWithRedirect(auth, googleProvider); 
-        } 
-        catch(error) { 
-            console.error(error);
-            window.showToast("Gagal memulai login Google.", "❌"); 
-        }
-    } else { window.showToast(provider + " login belum tersedia.", "⚠️"); }
-};
 
         window.handleLogout = async () => {
             if(auth.currentUser) {
@@ -2764,7 +2791,6 @@ getRedirectResult(auth).then((result) => {
             try { await updateDoc(doc(db, "buku_bacaan", bookId), { savedPin: pinObj }); } catch (error) { console.error(error); }
         }
 
-        // UPDATE UI 2: Update database saat buku diedit
         window.firebaseUpdateFullBook = async (bookId, dataObj) => {
             try { await updateDoc(doc(db, "buku_bacaan", bookId), dataObj); } catch (error) { console.error(error); throw error; }
         }
@@ -2779,7 +2805,6 @@ getRedirectResult(auth).then((result) => {
                 
                 document.getElementById('manualBookForm').reset();
                 document.getElementById('chapterList').innerHTML = '';
-                chapterCount = 0;
                 window.addChapterField('chapterList');
 
             } catch (error) {
