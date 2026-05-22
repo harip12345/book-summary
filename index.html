@@ -160,16 +160,18 @@
         .fav-list-item-title { font-size: 14px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
         .fav-list-item-author { font-size: 12px; color: var(--text-muted); display:flex; justify-content:space-between; }
 
+        /* 🔥 INTERACTIVE MODE (GABUNGAN PIN & HIGHLIGHT) 🔥 */
         .reader-body p { transition: background-color 0.2s ease, box-shadow 0.2s ease; border-radius: 4px; }
-        .reader-body.highlight-mode-active p { cursor: pointer; }
-        .reader-body.highlight-mode-active p:hover { background-color: rgba(200,134,58,0.08); box-shadow: 0 0 0 4px rgba(200,134,58,0.08); }
+        .reader-body.interactive-mode-active p { cursor: pointer; }
+        .reader-body.interactive-mode-active p:hover { background-color: rgba(200,134,58,0.08); box-shadow: 0 0 0 4px rgba(200,134,58,0.08); }
+        body.theme-dark .reader-body.interactive-mode-active p:hover { background-color: rgba(255,255,255,0.05); box-shadow: 0 0 0 4px rgba(255,255,255,0.05); }
+        
         .highlighted-text { background-color: rgba(200,134,58,0.25); box-shadow: 0 0 0 4px rgba(200,134,58,0.25); }
         body.theme-dark .highlighted-text { background-color: rgba(200,134,58,0.35); box-shadow: 0 0 0 4px rgba(200,134,58,0.35); }
-        body.theme-dark .reader-body.highlight-mode-active p:hover { background-color: rgba(255,255,255,0.05); box-shadow: 0 0 0 4px rgba(255,255,255,0.05); }
 
-        /* KELAS KHUSUS PARAGRAF PIN */
-        .pinned-paragraph { border-left: 4px solid var(--accent); padding-left: 12px; transition: all 0.3s ease; }
-        body.theme-dark .pinned-paragraph { border-left: 4px solid var(--accent-light); }
+        /* 🔥 KELAS KHUSUS PARAGRAF PIN (REVISI GARIS BAWAH) 🔥 */
+        .pinned-paragraph { border-bottom: 2.5px solid var(--accent); padding-bottom: 4px; transition: all 0.3s ease; }
+        body.theme-dark .pinned-paragraph { border-bottom: 2.5px solid var(--accent-light); }
 
         .onboarding-wrapper { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom)); position: relative; background: #0D0C0A; overflow: hidden; }
         .onboarding-wrapper::before { content: ''; position: absolute; top: -30%; left: -20%; width: 80%; height: 80%; background: radial-gradient(ellipse at center, rgba(200,134,58,0.08) 0%, transparent 70%); pointer-events: none; animation: floatSlow 8s ease-in-out infinite; }
@@ -284,10 +286,7 @@
         .lib-featured:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
         .feat-cover { width: 90px; height: 130px; border-radius: 6px 10px 10px 6px; overflow: hidden; box-shadow: 6px 6px 20px rgba(0,0,0,0.4); position: relative; }
         .feat-cover-inner { width: 100%; height: 100%; background: linear-gradient(160deg, #C8863A 0%, #7A5A3A 100%); display: flex; align-items: center; justify-content: center; padding: 8px; position: relative; }
-        
-        /* 🔥 REVISI: MENGHILANGKAN EFEK GELAP PADA COVER YANG MENGGUNAKAN GAMBAR URL */
         .feat-cover-inner.has-image { background: transparent; align-items: flex-end; padding-bottom: 12px; }
-        
         .feat-cover-inner::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: rgba(0,0,0,0.3); }
         .feat-cover-title { font-family: var(--font-display); font-size: 9px; color: rgba(255,255,255,0.9); text-align: center; font-style: italic; }
         .feat-meta { display: flex; flex-direction: column; gap: 6px; }
@@ -308,10 +307,7 @@
         .book-card:hover { transform: translateY(-4px); }
         .book-cover { aspect-ratio: 2/3; border-radius: 4px 8px 8px 4px; margin-bottom: 10px; box-shadow: var(--shadow-md); overflow: hidden; position: relative; }
         .book-cover-inner { width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px 12px; justify-content: space-between; position: relative; }
-        
-        /* 🔥 REVISI: MENGHILANGKAN EFEK GELAP PADA COVER BUKU LISTING YANG MENGGUNAKAN GAMBAR URL */
         .book-cover-inner.has-image { background: transparent; justify-content: flex-end; gap: 4px; padding-bottom: 14px; }
-        
         .book-cover-inner::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: rgba(0,0,0,0.25); }
         .bc1 { background: linear-gradient(160deg, #7A8C6E 0%, #4A5A40 100%); }
         .bc2 { background: linear-gradient(160deg, #5A7A8C 0%, #2A4A5C 100%); }
@@ -906,7 +902,7 @@
         <div class="library-shell">
             <div class="lib-topbar">
                 <div class="lib-header">
-                    <div class="lib-wordmark">Semua <span>Buku</span></div>
+                    <div class="lib-wordmark">L<span>ibrary</span></div>
                     <div class="lib-actions">
                         <div class="icon-btn" id="btnUploadCollection" onclick="openModal('addBookModal')" title="Tambah Buku" style="display:none; background: var(--accent); color: white; border-color: var(--accent);"><i data-lucide="plus"></i></div>
                         <div class="icon-btn" onclick="focusSearchCollection()"><i data-lucide="search"></i></div>
@@ -1055,7 +1051,6 @@
             <div class="reader-top-actions">
                 <button class="reader-top-btn" onclick="goToExplicitBookmark()" title="Ke Posisi yang Ditandai"><i data-lucide="map-pin" style="width:16px;"></i></button>
                 <button class="reader-top-btn" onclick="toggleFavorite()" id="btnFavorite" title="Simpan ke Favorit"><i data-lucide="heart" style="width:16px;"></i></button>
-                <!-- UPDATE UI 2: Tombol Edit -->
                 <button class="reader-top-btn" id="btnEditBook" onclick="openEditBookModal()" style="display:none; color:var(--accent);" title="Edit Buku"><i data-lucide="edit" style="width:16px;"></i></button>
                 <button class="reader-top-btn" id="btnDeleteBook" onclick="deleteActiveBook()" style="display:none; color: #D45353;" title="Hapus Buku"><i data-lucide="trash-2" style="width:16px;"></i></button>
                 <button class="reader-top-btn" onclick="toggleBookmarksDrawer()" title="Sorotan Pembaca"><i data-lucide="book-marked" style="width:16px;"></i></button> 
@@ -1096,8 +1091,10 @@
             <span class="bottom-bar-page-indicator" id="pageIndicator">0%</span>
             <button class="bottom-bar-btn" id="btnNextChapter" onclick="navigateChapter('next')"><i data-lucide="chevron-right"></i></button>
             <div class="bottom-bar-divider"></div>
-            <button class="bottom-bar-btn" id="btnHighlight" onclick="toggleHighlightMode()" title="Mode Sorotan"><i data-lucide="highlighter"></i></button>
-            <button class="bottom-bar-btn" onclick="setExplicitBookmark()" title="Tandai Paragraf Saat Ini (Pin)"><i data-lucide="pin"></i></button>
+            <!-- 🔥 REVISI TOMBOL INTERAKTIF (SEKALI KLIK) 🔥 -->
+            <button class="bottom-bar-btn" id="btnHighlight" onclick="toggleHighlightMode()" title="Sorot Paragraf (Highlight)"><i data-lucide="highlighter"></i></button>
+            <button class="bottom-bar-btn" id="btnPin" onclick="togglePinMode()" title="Tandai Paragraf (Pin)"><i data-lucide="pin"></i></button>
+            
             <button class="bottom-bar-btn" onclick="toggleSettings()" title="Pengaturan Teks"><i data-lucide="type"></i></button>
             <button class="bottom-bar-btn" onclick="openInsights()" title="Insight AI"><i data-lucide="sparkles"></i></button>
         </div>
@@ -1173,6 +1170,7 @@
             readerFontSize: localStorage.getItem('folio-reader-fontSize') || 'medium',
             readerTheme: localStorage.getItem('folio-reader-theme') || 'parchment',
             highlightMode: false,
+            pinMode: false, // 🔥 REVISI: State baru untuk mode penanda (Pin)
             settingsOpen: false,
             toastTimeout: null,
         };
@@ -1204,26 +1202,92 @@
             });
         }, { threshold: 0.5 });
 
-        // Fitur menyematkan (Pin) posisi baca
-        window.setExplicitBookmark = function() {
-            if(!activeBook) return;
-            const cIdx = activeChapterIdx;
-            const pIdx = activeBook.lastReadParagraph || 0;
+        // 🔥 REVISI: PENGENDALI MODE INTERAKTIF (SEKALI KLIK) 🔥
+        function updateInteractiveModes() {
+            const btnHL = document.getElementById('btnHighlight');
+            const btnPin = document.getElementById('btnPin');
+            const readerBody = document.getElementById('readerBody');
+
+            if (window.APP_STATE.highlightMode) {
+                btnHL.classList.add('active');
+                btnPin.classList.remove('active');
+                readerBody.classList.add('interactive-mode-active');
+            } else if (window.APP_STATE.pinMode) {
+                btnPin.classList.add('active');
+                btnHL.classList.remove('active');
+                readerBody.classList.add('interactive-mode-active');
+            } else {
+                btnHL.classList.remove('active');
+                btnPin.classList.remove('active');
+                readerBody.classList.remove('interactive-mode-active');
+            }
+        }
+
+        window.toggleHighlightMode = function() {
+            window.APP_STATE.highlightMode = !window.APP_STATE.highlightMode;
+            if(window.APP_STATE.highlightMode) {
+                window.APP_STATE.pinMode = false;
+                window.showToast('Mode Highlight AKTIF. Pilih 1 paragraf untuk disorot.', 'highlighter');
+            } else {
+                window.showToast('Mode Highlight Nonaktif.', 'highlighter');
+            }
+            updateInteractiveModes();
+        }
+
+        window.togglePinMode = function() {
+            window.APP_STATE.pinMode = !window.APP_STATE.pinMode;
+            if(window.APP_STATE.pinMode) {
+                window.APP_STATE.highlightMode = false;
+                window.showToast('Mode Pin AKTIF. Pilih 1 paragraf untuk ditandai.', 'pin');
+            } else {
+                window.showToast('Mode Pin Nonaktif.', 'pin');
+            }
+            updateInteractiveModes();
+        }
+
+        window.handleParagraphClick = function(pIndex) {
+            if (window.APP_STATE.highlightMode) {
+                executeHighlight(pIndex);
+                window.APP_STATE.highlightMode = false; 
+                updateInteractiveModes(); 
+            } else if (window.APP_STATE.pinMode) {
+                executePin(pIndex);
+                window.APP_STATE.pinMode = false; 
+                updateInteractiveModes(); 
+            }
+        }
+
+        function executeHighlight(pIndex) {
+            if (!activeBook) return;
+            if (!activeBook.highlights) activeBook.highlights = {};
+            if (!activeBook.highlights[activeChapterIdx]) activeBook.highlights[activeChapterIdx] = [];
+
+            const arr = activeBook.highlights[activeChapterIdx];
+            const idx = arr.indexOf(pIndex);
             
-            activeBook.savedPin = { chapter: cIdx, paragraph: pIdx };
+            if (idx > -1) arr.splice(idx, 1);
+            else arr.push(pIndex);
+
+            const pEl = document.getElementById(`para-${pIndex}`);
+            if (pEl) pEl.classList.toggle('highlighted-text');
+
+            if (window.firebaseUpdateHighlights) window.firebaseUpdateHighlights(activeBook.id, activeBook.highlights);
+        }
+
+        function executePin(pIndex) {
+            if(!activeBook) return;
+            activeBook.savedPin = { chapter: activeChapterIdx, paragraph: pIndex };
             
             if(window.firebaseUpdatePin) {
                 window.firebaseUpdatePin(activeBook.id, activeBook.savedPin);
             }
             
-            window.showToast(`Paragraf ditandai!`, 'pin');
+            window.showToast(`Paragraf berhasil ditandai!`, 'pin');
             
-            // Bersihkan indikator lama, pindahkan ke yang baru
             document.querySelectorAll('#readerBody p').forEach(p => p.classList.remove('pinned-paragraph'));
-            const pEl = document.getElementById(`para-${pIdx}`);
+            const pEl = document.getElementById(`para-${pIndex}`);
             if(pEl) {
                 pEl.classList.add('pinned-paragraph');
-                pEl.style.transition = "all 0.3s";
                 pEl.style.backgroundColor = "rgba(200,134,58,0.2)";
                 setTimeout(() => pEl.style.backgroundColor = "", 1500);
             }
@@ -1476,38 +1540,6 @@
             } else {
                 showToast("Belum ada buku di library.", "⚠️");
             }
-        }
-
-        window.toggleHighlightMode = function() {
-            window.APP_STATE.highlightMode = !window.APP_STATE.highlightMode;
-            const btn = document.getElementById('btnHighlight');
-            const readerBody = document.getElementById('readerBody');
-            if (window.APP_STATE.highlightMode) {
-                btn.classList.add('active');
-                readerBody.classList.add('highlight-mode-active');
-                showToast('Mode Highlight AKTIF. Klik paragraf untuk menyorot.', 'highlighter');
-            } else {
-                btn.classList.remove('active');
-                readerBody.classList.remove('highlight-mode-active');
-                showToast('Mode Highlight Nonaktif.', 'highlighter');
-            }
-        }
-
-        window.toggleParagraphHighlight = function(pIndex) {
-            if (!window.APP_STATE.highlightMode || !activeBook) return;
-            if (!activeBook.highlights) activeBook.highlights = {};
-            if (!activeBook.highlights[activeChapterIdx]) activeBook.highlights[activeChapterIdx] = [];
-
-            const arr = activeBook.highlights[activeChapterIdx];
-            const idx = arr.indexOf(pIndex);
-            
-            if (idx > -1) arr.splice(idx, 1);
-            else arr.push(pIndex);
-
-            const pEl = document.getElementById(`para-${pIndex}`);
-            if (pEl) pEl.classList.toggle('highlighted-text');
-
-            if (window.firebaseUpdateHighlights) window.firebaseUpdateHighlights(activeBook.id, activeBook.highlights);
         }
 
         function showScreen(name) {
@@ -2119,7 +2151,8 @@
                     const isHigh = currentHighlights.includes(index) ? 'highlighted-text' : '';
                     const isPinned = (index === pinnedPara) ? 'pinned-paragraph' : '';
                     const dropCap = index === 0 ? 'drop-cap' : '';
-                    htmlContent += `<p id="para-${index}" class="${dropCap} ${isHigh} ${isPinned}" onclick="toggleParagraphHighlight(${index})">${p}</p>`;
+                    // 🔥 REVISI: Menggunakan fungsi tunggal handleParagraphClick 🔥
+                    htmlContent += `<p id="para-${index}" class="${dropCap} ${isHigh} ${isPinned}" onclick="handleParagraphClick(${index})">${p}</p>`;
                 });
                 
                 let existingNote = (activeBook.chapterNotes && activeBook.chapterNotes[activeChapterIdx]) ? activeBook.chapterNotes[activeChapterIdx] : '';
@@ -2297,7 +2330,7 @@
                 activeBook.chapters.forEach(c => {
                     const div = document.createElement('div');
                     div.className = 'chapter-item';
-                    div.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; position: relative; margin-bottom: 16px;';
+                    div.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin-bottom: 16px; position: relative;';
                     div.innerHTML = `
                         <button type="button" onclick="this.parentElement.remove()" style="position: absolute; top: 12px; right: 12px; background: rgba(212,83,83,0.1); border: 1px solid rgba(212,83,83,0.3); border-radius: 4px; color: #D45353; padding: 4px; cursor: pointer; display: flex; align-items:center; justify-content:center;"><i data-lucide="trash-2" style="width: 14px;"></i></button>
                         <div class="form-group" style="margin-bottom: 12px; padding-right: 36px;">
