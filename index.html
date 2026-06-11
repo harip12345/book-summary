@@ -577,6 +577,74 @@
             border-radius: 6px; height: 14px; margin-bottom: 10px;
         }
         /* ===================== END AI CHAT STYLES ===================== */
+
+        /* ===================== WEB SPEECH TTS ===================== */
+        @keyframes ttsWave { 0%,100%{transform:scaleY(0.4)} 50%{transform:scaleY(1)} }
+        @keyframes ttsFadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+        .tts-bar {
+            position: fixed;
+            bottom: calc(78px + env(safe-area-inset-bottom));
+            left: 50%; transform: translateX(-50%);
+            background: rgba(26,24,20,0.95);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(200,134,58,0.3);
+            border-radius: var(--radius-full);
+            padding: 8px 16px 8px 14px;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            z-index: 88;
+            min-width: 240px; max-width: 92vw;
+            transform: translateX(-50%) translateY(120%);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .tts-bar.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+        .tts-bar.paused .tts-wave-bar { animation-play-state: paused; opacity: 0.35; }
+
+        .tts-waveform { display:flex; align-items:center; gap:3px; width:22px; height:18px; flex-shrink:0; }
+        .tts-wave-bar { width:3px; background:var(--accent); border-radius:2px; transform-origin:bottom; }
+        .tts-wave-bar:nth-child(1){height:7px; animation:ttsWave 0.7s ease-in-out infinite;}
+        .tts-wave-bar:nth-child(2){height:14px;animation:ttsWave 0.7s ease-in-out 0.1s infinite;}
+        .tts-wave-bar:nth-child(3){height:18px;animation:ttsWave 0.7s ease-in-out 0.2s infinite;}
+        .tts-wave-bar:nth-child(4){height:11px;animation:ttsWave 0.7s ease-in-out 0.3s infinite;}
+
+        .tts-info { flex:1; min-width:0; }
+        .tts-info-chapter { font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--accent); }
+        .tts-info-para { font-size:11px; color:rgba(212,207,196,0.65); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+        .tts-speed { font-family:var(--font-ui); font-size:11px; font-weight:600; color:var(--accent-light); background:rgba(200,134,58,0.12); border:1px solid rgba(200,134,58,0.2); border-radius:6px; padding:4px 8px; cursor:pointer; transition:var(--transition); flex-shrink:0; }
+        .tts-speed:hover { background:rgba(200,134,58,0.22); }
+
+        .tts-btn { width:32px; height:32px; border-radius:50%; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:rgba(212,207,196,0.7); transition:var(--transition); flex-shrink:0; }
+        .tts-btn:hover { background:rgba(255,255,255,0.08); color:#fff; }
+        .tts-btn.primary { width:36px; height:36px; background:var(--accent); color:#fff; }
+        .tts-btn.primary:hover { background:var(--accent-light); }
+        .tts-btn svg { width:15px; height:15px; stroke-width:2px; }
+        .tts-btn.primary svg { width:17px; height:17px; }
+
+        .tts-progress-track { position:absolute; bottom:0; left:0; right:0; height:2px; background:rgba(255,255,255,0.06); border-radius:0 0 var(--radius-full) var(--radius-full); overflow:hidden; }
+        .tts-progress-fill { height:100%; background:linear-gradient(90deg,var(--accent-dark),var(--accent-light)); transition:width 0.4s linear; }
+
+        /* Paragraf aktif yang sedang dibacakan */
+        .tts-reading {
+            background-color: rgba(200,134,58,0.13) !important;
+            border-left: 3px solid var(--accent) !important;
+            padding-left: 14px !important;
+            border-radius: 0 6px 6px 0 !important;
+            scroll-margin-top: 110px;
+            transition: background-color 0.3s ease !important;
+        }
+        body.theme-dark .tts-reading { background-color: rgba(200,134,58,0.2) !important; }
+
+        /* Tombol mic aktif */
+        .bottom-bar-btn.tts-active { color: var(--accent) !important; }
+        /* ===================== END WEB SPEECH TTS ===================== */
     </style>
 </head>
 <body>
@@ -1121,6 +1189,33 @@
             </div>
         </div>
 
+        <!-- TTS floating bar -->
+        <div class="tts-bar" id="ttsBar">
+            <div class="tts-waveform" aria-hidden="true">
+                <div class="tts-wave-bar"></div><div class="tts-wave-bar"></div>
+                <div class="tts-wave-bar"></div><div class="tts-wave-bar"></div>
+            </div>
+            <div class="tts-info">
+                <div class="tts-info-chapter" id="ttsInfoChapter">Bab 1</div>
+                <div class="tts-info-para" id="ttsInfoPara">Paragraf 1 dari —</div>
+            </div>
+            <button class="tts-speed" id="ttsSpeedBtn" onclick="ttsToggleSpeed()">1×</button>
+            <button class="tts-btn" onclick="ttsSkip(-1)" title="Paragraf sebelumnya">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="tts-btn primary" id="ttsPlayPauseBtn" onclick="ttsTogglePlayPause()">
+                <svg id="ttsIconPlay"  viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                <svg id="ttsIconPause" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="display:none;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+            </button>
+            <button class="tts-btn" onclick="ttsSkip(1)" title="Paragraf selanjutnya">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <button class="tts-btn" onclick="ttsStop()" title="Stop" style="color:rgba(212,83,83,0.75);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+            </button>
+            <div class="tts-progress-track"><div class="tts-progress-fill" id="ttsProgressFill" style="width:0%"></div></div>
+        </div>
+
         <div class="reader-bottom-bar visible" id="readerBottomBar">
             <button class="bottom-bar-btn" id="btnPrevChapter" onclick="navigateChapter('prev')"><i data-lucide="chevron-left"></i></button>
             <span class="bottom-bar-page-indicator" id="pageIndicator">0%</span>
@@ -1128,6 +1223,7 @@
             <div class="bottom-bar-divider"></div>
             <button class="bottom-bar-btn" id="btnHighlight" onclick="toggleHighlightMode()" title="Sorot Paragraf (Highlight)"><i data-lucide="highlighter"></i></button>
             <button class="bottom-bar-btn" id="btnPin" onclick="togglePinMode()" title="Tandai Paragraf (Pin)"><i data-lucide="pin"></i></button>
+            <button class="bottom-bar-btn" id="btnTTS" onclick="ttsToggle()" title="Narasi Audio (Text-to-Speech)"><i data-lucide="mic"></i></button>
             <button class="bottom-bar-btn" onclick="toggleSettings()" title="Pengaturan Teks"><i data-lucide="type"></i></button>
             <button class="bottom-bar-btn" onclick="openInsights()" title="Insight AI"><i data-lucide="sparkles"></i></button>
             <div class="bottom-bar-divider"></div>
@@ -1167,20 +1263,21 @@
                 <!-- Setup API Key (tampil jika belum ada key) -->
                 <div class="ai-setup-modal" id="aiSetupPanel" style="display:none;">
                     <div class="ai-setup-icon">
-                        <i data-lucide="key" style="width:28px;height:28px;color:var(--accent);"></i>
+                        <i data-lucide="server" style="width:28px;height:28px;color:var(--accent);"></i>
                     </div>
-                    <div style="font-family:var(--font-display);font-size:20px;color:#EDE8E0;font-style:italic;">Masukkan API Key</div>
+                    <div style="font-family:var(--font-display);font-size:20px;color:#EDE8E0;font-style:italic;">Hubungkan ke Server AI</div>
                     <div style="font-size:13px;color:var(--text-dark-secondary);line-height:1.7;max-width:320px;" id="aiSetupDesc">
-                        Untuk menggunakan Groq, masukkan API key gratis dari console.groq.com (tanpa kartu kredit).
+                        Masukkan URL Vercel API kamu. Setelah deploy, URL-nya seperti:<br>
+                        <span style="color:var(--accent-light);font-family:monospace;">https://folio-ai-api.vercel.app</span>
                     </div>
                     <div style="width:100%;max-width:380px;">
-                        <input type="password" class="form-input" id="aiApiKeyInput" placeholder="gsk_..." style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:#fff;margin-bottom:10px;">
-                        <button class="btn-primary" onclick="saveAIApiKey()" style="margin-bottom:10px;"><i data-lucide="save" style="width:16px;"></i> Simpan & Mulai Chat</button>
+                        <input type="text" class="form-input" id="aiApiKeyInput" placeholder="https://folio-ai-api.vercel.app" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:#fff;margin-bottom:10px;">
+                        <button class="btn-primary" onclick="saveAIApiKey()" style="margin-bottom:10px;"><i data-lucide="link" style="width:16px;"></i> Simpan & Mulai Chat</button>
                         <button class="ai-generate-btn" id="aiGetKeyBtn" onclick="openAIKeyPage()">
-                            <i data-lucide="external-link" style="width:14px;"></i> <span id="aiGetKeyLabel">Dapatkan API Key Groq Gratis</span>
+                            <i data-lucide="external-link" style="width:14px;"></i> <span id="aiGetKeyLabel">Buka Vercel Dashboard ↗</span>
                         </button>
                     </div>
-                    <div style="font-size:11px;color:rgba(160,152,136,0.6);margin-top:4px;">Key disimpan hanya di browser kamu (localStorage)</div>
+                    <div style="font-size:11px;color:rgba(160,152,136,0.6);margin-top:4px;">URL disimpan di browser kamu (localStorage)</div>
                 </div>
 
                 <!-- Chat messages -->
@@ -1266,10 +1363,8 @@
         let authMode = 'login';
 
         // =====================================================================
-        // FIX #1: ADMIN CHECK — sekarang memakai Firebase Custom Claims
-        // ADMIN_EMAILS dihapus dari client. isCurrentUserAdmin diset di Firebase
-        // module setelah token di-verify server-side via getIdTokenResult().
-        // =====================================================================
+        // Admin check — berdasarkan email (tambahkan email admin di sini)
+        const ADMIN_EMAILS = ['hari@gmail.com', 'haripamungkas519@gmail.com', 'hari.pamungkas@rumahzakat.org'];
         window.isCurrentUserAdmin = false;
 
         window.APP_STATE = {
@@ -1398,10 +1493,11 @@
         }
 
         function initApp() {
-            setTimeout(() => { const splash = document.getElementById('splashScreen'); if (splash) splash.classList.add('hide'); }, 1500);
+            setTimeout(() => { const splash = document.getElementById('splashScreen'); if (splash) splash.classList.add('hide'); }, 800);
             lucide.createIcons();
             updateProfileDisplay();
             updateReadingGoalDisplay();
+            ttsInit(); // Web Speech TTS
             if (window.APP_STATE.onboardingComplete) { switchMainTab('library'); }
             else { showScreen('onboarding'); resetOnboardingSlides(); }
             if (window.APP_STATE.onboardingComplete) initReader();
@@ -1410,11 +1506,9 @@
         }
 
         // =====================================================================
-        // FIX #1 (lanjutan): checkAdminUI sekarang membaca dari Custom Claims
-        // dipanggil dari Firebase module setelah getIdTokenResult()
-        // =====================================================================
-        function checkAdminUI(isAdmin) {
-            window.isCurrentUserAdmin = !!isAdmin;
+        function checkAdminUI(email) {
+            if (!email) { window.isCurrentUserAdmin = false; }
+            else { window.isCurrentUserAdmin = ADMIN_EMAILS.some(e => e.toLowerCase() === email.toLowerCase()); }
             const btnUploadHome       = document.getElementById('btnUploadHome');
             const btnUploadCollection = document.getElementById('btnUploadCollection');
             const btnDeleteBook       = document.getElementById('btnDeleteBook');
@@ -1518,6 +1612,10 @@
             // Tutup AI chat drawer saat keluar dari reader
             if (name !== 'reader' && document.getElementById('aiChatDrawer')?.classList.contains('open')) {
                 document.getElementById('aiChatDrawer').classList.remove('open');
+            }
+            // Stop TTS saat keluar dari reader
+            if (name !== 'reader' && typeof ttsStopIfActive === 'function') {
+                ttsStopIfActive();
             }
             activeScreenName = name;
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1833,24 +1931,86 @@
             list.innerHTML = html; lucide.createIcons();
         };
         window.jumpToChapter = function(idx) {
+            if (tts.isPlaying || tts.isPaused) ttsStop();
             activeChapterIdx = idx;
             if(activeBook) { activeBook.lastReadChapter = idx; activeBook.lastReadParagraph = 0; }
             window.scrollTo({ top: 0, behavior: 'auto' }); renderChapter(); renderTOC(); toggleTOC();
         };
-        window.openReader = function(bookId) {
-            previousScreenInfo.name   = activeScreenName;
+        // Cache chapters in-memory agar tidak fetch ulang saat buka buku yang sama
+        const _chaptersCache = {};
+
+        window.openReader = async function(bookId) {
+            previousScreenInfo.name    = activeScreenName;
             previousScreenInfo.scrollY = window.scrollY;
+
             activeBook = currentBooksToDisplay.find(b => b.id === bookId);
-            if(!activeBook) return;
+            if (!activeBook) return;
+
+            // Tampilkan reader segera dengan loading state
             document.getElementById('topbarBookTitle').textContent = activeBook.title;
             document.getElementById('topbarBookAuthor').innerHTML = `${activeBook.author} &bull; <span style="text-transform:capitalize; opacity: 0.9;">${activeBook.category}</span>`;
+            document.getElementById('readerChapterTitle').textContent = activeBook.title;
+            document.getElementById('readerBody').innerHTML = `
+                <div style="display:flex;flex-direction:column;gap:14px;padding-top:8px;">
+                    ${[0,1,2,3].map(i=>`<div style="height:16px;background:var(--bg-secondary);border-radius:4px;width:${[95,88,92,60][i]}%;animation:skeletonPulse 1.4s ease-in-out ${i*0.15}s infinite;"></div>`).join('')}
+                </div>`;
+            showScreen('reader');
+            window.scrollTo({ top: 0, behavior: 'auto' });
+
             activeBook.lastReadAt = Date.now();
-            if(window.firebaseUpdateLastRead) window.firebaseUpdateLastRead(activeBook.id, activeBook.lastReadAt);
+            if (window.firebaseUpdateLastRead) window.firebaseUpdateLastRead(activeBook.id, activeBook.lastReadAt);
             activeChapterIdx = activeBook.lastReadChapter !== undefined ? activeBook.lastReadChapter : 0;
+
             const btnFav = document.getElementById('btnFavorite');
-            if(activeBook.isFavorite) { btnFav.style.color='#D45353'; btnFav.innerHTML='<i data-lucide="heart" fill="#D45353" style="width:16px;"></i>'; }
+            if (activeBook.isFavorite) { btnFav.style.color='#D45353'; btnFav.innerHTML='<i data-lucide="heart" fill="#D45353" style="width:16px;"></i>'; }
             else { btnFav.style.color=''; btnFav.innerHTML='<i data-lucide="heart" style="width:16px;"></i>'; }
-            window.scrollTo({ top: 0, behavior: 'auto' }); renderChapter(); renderTOC(); showScreen('reader');
+
+            // Lazy load chapters — ambil dari cache dulu, baru dari Firestore
+            if (!activeBook.chapters?.length) {
+                if (_chaptersCache[bookId]) {
+                    // Hit dari cache memory
+                    activeBook.chapters      = _chaptersCache[bookId].chapters;
+                    activeBook.highlights    = _chaptersCache[bookId].highlights;
+                    activeBook.chapterNotes  = _chaptersCache[bookId].chapterNotes;
+                    activeBook.savedPin      = _chaptersCache[bookId].savedPin;
+                } else {
+                    try {
+                        // Fetch dari Firestore — hanya saat pertama kali buka buku ini
+                        const snap = await getDoc(doc(db, "buku_bacaan", bookId));
+                        if (snap.exists()) {
+                            const d = snap.data();
+                            activeBook.chapters     = d.chapters     || [];
+                            activeBook.highlights   = d.highlights   || {};
+                            activeBook.chapterNotes = d.chapterNotes || {};
+                            activeBook.savedPin     = d.savedPin     || null;
+                            activeBook.savedQuotes  = d.savedQuotes  || [];
+                            // Simpan ke cache
+                            _chaptersCache[bookId] = {
+                                chapters: activeBook.chapters,
+                                highlights: activeBook.highlights,
+                                chapterNotes: activeBook.chapterNotes,
+                                savedPin: activeBook.savedPin,
+                            };
+                            // Update di currentBooksToDisplay juga
+                            const idx = currentBooksToDisplay.findIndex(b => b.id === bookId);
+                            if (idx > -1) Object.assign(currentBooksToDisplay[idx], activeBook);
+                        }
+                    } catch(e) {
+                        console.warn('Gagal fetch chapters:', e);
+                    }
+                }
+            } else {
+                // Chapters sudah ada (sudah pernah dibuka atau tersimpan di snapshot)
+                _chaptersCache[bookId] = {
+                    chapters: activeBook.chapters,
+                    highlights: activeBook.highlights,
+                    chapterNotes: activeBook.chapterNotes,
+                    savedPin: activeBook.savedPin,
+                };
+            }
+
+            renderChapter();
+            renderTOC();
         }
         window.goBackFromReader = function() {
             showScreen(previousScreenInfo.name);
@@ -1877,7 +2037,15 @@
                 htmlContent += `<div class="reader-note-block"><div style="font-size:12px; font-weight:600; color:var(--accent); margin-bottom:12px; display:flex; align-items:center; gap:6px;"><i data-lucide="edit-3" style="width:14px;"></i> CATATAN & REFLEKSI BAB</div><textarea id="chapterNoteInput" placeholder="Apa insight menarik yang kamu dapatkan dari bab ini? Ketik catatan pribadi Anda di sini..." style="width:100%; background:transparent; border:none; outline:none; color:inherit; font-family:var(--font-body); font-size:16px; line-height:1.6; resize:vertical; min-height:80px;" oninput="saveChapterNote(this.value)">${existingNote}</textarea><div style="font-size:11px; color:var(--text-muted); margin-top:12px; text-align:right;" id="noteSaveStatus">Otomatis tersimpan</div></div>`;
                 document.getElementById('readerBody').innerHTML = htmlContent;
                 lucide.createIcons();
-                document.querySelectorAll('#readerBody p').forEach(p => paragraphObserver.observe(p));
+                document.querySelectorAll('#readerBody p').forEach(p => {
+                    paragraphObserver.observe(p);
+                });
+                // Load paragraf ke TTS engine
+                ttsLoadParagraphs();
+                // Double-klik paragraf = mulai narasi dari sana
+                tts.paragraphs.forEach((para, idx) => {
+                    para.el.addEventListener('dblclick', () => ttsStartFromParagraph(idx));
+                });
                 setTimeout(() => {
                     if (window.targetHighlightParagraph !== undefined) {
                         let targetP = document.getElementById(`para-${window.targetHighlightParagraph}`);
@@ -1903,6 +2071,8 @@
 
         window.navigateChapter = function(dir) {
             if(!activeBook || !activeBook.chapters) return;
+            // Stop TTS saat ganti bab
+            if (tts.isPlaying || tts.isPaused) ttsStop();
             const animator = document.getElementById('readerContentAnimator');
             if (dir==='next' && activeChapterIdx < activeBook.chapters.length-1) {
                 animator.classList.add('page-turn-next-out');
@@ -1969,6 +2139,8 @@
             if(window.firebaseUpdateFullBook) {
                 window.firebaseUpdateFullBook(activeBook.id, updatedData).then(() => {
                     Object.assign(activeBook, updatedData);
+                    // Invalidate cache agar bab yang baru tampil saat reload
+                    delete _chaptersCache[activeBook.id];
                     document.getElementById('topbarBookTitle').textContent = activeBook.title;
                     document.getElementById('topbarBookAuthor').innerHTML = `${activeBook.author} &bull; <span style="text-transform:capitalize; opacity: 0.9;">${activeBook.category}</span>`;
                     renderChapter(); renderTOC(); window.showToast("Buku berhasil diperbarui!", "✅"); closeModal('editBookModal');
@@ -2014,34 +2186,20 @@
         // AI CHAT ENGINE — Groq (primary) + OpenRouter (fallback)
         // Kedua provider gratis, tanpa kartu kredit
         // =====================================================================
-        const AI_CONFIG = {
-            groq: {
-                endpoint: 'https://api.groq.com/openai/v1/chat/completions',
-                model: 'llama-3.3-70b-versatile',
-                modelFallback: 'llama-3.1-8b-instant',
-                keyStorageKey: 'folio-groq-api-key',
-                keyPage: 'https://console.groq.com/keys',
-                keyPlaceholder: 'gsk_...',
-                label: 'Groq',
-                setupDesc: 'Masukkan API key gratis dari console.groq.com (tanpa kartu kredit, 1000 req/hari).',
-                keyLabel: 'Dapatkan API Key Groq Gratis',
-            },
-            openrouter: {
-                endpoint: 'https://openrouter.ai/api/v1/chat/completions',
-                model: 'meta-llama/llama-3.3-70b-instruct:free',
-                modelFallback: 'deepseek/deepseek-r1:free',
-                keyStorageKey: 'folio-openrouter-api-key',
-                keyPage: 'https://openrouter.ai/keys',
-                keyPlaceholder: 'sk-or-...',
-                label: 'OpenRouter',
-                setupDesc: 'Masukkan API key gratis dari openrouter.ai (tanpa kartu kredit, 200 req/hari, 28+ model).',
-                keyLabel: 'Dapatkan API Key OpenRouter Gratis',
-            }
-        };
+        // =====================================================================
+        // AI ENGINE — memanggil Vercel API (key tersembunyi di server)
+        // Ganti FOLIO_API_URL dengan URL Vercel kamu setelah deploy
+        // Contoh: 'https://folio-ai-api.vercel.app'
+        // =====================================================================
+        const FOLIO_API_URL = localStorage.getItem('folio-api-url') || '';
 
-        let aiProvider   = localStorage.getItem('folio-ai-provider') || 'groq';
-        let aiChatHistory = [];   // {role, content}[]
-        let aiIsLoading  = false;
+        let aiChatHistory = [];
+        let aiIsLoading   = false;
+
+        // ── Cek apakah URL API sudah diset ──
+        function aiServerReady() {
+            return !!FOLIO_API_URL.trim();
+        }
 
         // ── Buka/tutup drawer ──
         window.openAIChat = function() {
@@ -2049,21 +2207,18 @@
             drawer.classList.add('open');
             lucide.createIcons();
 
-            // Update context bar
             if (activeBook) {
-                document.getElementById('aiContextTitle').textContent = activeBook.title + ' · Bab ' + (activeChapterIdx + 1);
-                document.getElementById('aiChatSubtitle').textContent = 'Konteks: ' + (activeBook.chapters?.[activeChapterIdx]?.title || 'Ringkasan');
+                document.getElementById('aiContextTitle').textContent   = activeBook.title + ' · Bab ' + (activeChapterIdx + 1);
+                document.getElementById('aiChatSubtitle').textContent   = 'Konteks: ' + (activeBook.chapters?.[activeChapterIdx]?.title || 'Ringkasan');
             }
 
-            // Cek apakah API key sudah ada
-            const cfg = AI_CONFIG[aiProvider];
-            const hasKey = !!localStorage.getItem(cfg.keyStorageKey);
-            document.getElementById('aiSetupPanel').style.display   = hasKey ? 'none'  : 'flex';
-            document.getElementById('aiChatMessages').style.display  = hasKey ? 'flex'  : 'none';
-            document.getElementById('aiQuickChips').style.display    = hasKey ? 'flex'  : 'none';
-            document.getElementById('aiChatInput').closest('.ai-chat-input-area').style.display = hasKey ? 'flex' : 'none';
+            const ready = aiServerReady();
+            document.getElementById('aiSetupPanel').style.display                                    = ready ? 'none' : 'flex';
+            document.getElementById('aiChatMessages').style.display                                  = ready ? 'flex' : 'none';
+            document.getElementById('aiQuickChips').style.display                                    = ready ? 'flex' : 'none';
+            document.getElementById('aiChatInput').closest('.ai-chat-input-area').style.display      = ready ? 'flex' : 'none';
 
-            if (hasKey && aiChatHistory.length === 0) {
+            if (ready && aiChatHistory.length === 0) {
                 addAIChatMessage('assistant', 'Halo! Saya siap membantu kamu memahami **' + (activeBook?.title || 'buku ini') + '**. Mau tanya apa?');
             }
 
@@ -2078,43 +2233,29 @@
             if (e.target === document.getElementById('aiChatDrawer')) closeAIChat();
         }
 
-        // ── Ganti provider ──
+        // ── Tombol provider — hanya kosmetik, keduanya pakai server yang sama ──
         window.setAIProvider = function(provider, btn) {
-            aiProvider = provider;
-            localStorage.setItem('folio-ai-provider', provider);
             document.querySelectorAll('.ai-provider-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
-            const cfg = AI_CONFIG[provider];
-            document.getElementById('aiSetupDesc').textContent   = cfg.setupDesc;
-            document.getElementById('aiGetKeyLabel').textContent = cfg.keyLabel;
-            document.getElementById('aiApiKeyInput').placeholder = cfg.keyPlaceholder;
-
-            const hasKey = !!localStorage.getItem(cfg.keyStorageKey);
-            document.getElementById('aiSetupPanel').style.display  = hasKey ? 'none' : 'flex';
-            document.getElementById('aiChatMessages').style.display = hasKey ? 'flex' : 'none';
-            document.getElementById('aiQuickChips').style.display   = hasKey ? 'flex' : 'none';
-            document.getElementById('aiChatInput').closest('.ai-chat-input-area').style.display = hasKey ? 'flex' : 'none';
+            // Catatan: provider toggle di sini hanya label UI
+            // Karena API key disimpan di server, tidak ada key yang perlu diisi user
         }
 
-        // ── Simpan API key ──
+        // ── Setup panel — user cukup masukkan URL Vercel ──
+        // Teks dan placeholder di HTML di-update agar sesuai flow baru
         window.saveAIApiKey = function() {
             const val = document.getElementById('aiApiKeyInput').value.trim();
-            if (!val) return window.showToast('Masukkan API key terlebih dahulu', '⚠️');
-            const cfg = AI_CONFIG[aiProvider];
-            localStorage.setItem(cfg.keyStorageKey, val);
-            document.getElementById('aiApiKeyInput').value = '';
-            document.getElementById('aiSetupPanel').style.display  = 'none';
-            document.getElementById('aiChatMessages').style.display = 'flex';
-            document.getElementById('aiQuickChips').style.display   = 'flex';
-            document.getElementById('aiChatInput').closest('.ai-chat-input-area').style.display = 'flex';
-            aiChatHistory = [];
-            addAIChatMessage('assistant', 'API key tersimpan! Saya siap membantu kamu memahami **' + (activeBook?.title || 'buku ini') + '**. Mau tanya apa?');
-            window.showToast('API key berhasil disimpan!', '✅');
+            if (!val) return window.showToast('Masukkan URL API Vercel kamu', '⚠️');
+            // Normalisasi — hapus trailing slash
+            const cleanUrl = val.replace(/\/$/, '');
+            localStorage.setItem('folio-api-url', cleanUrl);
+            // Reload state tanpa refresh
+            location.reload();
         }
 
         window.openAIKeyPage = function() {
-            window.open(AI_CONFIG[aiProvider].keyPage, '_blank');
+            // Arahkan ke panduan deploy
+            window.open('https://vercel.com/dashboard', '_blank');
         }
 
         // ── Tambah pesan ke UI ──
@@ -2187,51 +2328,21 @@ INSTRUKSI:
         }
 
         // ── Kirim ke API ──
+        // ── Kirim ke Vercel API server (key tersembunyi di server) ──
         async function callAIAPI(messages) {
-            const cfg = AI_CONFIG[aiProvider];
-            const apiKey = localStorage.getItem(cfg.keyStorageKey);
-            if (!apiKey) throw new Error('API key tidak ditemukan');
-
-            const headers = {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`,
-            };
-
-            // OpenRouter butuh header tambahan
-            if (aiProvider === 'openrouter') {
-                headers['HTTP-Referer'] = 'https://folio-app.web.app';
-                headers['X-Title'] = 'Folio Book Summary App';
-            }
-
-            const body = {
-                model: cfg.model,
-                messages: messages,
-                max_tokens: 1024,
-                temperature: 0.7,
-            };
-
-            let res = await fetch(cfg.endpoint, {
+            if (!FOLIO_API_URL) throw new Error('URL API belum dikonfigurasi. Klik tombol bot dan masukkan URL Vercel.');
+            const res = await fetch(`${FOLIO_API_URL}/api/chat`, {
                 method: 'POST',
-                headers,
-                body: JSON.stringify(body),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    messages,
+                    bookTitle:    activeBook?.title || '',
+                    chapterTitle: activeBook?.chapters?.[activeChapterIdx]?.title || '',
+                }),
             });
-
-            // Fallback ke model lebih kecil jika model utama overloaded
-            if (!res.ok && (res.status === 429 || res.status === 503)) {
-                body.model = cfg.modelFallback;
-                res = await fetch(cfg.endpoint, { method: 'POST', headers, body: JSON.stringify(body) });
-            }
-
-            if (!res.ok) {
-                const errData = await res.json().catch(() => ({}));
-                const errMsg = errData?.error?.message || `Error ${res.status}`;
-                if (res.status === 401) throw new Error('API key tidak valid. Periksa kembali key kamu.');
-                if (res.status === 429) throw new Error('Batas request harian tercapai. Coba lagi besok atau ganti provider.');
-                throw new Error(errMsg);
-            }
-
             const data = await res.json();
-            return data.choices?.[0]?.message?.content || 'Maaf, tidak ada respons dari AI.';
+            if (!res.ok) throw new Error(data.error || `Server error ${res.status}`);
+            return data.reply;
         }
 
         // ── Kirim pesan ──
@@ -2304,81 +2415,53 @@ INSTRUKSI:
         }
 
         // ── Generate AI Insight otomatis di Insights screen ──
+        // ── Generate insight via Vercel server ──
         window.generateAIInsight = async function() {
             if (!activeBook) return;
 
-            const cfg = AI_CONFIG[aiProvider];
-            const hasKey = !!localStorage.getItem(cfg.keyStorageKey);
-
-            if (!hasKey) {
-                // Buka AI chat drawer untuk setup key terlebih dahulu
+            if (!FOLIO_API_URL) {
                 openAIChat();
-                window.showToast('Masukkan API key dulu untuk Generate Insight', '⚠️');
+                window.showToast('Masukkan URL API Vercel dulu', '⚠️');
                 return;
             }
 
-            const btn = document.getElementById('btnGenerateAIInsight');
+            const btn   = document.getElementById('btnGenerateAIInsight');
             const label = document.getElementById('generateInsightLabel');
             btn.disabled = true;
             label.textContent = 'Sedang generate...';
 
-            // Tampilkan shimmer loading di semua section
-            const elKP = document.getElementById('insightKeyPoints');
-            const elLA = document.getElementById('insightLangkahAksi');
-            const elKesimpulan = document.getElementById('insightKesimpulan');
             const shimmerHTML = `<div class="ai-shimmer" style="width:90%;"></div><div class="ai-shimmer" style="width:75%;"></div><div class="ai-shimmer" style="width:85%;"></div>`;
-            elKesimpulan.innerHTML = shimmerHTML;
-            elKP.innerHTML = shimmerHTML;
-            elLA.innerHTML = shimmerHTML;
+            document.getElementById('insightKesimpulan').innerHTML = shimmerHTML;
+            document.getElementById('insightKeyPoints').innerHTML  = shimmerHTML;
+            document.getElementById('insightLangkahAksi').innerHTML = shimmerHTML;
 
             try {
-                // Ambil semua chapter content untuk context
-                const allContent = activeBook.chapters?.map((c, i) =>
-                    `BAB ${i+1} — ${c.title}:\n${c.content?.substring(0, 800) || ''}`
-                ).join('\n\n') || '';
+                const res = await fetch(`${FOLIO_API_URL}/api/generate-insight`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title:      activeBook.title,
+                        author:     activeBook.author,
+                        category:   activeBook.category,
+                        kesimpulan: activeBook.kesimpulan,
+                        chapters:   (activeBook.chapters || []).map(c => ({
+                            title:   c.title,
+                            content: (c.content || '').substring(0, 800),
+                        })),
+                    }),
+                });
 
-                const prompt = `Kamu adalah ahli ringkasan buku. Analisis buku berikut dan buat output dalam format JSON yang ketat:
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || `Server error ${res.status}`);
 
-BUKU: "${activeBook.title}" oleh ${activeBook.author}
-KATEGORI: ${activeBook.category}
+                // Update UI
+                const elK  = document.getElementById('insightKesimpulan');
+                const elKP = document.getElementById('insightKeyPoints');
+                const elLA = document.getElementById('insightLangkahAksi');
 
-ISI BUKU (ringkasan per bab):
-${allContent.substring(0, 4000)}
-
-Buat output dalam format JSON PERSIS seperti ini (tanpa teks lain, tanpa markdown code block):
-{
-  "kesimpulan": "Paragraf kesimpulan mendalam 3-4 kalimat tentang inti pesan buku",
-  "keyPoints": ["Poin penting 1", "Poin penting 2", "Poin penting 3", "Poin penting 4", "Poin penting 5"],
-  "langkahAksi": ["Langkah aksi 1 yang konkret", "Langkah aksi 2 yang konkret", "Langkah aksi 3 yang konkret", "Langkah aksi 4 yang konkret"]
-}`;
-
-                const messages = [
-                    { role: 'system', content: 'Kamu adalah analis buku profesional. Selalu balas HANYA dalam format JSON yang valid, tanpa teks tambahan apapun.' },
-                    { role: 'user', content: prompt }
-                ];
-
-                const reply = await callAIAPI(messages);
-
-                // Parse JSON dari response
-                let parsed;
-                try {
-                    // Bersihkan jika ada markdown code block
-                    const clean = reply.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
-                    parsed = JSON.parse(clean);
-                } catch(e) {
-                    throw new Error('Format respons AI tidak valid. Coba generate ulang.');
-                }
-
-                // Update tampilan insights
-                if (parsed.kesimpulan) {
-                    elKesimpulan.innerHTML = `<p style="margin-bottom:1.2em;">${parsed.kesimpulan}</p><div style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-ui);font-size:11px;color:var(--accent);padding:4px 10px;background:rgba(200,134,58,0.1);border-radius:20px;margin-top:4px;"><i data-lucide="sparkles" style="width:12px;"></i> Dibuat oleh ${AI_CONFIG[aiProvider].label} AI</div>`;
-                }
-                if (parsed.keyPoints?.length) {
-                    elKP.innerHTML = parsed.keyPoints.map(p => `<li style="margin-bottom:12px;">${p}</li>`).join('');
-                }
-                if (parsed.langkahAksi?.length) {
-                    elLA.innerHTML = parsed.langkahAksi.map(p => `<li style="margin-bottom:12px;">${p}</li>`).join('');
-                }
+                elK.innerHTML  = `<p style="margin-bottom:1.2em;">${data.kesimpulan}</p><div style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-ui);font-size:11px;color:var(--accent);padding:4px 10px;background:rgba(200,134,58,0.1);border-radius:20px;margin-top:4px;"><i data-lucide="sparkles" style="width:12px;"></i> Groq AI · ${data.model || ''}</div>`;
+                elKP.innerHTML = data.keyPoints.map(p  => `<li style="margin-bottom:12px;">${p}</li>`).join('');
+                elLA.innerHTML = data.langkahAksi.map(p => `<li style="margin-bottom:12px;">${p}</li>`).join('');
 
                 lucide.createIcons();
                 label.textContent = '✓ Insight Diperbarui — Generate Ulang';
@@ -2388,21 +2471,20 @@ Buat output dalam format JSON PERSIS seperti ini (tanpa teks lain, tanpa markdow
                 // Simpan ke Firebase jika admin
                 if (window.isCurrentUserAdmin && window.firebaseUpdateFullBook) {
                     window.firebaseUpdateFullBook(activeBook.id, {
-                        kesimpulan: parsed.kesimpulan,
-                        keyPoints: parsed.keyPoints.join('\n'),
-                        langkahAksi: parsed.langkahAksi.join('\n'),
-                    }).catch(e => console.warn('Gagal simpan insight ke Firebase:', e));
+                        kesimpulan:   data.kesimpulan,
+                        keyPoints:    data.keyPoints.join('\n'),
+                        langkahAksi:  data.langkahAksi.join('\n'),
+                    }).catch(e => console.warn('Gagal simpan ke Firebase:', e));
                 }
 
             } catch (err) {
-                elKesimpulan.innerHTML = `<p style="color:rgba(212,83,83,0.8);">⚠️ ${err.message}</p>`;
-                elKP.innerHTML = '<li><em>Gagal generate. Coba lagi.</em></li>';
-                elLA.innerHTML = '<li><em>Gagal generate. Coba lagi.</em></li>';
+                document.getElementById('insightKesimpulan').innerHTML  = `<p style="color:rgba(212,83,83,0.8);">⚠️ ${err.message}</p>`;
+                document.getElementById('insightKeyPoints').innerHTML   = '<li><em>Gagal generate. Coba lagi.</em></li>';
+                document.getElementById('insightLangkahAksi').innerHTML = '<li><em>Gagal generate. Coba lagi.</em></li>';
                 label.textContent = 'Coba Generate Ulang';
                 btn.disabled = false;
             }
         }
-
         // Reset chat history saat ganti buku
         const _origOpenReader = window.openReader;
         window.openReader = function(bookId) {
@@ -2414,6 +2496,224 @@ Buat output dalam format JSON PERSIS seperti ini (tanpa teks lain, tanpa markdow
         const _origShowScreen = window.showScreen || function(){};
         // (ditangani di patch showScreen di bawah via event)
 
+
+        // =====================================================================
+        // WEB SPEECH API — TTS ENGINE
+        // Tidak ada library, tidak ada server, tidak ada limit
+        // =====================================================================
+        const tts = {
+            isPlaying:    false,
+            isPaused:     false,
+            paraIdx:      0,
+            paragraphs:   [],   // { el, text }
+            utterance:    null,
+            rate:         1.0,
+            speedOptions: [0.8, 1.0, 1.2, 1.5, 1.8],
+            speedIdx:     1,
+            speedLabels:  ['0.8×','1×','1.2×','1.5×','1.8×'],
+            voice:        null,
+            supported:    ('speechSynthesis' in window),
+        };
+
+        // Pilih voice Bahasa Indonesia terbaik yang tersedia di device
+        function ttsFindVoice() {
+            if (!tts.supported) return null;
+            const voices = window.speechSynthesis.getVoices();
+            return (
+                voices.find(v => v.lang === 'id-ID') ||
+                voices.find(v => v.lang.startsWith('id')) ||
+                voices.find(v => v.default) ||
+                voices[0] || null
+            );
+        }
+
+        // Inisialisasi — dipanggil sekali di initApp
+        window.ttsInit = function() {
+            if (!tts.supported) return;
+            tts.voice = ttsFindVoice();
+            // Beberapa browser load voice async
+            window.speechSynthesis.onvoiceschanged = () => {
+                tts.voice = ttsFindVoice();
+            };
+        }
+
+        // Kumpulkan semua paragraf dari readerBody — dipanggil setelah renderChapter()
+        window.ttsLoadParagraphs = function() {
+            tts.paragraphs = [];
+            document.querySelectorAll('#readerBody p[id^="para-"]').forEach(el => {
+                const text = (el.innerText || el.textContent || '').trim();
+                if (text) tts.paragraphs.push({ el, text });
+            });
+        }
+
+        // ── Toggle on/off dari tombol mic ──
+        window.ttsToggle = function() {
+            if (!tts.supported) {
+                window.showToast('Browser kamu tidak mendukung Text-to-Speech', '⚠️');
+                return;
+            }
+            if (tts.isPlaying || tts.isPaused) {
+                ttsStop();
+            } else {
+                tts.paraIdx = 0;
+                ttsPlay();
+            }
+        }
+
+        // ── Play/Pause toggle dari tombol di bar ──
+        window.ttsTogglePlayPause = function() {
+            if (!tts.isPlaying && !tts.isPaused) { ttsPlay(); return; }
+            if (tts.isPlaying) {
+                window.speechSynthesis.pause();
+                tts.isPlaying = false; tts.isPaused = true;
+                ttsUpdateUI();
+            } else {
+                window.speechSynthesis.resume();
+                tts.isPlaying = true; tts.isPaused = false;
+                ttsUpdateUI();
+            }
+        }
+
+        // ── Mulai baca dari paraIdx saat ini ──
+        function ttsPlay() {
+            if (!tts.supported || !tts.paragraphs.length) return;
+            window.speechSynthesis.cancel();
+
+            const para = tts.paragraphs[tts.paraIdx];
+            if (!para) { ttsStop(); return; }
+
+            ttsHighlight(tts.paraIdx);
+            ttsScrollTo(tts.paraIdx);
+
+            const utt = new SpeechSynthesisUtterance(para.text);
+            utt.rate   = tts.rate;
+            utt.pitch  = 1.0;
+            utt.volume = 1.0;
+            utt.lang   = 'id-ID';
+            if (tts.voice) utt.voice = tts.voice;
+
+            utt.onstart = () => {
+                tts.isPlaying = true; tts.isPaused = false;
+                ttsUpdateUI();
+            };
+
+            utt.onend = () => {
+                tts.paraIdx++;
+                if (tts.paraIdx < tts.paragraphs.length) {
+                    ttsPlay();
+                } else {
+                    // Selesai semua paragraf bab ini
+                    ttsStop();
+                    window.showToast('Narasi bab selesai', 'mic');
+                }
+            };
+
+            utt.onerror = (e) => {
+                if (e.error === 'interrupted' || e.error === 'canceled') return;
+                console.warn('TTS error:', e.error);
+                tts.isPlaying = false;
+                ttsUpdateUI();
+            };
+
+            tts.utterance = utt;
+            window.speechSynthesis.speak(utt);
+            ttsShowBar();
+        }
+
+        // ── Stop total ──
+        window.ttsStop = function() {
+            window.speechSynthesis.cancel();
+            tts.isPlaying = false; tts.isPaused = false; tts.paraIdx = 0;
+            ttsRemoveHighlight();
+            ttsUpdateUI();
+            ttsHideBar();
+        }
+
+        // ── Skip paragraf (delta = +1 / -1) ──
+        window.ttsSkip = function(delta) {
+            const newIdx = tts.paraIdx + delta;
+            if (newIdx < 0 || newIdx >= tts.paragraphs.length) return;
+            tts.paraIdx = newIdx;
+            ttsPlay();
+        }
+
+        // ── Toggle kecepatan ──
+        window.ttsToggleSpeed = function() {
+            tts.speedIdx = (tts.speedIdx + 1) % tts.speedOptions.length;
+            tts.rate = tts.speedOptions[tts.speedIdx];
+            document.getElementById('ttsSpeedBtn').textContent = tts.speedLabels[tts.speedIdx];
+            if (tts.isPlaying) ttsPlay(); // restart dengan kecepatan baru
+        }
+
+        // ── Highlight paragraf aktif ──
+        function ttsHighlight(idx) {
+            ttsRemoveHighlight();
+            const para = tts.paragraphs[idx];
+            if (para?.el) para.el.classList.add('tts-reading');
+        }
+
+        function ttsRemoveHighlight() {
+            document.querySelectorAll('.tts-reading').forEach(el => el.classList.remove('tts-reading'));
+        }
+
+        // ── Scroll ke paragraf aktif ──
+        function ttsScrollTo(idx) {
+            const para = tts.paragraphs[idx];
+            if (!para?.el) return;
+            requestAnimationFrame(() => {
+                para.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        }
+
+        // ── Update semua UI ──
+        function ttsUpdateUI() {
+            const bar       = document.getElementById('ttsBar');
+            const playIcon  = document.getElementById('ttsIconPlay');
+            const pauseIcon = document.getElementById('ttsIconPause');
+            const btnMic    = document.getElementById('btnTTS');
+            const fill      = document.getElementById('ttsProgressFill');
+            const chapter   = document.getElementById('ttsInfoChapter');
+            const paraInfo  = document.getElementById('ttsInfoPara');
+
+            const total   = tts.paragraphs.length;
+            const current = tts.paraIdx + 1;
+
+            if (playIcon)  playIcon.style.display  = tts.isPlaying ? 'none'  : 'block';
+            if (pauseIcon) pauseIcon.style.display = tts.isPlaying ? 'block' : 'none';
+            if (bar)       bar.classList.toggle('paused', tts.isPaused);
+            if (btnMic)    btnMic.classList.toggle('tts-active', tts.isPlaying || tts.isPaused);
+
+            if (fill) fill.style.width = total > 0 ? `${(current / total) * 100}%` : '0%';
+
+            const chapterTitleEl = document.getElementById('readerChapterTitle');
+            if (chapter)  chapter.textContent  = chapterTitleEl?.textContent || 'Bab';
+            if (paraInfo) paraInfo.textContent = `Paragraf ${current} dari ${total}`;
+        }
+
+        function ttsShowBar() {
+            document.getElementById('ttsBar')?.classList.add('show');
+            ttsUpdateUI();
+        }
+
+        function ttsHideBar() {
+            document.getElementById('ttsBar')?.classList.remove('show');
+        }
+
+        // ── Double-klik paragraf = mulai TTS dari sana ──
+        window.ttsStartFromParagraph = function(pIndex) {
+            tts.paraIdx = pIndex;
+            ttsPlay();
+        }
+
+        // Stop TTS otomatis saat keluar dari reader
+        window.ttsStopIfActive = function() {
+            if (tts.isPlaying || tts.isPaused) ttsStop();
+        }
+
+        // =====================================================================
+        // END WEB SPEECH TTS ENGINE
+        // =====================================================================
+
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
 
@@ -2421,7 +2721,7 @@ Buat output dalam format JSON PERSIS seperti ini (tanpa teks lain, tanpa markdow
     <script type="module">
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
         // =====================================================================
         // FIX #2: Firebase config — key tetap harus ada di sini karena ini
@@ -2460,7 +2760,7 @@ Buat output dalam format JSON PERSIS seperti ini (tanpa teks lain, tanpa markdow
         };
 
         const app = initializeApp(firebaseConfig);
-        const db  = getFirestore(app);
+        const db = getFirestore(app);
         const auth = getAuth(app);
         const googleProvider = new GoogleAuthProvider();
 
@@ -2476,10 +2776,7 @@ Buat output dalam format JSON PERSIS seperti ini (tanpa teks lain, tanpa markdow
         });
 
         // =====================================================================
-        // FIX #1 (inti): onAuthStateChanged sekarang membaca Custom Claims
-        // via getIdTokenResult() — admin status dari server, tidak dari client
-        // =====================================================================
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.APP_STATE.isLoggedIn = true;
                 window.APP_STATE.email      = user.email;
@@ -2489,14 +2786,8 @@ Buat output dalam format JSON PERSIS seperti ini (tanpa teks lain, tanpa markdow
                 localStorage.setItem('folio-user-logged-in', 'true');
                 window.updateProfileDisplay();
 
-                // Baca Custom Claims dari token (server-verified)
-                try {
-                    const tokenResult = await user.getIdTokenResult();
-                    // checkAdminUI sekarang menerima boolean, bukan email
-                    checkAdminUI(tokenResult.claims.admin === true);
-                } catch(e) {
-                    checkAdminUI(false);
-                }
+                // Cek admin berdasarkan email
+                checkAdminUI(user.email);
 
                 setDoc(doc(db, "users", user.uid), {
                     uid: user.uid, email: user.email,
@@ -2508,8 +2799,7 @@ Buat output dalam format JSON PERSIS seperti ini (tanpa teks lain, tanpa markdow
                     window.goToSlide(2);
                 }
             } else {
-                // User logout — reset admin UI
-                checkAdminUI(false);
+                checkAdminUI('');
             }
         });
 
@@ -2629,13 +2919,75 @@ Buat output dalam format JSON PERSIS seperti ini (tanpa teks lain, tanpa markdow
         };
 
         // =====================================================================
-        // FIX #4: Re-render tidak efisien — onSnapshot sekarang menggunakan
-        // debounce 300ms untuk mencegah burst update (misal saat upload Excel)
-        // serta menggunakan diffing via renderBooks() yang sudah diperbaiki
         // =====================================================================
+        // OPTIMASI LOADING:
+        // 1. Skeleton loading tampil SEGERA sebelum data datang
+        // 2. onSnapshot tanpa debounce untuk first-load (langsung render)
+        // 3. Debounce 300ms hanya untuk update selanjutnya (burst protection)
+        // 4. Offline cache (IndexedDB) membuat data muncul instan di kunjungan kedua
+        // =====================================================================
+
+        // Tampilkan skeleton segera agar user tahu sesuatu sedang dimuat
+        function showSkeletonLoading() {
+            const skeletonCard = (i) => `
+                <div class="book-card" style="pointer-events:none;" data-book-id="skel-${i}">
+                    <div class="book-cover bc${(i%6)+1}" style="opacity:0.35;">
+                        <div class="book-cover-inner"></div>
+                    </div>
+                    <div style="height:13px;background:var(--bg-secondary);border-radius:4px;margin-bottom:6px;width:${70+Math.random()*20|0}%;animation:skeletonPulse 1.4s ease-in-out ${i*0.1}s infinite;"></div>
+                    <div style="height:11px;background:var(--bg-secondary);border-radius:4px;width:50%;animation:skeletonPulse 1.4s ease-in-out ${i*0.1+0.2}s infinite;"></div>
+                </div>`;
+
+            const featEl = document.getElementById('featuredBookContainer');
+            if (featEl && !featEl.innerHTML.trim()) {
+                featEl.innerHTML = `<div style="background:var(--bg-dark);border-radius:20px;padding:28px;display:grid;grid-template-columns:90px 1fr;gap:20px;margin-bottom:32px;animation:skeletonPulse 1.4s ease-in-out infinite;"><div style="width:90px;height:130px;border-radius:8px;background:rgba(255,255,255,0.06);"></div><div style="display:flex;flex-direction:column;gap:12px;justify-content:center;"><div style="height:12px;background:rgba(255,255,255,0.06);border-radius:4px;width:40%;"></div><div style="height:22px;background:rgba(255,255,255,0.06);border-radius:4px;width:80%;"></div><div style="height:11px;background:rgba(255,255,255,0.06);border-radius:4px;width:55%;"></div><div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;width:100%;"></div></div></div>`;
+            }
+            const gridEl = document.getElementById('bookGrid');
+            if (gridEl && !gridEl.innerHTML.trim()) {
+                gridEl.innerHTML = [0,1,2,3,4,5].map(i => skeletonCard(i)).join('');
+            }
+            const colGridEl = document.getElementById('collectionGrid');
+            if (colGridEl && !colGridEl.innerHTML.trim()) {
+                colGridEl.innerHTML = [0,1,2,3,4,5,6,7].map(i => skeletonCard(i)).join('');
+            }
+        }
+
+        // Inject animasi skeleton ke <style>
+        const skeletonStyle = document.createElement('style');
+        skeletonStyle.textContent = `@keyframes skeletonPulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} }`;
+        document.head.appendChild(skeletonStyle);
+
+        // Tampilkan skeleton segera jika user sudah pernah login
+        if (window.APP_STATE.onboardingComplete) showSkeletonLoading();
+
         let renderDebounceTimer = null;
+        let firstRenderDone = false;
+
         const q = query(collection(db, "buku_bacaan"), orderBy("createdAt", "desc"));
         onSnapshot(q, (snapshot) => {
+            // First render: TANPA debounce — data dari cache/server langsung tampil
+            if (!firstRenderDone) {
+                firstRenderDone = true;
+                let books = [];
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    books.push({
+                        id: docSnap.id, title: data.title||"Tanpa Judul", author: data.author||"Anonim",
+                        category: data.category||"lainnya", kesimpulan: data.kesimpulan||"", keyPoints: data.keyPoints||"",
+                        langkahAksi: data.langkahAksi||"", cover: data.cover||"bc1", coverUrl: data.coverUrl||"",
+                        progress: data.progress||0, isFavorite: data.isFavorite||false, tag: data.tag||"Belum Dibaca",
+                        // chapters TIDAK dimuat di sini — di-fetch saat openReader (lazy load)
+                        chapters: data.chapters||[], highlights: data.highlights||{}, chapterNotes: data.chapterNotes||{},
+                        lastReadAt: data.lastReadAt||0, lastReadChapter: data.lastReadChapter||0,
+                        lastReadParagraph: data.lastReadParagraph||0, savedPin: data.savedPin||null, savedQuotes: data.savedQuotes||[]
+                    });
+                });
+                if(window.updateDynamicFilters) window.updateDynamicFilters(books);
+                if(window.renderBooks) window.renderBooks(books);
+                return;
+            }
+
+            // Update selanjutnya: debounce 300ms untuk cegah burst
             clearTimeout(renderDebounceTimer);
             renderDebounceTimer = setTimeout(() => {
                 let books = [];
@@ -2646,6 +2998,7 @@ Buat output dalam format JSON PERSIS seperti ini (tanpa teks lain, tanpa markdow
                         category: data.category||"lainnya", kesimpulan: data.kesimpulan||"", keyPoints: data.keyPoints||"",
                         langkahAksi: data.langkahAksi||"", cover: data.cover||"bc1", coverUrl: data.coverUrl||"",
                         progress: data.progress||0, isFavorite: data.isFavorite||false, tag: data.tag||"Belum Dibaca",
+                        // chapters TIDAK dimuat di sini — di-fetch saat openReader (lazy load)
                         chapters: data.chapters||[], highlights: data.highlights||{}, chapterNotes: data.chapterNotes||{},
                         lastReadAt: data.lastReadAt||0, lastReadChapter: data.lastReadChapter||0,
                         lastReadParagraph: data.lastReadParagraph||0, savedPin: data.savedPin||null, savedQuotes: data.savedQuotes||[]
