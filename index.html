@@ -763,9 +763,10 @@
             <div style="padding: 24px 24px 16px;">
                 <div class="modal-title" style="color: #fff;">Tambah Buku Baru</div>
                 <div class="modal-subtitle" style="color: var(--text-light-muted); margin-bottom: 16px;">Pilih metode untuk mengunggah buku ke database.</div>
-                <div class="modal-tabs" style="display: flex; gap: 8px; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 8px; margin-bottom: 16px;">
-                    <button class="modal-tab active" onclick="switchAddBookTab('manual')" id="tabBtnManual" style="flex: 1; padding: 10px; border: none; background: var(--accent); color: #fff; border-radius: 6px; font-family: var(--font-ui); font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s;">Input Manual (CMS)</button>
-                    <button class="modal-tab" onclick="switchAddBookTab('excel')" id="tabBtnExcel" style="flex: 1; padding: 10px; border: none; background: transparent; color: var(--text-light-muted); border-radius: 6px; font-family: var(--font-ui); font-size: 13px; font-weight: 500; cursor: pointer; transition: 0.3s;">Upload Excel</button>
+                <div class="modal-tabs" style="display: flex; gap: 6px; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 8px; margin-bottom: 16px;">
+                    <button class="modal-tab active" onclick="switchAddBookTab('manual')" id="tabBtnManual" style="flex: 1; padding: 9px 6px; border: none; background: var(--accent); color: #fff; border-radius: 6px; font-family: var(--font-ui); font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.3s;">Manual</button>
+                    <button class="modal-tab" onclick="switchAddBookTab('excel')" id="tabBtnExcel" style="flex: 1; padding: 9px 6px; border: none; background: transparent; color: var(--text-light-muted); border-radius: 6px; font-family: var(--font-ui); font-size: 12px; font-weight: 500; cursor: pointer; transition: 0.3s;">Excel</button>
+                    <button class="modal-tab" onclick="switchAddBookTab('ai')" id="tabBtnAI" style="flex: 1; padding: 9px 6px; border: none; background: transparent; color: var(--text-light-muted); border-radius: 6px; font-family: var(--font-ui); font-size: 12px; font-weight: 500; cursor: pointer; transition: 0.3s; display:flex; align-items:center; justify-content:center; gap:5px;"><i data-lucide="sparkles" style="width:13px;height:13px;"></i> Generate AI</button>
                 </div>
             </div>
             <div style="padding: 0 24px 24px; max-height: 65vh; overflow-y: auto;">
@@ -825,6 +826,87 @@
                         </div>
                         <button type="submit" id="btnSubmitBook" class="btn-primary" style="margin-top:24px;"><i data-lucide="upload-cloud" style="width:18px;"></i> Proses Excel ke Firebase</button>
                     </form>
+                </div>
+
+                <!-- TAB 3: GENERATE AI -->
+                <div id="tabAI" class="tab-pane" style="display: none;">
+
+                    <!-- STEP 1: Input Info Buku -->
+                    <div id="aiStep1">
+                        <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);border-radius:8px;padding:14px 16px;margin-bottom:20px;display:flex;gap:10px;align-items:flex-start;">
+                            <i data-lucide="sparkles" style="width:16px;height:16px;color:#A78BFA;flex-shrink:0;margin-top:1px;"></i>
+                            <div style="font-size:12px;color:rgba(167,139,250,0.9);line-height:1.7;">
+                                <strong>Cara kerja:</strong> Masukkan judul buku → AI buat outline (daftar bab) dulu → kamu pilih bab mana yang mau di-generate isinya. <strong>Hemat token</strong> — tidak langsung generate semua.
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" style="color:var(--accent-light);">URL Cover Buku (Opsional)</label>
+                            <input type="url" class="form-input" id="aiCoverUrl" placeholder="https://..." style="background:rgba(200,134,58,0.05);border-color:rgba(200,134,58,0.3);color:#fff;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="color:var(--text-light-muted);">Judul Buku *</label>
+                            <input type="text" class="form-input" id="aiJudul" placeholder="Contoh: Atomic Habits" style="background:rgba(255,255,255,0.05);color:#fff;">
+                        </div>
+                        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                            <div class="form-group" style="flex:1;min-width:140px;">
+                                <label class="form-label" style="color:var(--text-light-muted);">Penulis *</label>
+                                <input type="text" class="form-input" id="aiPenulis" placeholder="James Clear" style="background:rgba(255,255,255,0.05);color:#fff;">
+                            </div>
+                            <div class="form-group" style="flex:1;min-width:140px;">
+                                <label class="form-label" style="color:var(--text-light-muted);">Kategori *</label>
+                                <input type="text" class="form-input" id="aiKategori" placeholder="Psikologi" style="background:rgba(255,255,255,0.05);color:#fff;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="color:var(--text-light-muted);">Jumlah Bab</label>
+                            <select class="form-input" id="aiJumlahBab" style="background:rgba(255,255,255,0.05);color:#fff;border-color:rgba(255,255,255,0.12);">
+                                <option value="5">5 bab</option>
+                                <option value="7" selected>7 bab (rekomendasi)</option>
+                                <option value="10">10 bab</option>
+                                <option value="12">12 bab</option>
+                            </select>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px;margin-bottom:20px;">
+                            <div style="font-size:11px;color:var(--text-dark-secondary);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">API Key Groq</div>
+                            <div style="font-size:12px;color:rgba(255,255,255,0.5);" id="aiGroqKeyStatus">Belum dikonfigurasi</div>
+                            <input type="password" class="form-input" id="aiGroqKeyInput" placeholder="gsk_..." style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);color:#fff;margin-top:8px;display:none;">
+                            <div style="display:flex;gap:8px;margin-top:8px;">
+                                <button type="button" id="aiGroqKeyToggle" onclick="aiToggleGroqKey()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--text-light-muted);font-size:12px;padding:6px 12px;cursor:pointer;font-family:var(--font-ui);">Ganti Key</button>
+                                <a href="https://console.groq.com/keys" target="_blank" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:var(--accent-light);font-size:12px;padding:6px 12px;cursor:pointer;font-family:var(--font-ui);text-decoration:none;display:flex;align-items:center;gap:4px;"><i data-lucide="external-link" style="width:11px;"></i> Dapatkan Key Gratis</a>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-primary" id="btnGenerateOutline" onclick="aiGenerateOutline()">
+                            <i data-lucide="sparkles" style="width:18px;"></i> Generate Outline Buku
+                        </button>
+                    </div>
+
+                    <!-- STEP 2: Review outline + generate per bab -->
+                    <div id="aiStep2" style="display:none;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                            <div>
+                                <div style="font-family:var(--font-display);font-size:18px;color:#EDE8E0;font-style:italic;" id="aiOutlineBookTitle">Judul Buku</div>
+                                <div style="font-size:12px;color:var(--text-dark-secondary);margin-top:3px;" id="aiOutlineBookMeta">Penulis · Kategori</div>
+                            </div>
+                            <button type="button" onclick="aiResetToStep1()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text-light-muted);font-size:12px;padding:7px 12px;cursor:pointer;font-family:var(--font-ui);display:flex;align-items:center;gap:6px;"><i data-lucide="arrow-left" style="width:13px;"></i> Ubah Info</button>
+                        </div>
+
+                        <!-- Token counter -->
+                        <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.15);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:12px;color:rgba(167,139,250,0.8);">Estimasi token terpakai</span>
+                            <span style="font-family:var(--font-mono);font-size:13px;font-weight:600;color:#A78BFA;" id="aiTokenCounter">~0 token</span>
+                        </div>
+
+                        <!-- Daftar bab -->
+                        <div id="aiOutlineList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;"></div>
+
+                        <!-- Simpan ke Firebase -->
+                        <button type="button" class="btn-primary" id="btnSaveAIBook" onclick="aiSaveBook()" style="margin-bottom:8px;">
+                            <i data-lucide="save" style="width:18px;"></i> <span id="btnSaveAILabel">Simpan Buku ke Firebase</span>
+                        </button>
+                        <div style="font-size:11px;color:var(--text-dark-secondary);text-align:center;">Bisa simpan meski belum semua bab di-generate. Bab kosong tetap tersimpan sebagai placeholder.</div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -2126,10 +2208,28 @@
         }
 
         window.switchAddBookTab = function(tab) {
-            const btnManual = document.getElementById('tabBtnManual'); const btnExcel = document.getElementById('tabBtnExcel');
-            const paneManual = document.getElementById('tabManual'); const paneExcel = document.getElementById('tabExcel');
-            if (tab==='manual') { btnManual.style.background='var(--accent)'; btnManual.style.color='#fff'; btnExcel.style.background='transparent'; btnExcel.style.color='var(--text-light-muted)'; paneManual.style.display='block'; paneExcel.style.display='none'; }
-            else { btnExcel.style.background='var(--accent)'; btnExcel.style.color='#fff'; btnManual.style.background='transparent'; btnManual.style.color='var(--text-light-muted)'; paneExcel.style.display='block'; paneManual.style.display='none'; }
+            const btnManual = document.getElementById('tabBtnManual');
+            const btnExcel  = document.getElementById('tabBtnExcel');
+            const btnAI     = document.getElementById('tabBtnAI');
+            const paneManual = document.getElementById('tabManual');
+            const paneExcel  = document.getElementById('tabExcel');
+            const paneAI     = document.getElementById('tabAI');
+
+            // Reset semua
+            [btnManual, btnExcel, btnAI].forEach(b => { if(b){ b.style.background='transparent'; b.style.color='var(--text-light-muted)'; }});
+            [paneManual, paneExcel, paneAI].forEach(p => { if(p) p.style.display='none'; });
+
+            if (tab === 'manual') {
+                btnManual.style.background='var(--accent)'; btnManual.style.color='#fff';
+                paneManual.style.display='block';
+            } else if (tab === 'excel') {
+                btnExcel.style.background='var(--accent)'; btnExcel.style.color='#fff';
+                paneExcel.style.display='block';
+            } else if (tab === 'ai') {
+                btnAI.style.background='var(--accent)'; btnAI.style.color='#fff';
+                paneAI.style.display='block';
+                aiInitTab(); // inisialisasi status key
+            }
         }
         window.addChapterField = function(containerId) {
             const list = document.getElementById(containerId);
@@ -2904,6 +3004,314 @@ INSTRUKSI:
 
         // =====================================================================
         // END TTS ENGINE v2
+        // =====================================================================
+
+
+        // =====================================================================
+        // AI GENERATE BOOK ENGINE — Opsi A
+        // Flow: Input info → Generate outline (~400 token)
+        //       → User pilih bab → Generate isi per bab on-demand (~800 token/bab)
+        // =====================================================================
+
+        const AI_GEN_KEY = 'folio-groq-gen-key';
+        let aiGenBook = { title:'', author:'', category:'', coverUrl:'', chapters:[] };
+        let aiTokensUsed = 0;
+
+        // ── Init tab — cek key ──
+        window.aiInitTab = function() {
+            const key = localStorage.getItem(AI_GEN_KEY) || '';
+            const statusEl = document.getElementById('aiGroqKeyStatus');
+            const inputEl  = document.getElementById('aiGroqKeyInput');
+            if (statusEl) statusEl.textContent = key ? '✓ Key tersimpan — siap digunakan' : 'Belum ada key';
+            if (statusEl) statusEl.style.color  = key ? '#7A8C6E' : 'rgba(255,255,255,0.4)';
+            if (inputEl)  inputEl.style.display = key ? 'none' : 'block';
+            lucide.createIcons();
+        }
+
+        window.aiToggleGroqKey = function() {
+            const input = document.getElementById('aiGroqKeyInput');
+            const btn   = document.getElementById('aiGroqKeyToggle');
+            if (!input) return;
+            if (input.style.display === 'none') {
+                input.style.display = 'block';
+                input.focus();
+                if (btn) btn.textContent = 'Simpan Key';
+            } else {
+                const val = input.value.trim();
+                if (val) {
+                    localStorage.setItem(AI_GEN_KEY, val);
+                    input.value = '';
+                    window.showToast('Groq key tersimpan!', '✅');
+                }
+                input.style.display = 'none';
+                if (btn) btn.textContent = 'Ganti Key';
+                aiInitTab();
+            }
+        }
+
+        // ── Panggil Groq API langsung dari client ──
+        async function aiCallGroq(messages, maxTokens = 1000) {
+            const key = localStorage.getItem(AI_GEN_KEY);
+            if (!key) throw new Error('Groq API key belum dimasukkan.');
+
+            const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type':  'application/json',
+                    'Authorization': `Bearer ${key}`,
+                },
+                body: JSON.stringify({
+                    model:       'llama-3.3-70b-versatile',
+                    messages,
+                    max_tokens:  maxTokens,
+                    temperature: 0.7,
+                }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                const msg = data?.error?.message || `Groq error ${res.status}`;
+                if (res.status === 401) throw new Error('API key Groq tidak valid.');
+                if (res.status === 429) throw new Error('Rate limit Groq. Tunggu 1 menit lalu coba lagi.');
+                throw new Error(msg);
+            }
+
+            // Update token counter
+            aiTokensUsed += (data.usage?.total_tokens || 0);
+            const counterEl = document.getElementById('aiTokenCounter');
+            if (counterEl) counterEl.textContent = `~${aiTokensUsed.toLocaleString()} token`;
+
+            return data.choices?.[0]?.message?.content || '';
+        }
+
+        // ── STEP 1: Generate outline ──
+        window.aiGenerateOutline = async function() {
+            const title    = document.getElementById('aiJudul')?.value.trim();
+            const author   = document.getElementById('aiPenulis')?.value.trim();
+            const category = document.getElementById('aiKategori')?.value.trim();
+            const jumlah   = document.getElementById('aiJumlahBab')?.value || '7';
+            const coverUrl = document.getElementById('aiCoverUrl')?.value.trim() || '';
+
+            if (!title || !author) return window.showToast('Judul dan penulis wajib diisi', '⚠️');
+            if (!localStorage.getItem(AI_GEN_KEY)) {
+                // Tampilkan input key jika belum ada
+                document.getElementById('aiGroqKeyInput').style.display = 'block';
+                document.getElementById('aiGroqKeyInput').focus();
+                return window.showToast('Masukkan Groq API key terlebih dahulu', '⚠️');
+            }
+
+            const btn = document.getElementById('btnGenerateOutline');
+            btn.innerHTML = '<i data-lucide="loader" style="width:16px;animation:spin 1s linear infinite;"></i> Generating outline...';
+            btn.disabled = true;
+            lucide.createIcons();
+
+            try {
+                aiTokensUsed = 0;
+                const prompt = `Kamu adalah asisten pembuat ringkasan buku profesional dalam Bahasa Indonesia.
+
+Buat outline untuk buku berikut:
+- Judul: "${title}"
+- Penulis: ${author}
+- Kategori: ${category || 'Umum'}
+- Jumlah bab: ${jumlah}
+
+Balas HANYA dengan JSON berikut (tanpa teks lain, tanpa markdown):
+{
+  "kesimpulan": "2-3 kalimat tentang inti pesan buku ini",
+  "keyPoints": ["poin 1", "poin 2", "poin 3", "poin 4", "poin 5"],
+  "langkahAksi": ["langkah 1", "langkah 2", "langkah 3"],
+  "bab": [
+    {"judul": "Judul Bab 1", "sinopsis": "1 kalimat isi bab ini"},
+    {"judul": "Judul Bab 2", "sinopsis": "1 kalimat isi bab ini"}
+  ]
+}`;
+
+                const reply = await aiCallGroq([
+                    { role: 'system', content: 'Kamu selalu balas dalam format JSON valid tanpa teks tambahan.' },
+                    { role: 'user',   content: prompt },
+                ], 800);
+
+                // Parse JSON
+                const clean  = reply.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
+                const parsed = JSON.parse(clean);
+
+                if (!parsed.bab || !Array.isArray(parsed.bab)) throw new Error('Format outline tidak valid. Coba lagi.');
+
+                // Simpan ke state
+                aiGenBook = {
+                    title, author, category: category.toLowerCase() || 'lainnya', coverUrl,
+                    kesimpulan:  parsed.kesimpulan  || '',
+                    keyPoints:   (parsed.keyPoints  || []).join('\n'),
+                    langkahAksi: (parsed.langkahAksi|| []).join('\n'),
+                    chapters: parsed.bab.map(b => ({
+                        title:     b.judul    || 'Bab',
+                        sinopsis:  b.sinopsis || '',
+                        content:   '',          // belum di-generate
+                        generated: false,
+                    })),
+                };
+
+                // Tampilkan step 2
+                aiRenderOutline();
+                document.getElementById('aiStep1').style.display = 'none';
+                document.getElementById('aiStep2').style.display = 'block';
+
+            } catch(e) {
+                window.showToast(e.message, '❌');
+                btn.innerHTML = '<i data-lucide="sparkles" style="width:18px;"></i> Generate Outline Buku';
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        // ── Render daftar bab di step 2 ──
+        function aiRenderOutline() {
+            const listEl  = document.getElementById('aiOutlineList');
+            const titleEl = document.getElementById('aiOutlineBookTitle');
+            const metaEl  = document.getElementById('aiOutlineBookMeta');
+            if (titleEl) titleEl.textContent = aiGenBook.title;
+            if (metaEl)  metaEl.textContent  = `${aiGenBook.author} · ${aiGenBook.category}`;
+
+            if (!listEl) return;
+            listEl.innerHTML = aiGenBook.chapters.map((ch, i) => `
+                <div style="background:rgba(255,255,255,0.03);border:1px solid ${ch.generated ? 'rgba(122,140,110,0.4)' : 'rgba(255,255,255,0.08)'};border-radius:10px;padding:14px 16px;transition:0.2s;" id="aiChCard-${i}">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:${ch.generated ? '#7A8C6E' : 'rgba(200,134,58,0.7)'};margin-bottom:4px;">Bab ${i+1}</div>
+                            <div style="font-size:14px;font-weight:600;color:#EDE8E0;">${ch.title}</div>
+                            <div style="font-size:12px;color:rgba(160,152,136,0.7);margin-top:4px;line-height:1.5;">${ch.sinopsis}</div>
+                            ${ch.generated ? '<div style="font-size:11px;color:#7A8C6E;margin-top:6px;display:flex;align-items:center;gap:4px;"><i data-lucide="check-circle" style="width:12px;"></i> Isi sudah digenerate</div>' : ''}
+                        </div>
+                        <button type="button" onclick="aiGenerateChapter(${i})" id="aiBtnCh-${i}"
+                            style="padding:8px 14px;border-radius:8px;border:1px solid ${ch.generated ? 'rgba(122,140,110,0.4)' : 'rgba(200,134,58,0.3)'};background:${ch.generated ? 'rgba(122,140,110,0.1)' : 'rgba(200,134,58,0.1)'};color:${ch.generated ? '#7A8C6E' : 'var(--accent-light)'};font-family:var(--font-ui);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">
+                            ${ch.generated ? '↺ Generate Ulang' : '▶ Generate Isi'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+
+            // Update save button label
+            const generatedCount = aiGenBook.chapters.filter(c => c.generated).length;
+            const saveLabel = document.getElementById('btnSaveAILabel');
+            if (saveLabel) saveLabel.textContent = generatedCount > 0
+                ? `Simpan Buku (${generatedCount}/${aiGenBook.chapters.length} bab selesai)`
+                : 'Simpan Buku ke Firebase';
+        }
+
+        // ── STEP 2: Generate isi 1 bab ──
+        window.aiGenerateChapter = async function(idx) {
+            const ch  = aiGenBook.chapters[idx];
+            const btn = document.getElementById(`aiBtnCh-${idx}`);
+            if (!ch || !btn) return;
+
+            btn.textContent = '⏳ Generating...';
+            btn.disabled = true;
+
+            try {
+                const prompt = `Kamu adalah penulis ringkasan buku profesional dalam Bahasa Indonesia.
+
+Tulis ringkasan mendalam untuk bab berikut:
+- Buku: "${aiGenBook.title}" oleh ${aiGenBook.author}
+- Nama Bab: "${ch.title}"
+- Sinopsis bab: ${ch.sinopsis}
+
+Tulis ringkasan bab dalam 4-6 paragraf padat (~400-500 kata) dalam Bahasa Indonesia yang mengalir natural, seolah penulis sendiri yang berbicara. Jangan pakai format list atau heading. Langsung tulis isi paragraf saja.`;
+
+                const reply = await aiCallGroq([
+                    { role: 'system', content: 'Kamu adalah penulis ringkasan buku profesional. Tulis dalam Bahasa Indonesia yang mengalir, natural, dan padat.' },
+                    { role: 'user',   content: prompt },
+                ], 1000);
+
+                // Simpan ke state
+                aiGenBook.chapters[idx].content   = reply.trim();
+                aiGenBook.chapters[idx].generated = true;
+
+                // Re-render outline
+                aiRenderOutline();
+                window.showToast(`Bab ${idx+1} berhasil digenerate!`, '✅');
+
+            } catch(e) {
+                window.showToast(e.message, '❌');
+                btn.textContent = '▶ Generate Isi';
+                btn.disabled = false;
+            }
+        }
+
+        // ── Reset ke step 1 ──
+        window.aiResetToStep1 = function() {
+            document.getElementById('aiStep1').style.display = 'block';
+            document.getElementById('aiStep2').style.display = 'none';
+            const btn = document.getElementById('btnGenerateOutline');
+            if (btn) { btn.innerHTML = '<i data-lucide="sparkles" style="width:18px;"></i> Generate Outline Buku'; btn.disabled = false; lucide.createIcons(); }
+        }
+
+        // ── Simpan buku ke Firebase ──
+        window.aiSaveBook = async function() {
+            const generatedCount = aiGenBook.chapters.filter(c => c.generated).length;
+            if (generatedCount === 0) {
+                if (!confirm('Belum ada bab yang di-generate. Simpan buku dengan bab kosong?')) return;
+            }
+
+            const btn = document.getElementById('btnSaveAIBook');
+            btn.innerHTML = '<i data-lucide="loader" style="width:16px;animation:spin 1s linear infinite;"></i> Menyimpan...';
+            btn.disabled = true;
+            lucide.createIcons();
+
+            const covers = ['bc1','bc2','bc3','bc4','bc5','bc6'];
+            const bookData = {
+                title:       aiGenBook.title,
+                author:      aiGenBook.author,
+                category:    aiGenBook.category,
+                coverUrl:    aiGenBook.coverUrl || '',
+                kesimpulan:  aiGenBook.kesimpulan  || '',
+                keyPoints:   aiGenBook.keyPoints   || '',
+                langkahAksi: aiGenBook.langkahAksi || '',
+                cover:       covers[Math.floor(Math.random() * covers.length)],
+                progress:    0,
+                isFavorite:  false,
+                highlights:  {},
+                chapterNotes:{},
+                tag:         'Belum Dibaca',
+                chapters:    aiGenBook.chapters.map(c => ({
+                    title:   c.title,
+                    content: c.content || `[Bab ini belum di-generate. Buka Edit Buku untuk generate isinya.]`,
+                })),
+                lastReadAt:       0,
+                lastReadChapter:  0,
+                lastReadParagraph:0,
+                savedPin:    null,
+                savedQuotes: [],
+            };
+
+            if (window.firebaseSaveManualBook) {
+                window.firebaseSaveManualBook(bookData).then ? 
+                    window.firebaseSaveManualBook(bookData) : 
+                    window.firebaseSaveManualBook(bookData);
+                // Reset state
+                aiGenBook  = { title:'', author:'', category:'', coverUrl:'', chapters:[] };
+                aiTokensUsed = 0;
+                document.getElementById('aiStep1').style.display = 'block';
+                document.getElementById('aiStep2').style.display = 'none';
+                document.getElementById('aiJudul').value   = '';
+                document.getElementById('aiPenulis').value = '';
+                document.getElementById('aiKategori').value= '';
+                document.getElementById('aiCoverUrl').value= '';
+                const btnOut = document.getElementById('btnGenerateOutline');
+                if (btnOut) { btnOut.innerHTML = '<i data-lucide="sparkles" style="width:18px;"></i> Generate Outline Buku'; btnOut.disabled=false; lucide.createIcons(); }
+            }
+        }
+
+        // CSS untuk animasi spin loader
+        if (!document.getElementById('aiGenStyles')) {
+            const s = document.createElement('style');
+            s.id = 'aiGenStyles';
+            s.textContent = '@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }';
+            document.head.appendChild(s);
+        }
+        // =====================================================================
+        // END AI GENERATE BOOK ENGINE
         // =====================================================================
 
         document.addEventListener('DOMContentLoaded', initApp);
