@@ -867,13 +867,11 @@
                                 <option value="12">12 bab</option>
                             </select>
                         </div>
-                        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px;margin-bottom:20px;">
-                            <div style="font-size:11px;color:var(--text-dark-secondary);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">API Key Groq</div>
-                            <div style="font-size:12px;color:rgba(255,255,255,0.5);" id="aiGroqKeyStatus">Belum dikonfigurasi</div>
-                            <input type="password" class="form-input" id="aiGroqKeyInput" placeholder="gsk_..." style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);color:#fff;margin-top:8px;display:none;">
-                            <div style="display:flex;gap:8px;margin-top:8px;">
-                                <button type="button" id="aiGroqKeyToggle" onclick="aiToggleGroqKey()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--text-light-muted);font-size:12px;padding:6px 12px;cursor:pointer;font-family:var(--font-ui);">Ganti Key</button>
-                                <a href="https://console.groq.com/keys" target="_blank" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:var(--accent-light);font-size:12px;padding:6px 12px;cursor:pointer;font-family:var(--font-ui);text-decoration:none;display:flex;align-items:center;gap:4px;"><i data-lucide="external-link" style="width:11px;"></i> Dapatkan Key Gratis</a>
+                        <div style="background:rgba(122,140,110,0.08);border:1px solid rgba(122,140,110,0.2);border-radius:8px;padding:12px 14px;margin-bottom:20px;display:flex;gap:10px;align-items:center;">
+                            <i data-lucide="server" style="width:16px;height:16px;color:#7A8C6E;flex-shrink:0;"></i>
+                            <div>
+                                <div style="font-size:12px;color:#7A8C6E;font-weight:600;">API Key dikelola server Vercel</div>
+                                <div style="font-size:11px;color:rgba(122,140,110,0.7);margin-top:2px;">Key Groq tersimpan aman di environment variable — tidak perlu input manual.</div>
                             </div>
                         </div>
                         <button type="button" class="btn-primary" id="btnGenerateOutline" onclick="aiGenerateOutline()">
@@ -3013,76 +3011,30 @@ INSTRUKSI:
         //       → User pilih bab → Generate isi per bab on-demand (~800 token/bab)
         // =====================================================================
 
-        const AI_GEN_KEY = 'folio-groq-gen-key';
         let aiGenBook = { title:'', author:'', category:'', coverUrl:'', chapters:[] };
         let aiTokensUsed = 0;
 
         // ── Init tab — cek key ──
         window.aiInitTab = function() {
-            const key = localStorage.getItem(AI_GEN_KEY) || '';
-            const statusEl = document.getElementById('aiGroqKeyStatus');
-            const inputEl  = document.getElementById('aiGroqKeyInput');
-            if (statusEl) statusEl.textContent = key ? '✓ Key tersimpan — siap digunakan' : 'Belum ada key';
-            if (statusEl) statusEl.style.color  = key ? '#7A8C6E' : 'rgba(255,255,255,0.4)';
-            if (inputEl)  inputEl.style.display = key ? 'none' : 'block';
+            // Key dikelola server — hanya cek apakah URL Vercel sudah diset
             lucide.createIcons();
         }
 
-        window.aiToggleGroqKey = function() {
-            const input = document.getElementById('aiGroqKeyInput');
-            const btn   = document.getElementById('aiGroqKeyToggle');
-            if (!input) return;
-            if (input.style.display === 'none') {
-                input.style.display = 'block';
-                input.focus();
-                if (btn) btn.textContent = 'Simpan Key';
-            } else {
-                const val = input.value.trim();
-                if (val) {
-                    localStorage.setItem(AI_GEN_KEY, val);
-                    input.value = '';
-                    window.showToast('Groq key tersimpan!', '✅');
-                }
-                input.style.display = 'none';
-                if (btn) btn.textContent = 'Ganti Key';
-                aiInitTab();
-            }
-        }
-
-        // ── Panggil Groq API langsung dari client ──
-        async function aiCallGroq(messages, maxTokens = 1000) {
-            const key = localStorage.getItem(AI_GEN_KEY);
-            if (!key) throw new Error('Groq API key belum dimasukkan.');
-
-            const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type':  'application/json',
-                    'Authorization': `Bearer ${key}`,
-                },
-                body: JSON.stringify({
-                    model:       'llama-3.3-70b-versatile',
-                    messages,
-                    max_tokens:  maxTokens,
-                    temperature: 0.7,
-                }),
+        // ── Panggil Vercel API server (key tersembunyi di ENV) ──
+        async function aiCallServer(action, payload) {
+            if (!FOLIO_API_URL) throw new Error('URL Vercel API belum diset. Klik tombol 🤖 di reader untuk mengatur.');
+            const res = await fetch(`${FOLIO_API_URL}/api/generate-book`, {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ action, ...payload }),
             });
-
             const data = await res.json();
-
-            if (!res.ok) {
-                const msg = data?.error?.message || `Groq error ${res.status}`;
-                if (res.status === 401) throw new Error('API key Groq tidak valid.');
-                if (res.status === 429) throw new Error('Rate limit Groq. Tunggu 1 menit lalu coba lagi.');
-                throw new Error(msg);
-            }
-
+            if (!res.ok) throw new Error(data.error || `Server error ${res.status}`);
             // Update token counter
             aiTokensUsed += (data.usage?.total_tokens || 0);
             const counterEl = document.getElementById('aiTokenCounter');
             if (counterEl) counterEl.textContent = `~${aiTokensUsed.toLocaleString()} token`;
-
-            return data.choices?.[0]?.message?.content || '';
+            return data;
         }
 
         // ── STEP 1: Generate outline ──
@@ -3094,11 +3046,8 @@ INSTRUKSI:
             const coverUrl = document.getElementById('aiCoverUrl')?.value.trim() || '';
 
             if (!title || !author) return window.showToast('Judul dan penulis wajib diisi', '⚠️');
-            if (!localStorage.getItem(AI_GEN_KEY)) {
-                // Tampilkan input key jika belum ada
-                document.getElementById('aiGroqKeyInput').style.display = 'block';
-                document.getElementById('aiGroqKeyInput').focus();
-                return window.showToast('Masukkan Groq API key terlebih dahulu', '⚠️');
+            if (!FOLIO_API_URL) {
+                return window.showToast('URL Vercel API belum diset. Klik tombol 🤖 di reader untuk mengatur.', '⚠️');
             }
 
             const btn = document.getElementById('btnGenerateOutline');
@@ -3108,34 +3057,10 @@ INSTRUKSI:
 
             try {
                 aiTokensUsed = 0;
-                const prompt = `Kamu adalah asisten pembuat ringkasan buku profesional dalam Bahasa Indonesia.
-
-Buat outline untuk buku berikut:
-- Judul: "${title}"
-- Penulis: ${author}
-- Kategori: ${category || 'Umum'}
-- Jumlah bab: ${jumlah}
-
-Balas HANYA dengan JSON berikut (tanpa teks lain, tanpa markdown):
-{
-  "kesimpulan": "2-3 kalimat tentang inti pesan buku ini",
-  "keyPoints": ["poin 1", "poin 2", "poin 3", "poin 4", "poin 5"],
-  "langkahAksi": ["langkah 1", "langkah 2", "langkah 3"],
-  "bab": [
-    {"judul": "Judul Bab 1", "sinopsis": "1 kalimat isi bab ini"},
-    {"judul": "Judul Bab 2", "sinopsis": "1 kalimat isi bab ini"}
-  ]
-}`;
-
-                const reply = await aiCallGroq([
-                    { role: 'system', content: 'Kamu selalu balas dalam format JSON valid tanpa teks tambahan.' },
-                    { role: 'user',   content: prompt },
-                ], 800);
-
-                // Parse JSON
-                const clean  = reply.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
-                const parsed = JSON.parse(clean);
-
+                const result = await aiCallServer('outline', {
+                    title, author, category: category || 'Umum', jumlahBab: jumlah,
+                });
+                const parsed = result;
                 if (!parsed.bab || !Array.isArray(parsed.bab)) throw new Error('Format outline tidak valid. Coba lagi.');
 
                 // Simpan ke state
@@ -3210,22 +3135,16 @@ Balas HANYA dengan JSON berikut (tanpa teks lain, tanpa markdown):
             btn.disabled = true;
 
             try {
-                const prompt = `Kamu adalah penulis ringkasan buku profesional dalam Bahasa Indonesia.
-
-Tulis ringkasan mendalam untuk bab berikut:
-- Buku: "${aiGenBook.title}" oleh ${aiGenBook.author}
-- Nama Bab: "${ch.title}"
-- Sinopsis bab: ${ch.sinopsis}
-
-Tulis ringkasan bab dalam 4-6 paragraf padat (~400-500 kata) dalam Bahasa Indonesia yang mengalir natural, seolah penulis sendiri yang berbicara. Jangan pakai format list atau heading. Langsung tulis isi paragraf saja.`;
-
-                const reply = await aiCallGroq([
-                    { role: 'system', content: 'Kamu adalah penulis ringkasan buku profesional. Tulis dalam Bahasa Indonesia yang mengalir, natural, dan padat.' },
-                    { role: 'user',   content: prompt },
-                ], 1000);
+                const result = await aiCallServer('chapter', {
+                    title:           aiGenBook.title,
+                    author:          aiGenBook.author,
+                    chapterTitle:    ch.title,
+                    chapterSinopsis: ch.sinopsis,
+                    chapterIdx:      idx,
+                });
 
                 // Simpan ke state
-                aiGenBook.chapters[idx].content   = reply.trim();
+                aiGenBook.chapters[idx].content   = result.content || '';
                 aiGenBook.chapters[idx].generated = true;
 
                 // Re-render outline
