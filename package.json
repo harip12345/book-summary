@@ -1,0 +1,16 @@
+{
+  "name": "folio-ai-api",
+  "version": "1.0.0",
+  "description": "Folio Book Summary App — AI API Server (Vercel Serverless)",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "devDependencies": {
+    "vercel": "^37.0.0"
+  }
+}
