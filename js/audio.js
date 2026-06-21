@@ -1,11 +1,11 @@
-// Folio — Audio (Audiobook) module
+// Folio - Audio (Audiobook) module
 // Handles premium narration via ElevenLabs through the serverless proxy at
 // /api/tts. The API key lives ONLY on the server (Vercel env var
 // ELEVENLABS_API_KEY) and is never entered in the UI or stored in the browser.
 // If the proxy is unavailable, the app falls back to the free browser voice.
 (function () {
 	'use strict';
-​
+
 	var CONFIG = {
 		endpoint: '/api/tts',
 		modelId: 'eleven_multilingual_v2',
@@ -19,7 +19,7 @@
 		],
 	};
 	window.FOLIO_AUDIO_CONFIG = CONFIG;
-​
+
 	// Health check: is the premium voice configured on the server?
 	// Returns a Promise<boolean>. Uses no TTS quota.
 	window.folioAudioHealth = function () {
@@ -28,16 +28,16 @@
 			.then(function (j) { return !!(j && j.enabled); })
 			.catch(function () { return false; });
 	};
-​
+
 	// Synthesize speech for a piece of text.
-	// Returns a Promise<Blob> (audio/mpeg). Throws an Error with a `.status`
+	// Returns a Promise<Blob> (audio/mpeg). Throws an Error with a .status
 	// property on failure so the caller can decide whether to fall back.
 	window.folioSynthesizeSpeech = function (text, opts) {
 		opts = opts || {};
 		var voiceId = opts.voiceId || CONFIG.defaultVoiceId;
 		var src = (text || '').toString();
 		var chunk = src.length > CONFIG.maxChars ? src.slice(0, CONFIG.maxChars) + '...' : src;
-​
+
 		return fetch(CONFIG.endpoint, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
