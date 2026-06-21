@@ -687,10 +687,10 @@
         .bottom-bar-ai:hover { transform: translateY(-3px) scale(1.07); box-shadow: 0 11px 24px rgba(59,130,246,0.5); }
         .bottom-bar-ai:active { transform: scale(0.91); }
         /* audio dead-center via two equal flex groups */
-        .reader-bottom-bar { width: auto; max-width: 92vw; justify-content: center; gap: 6px; }
-        .bb-group { display: flex; align-items: center; gap: 2px; flex: 0 0 auto; min-width: 0; }
-        .bb-left { justify-content: flex-start; }
-        .bb-right { justify-content: flex-end; }
+        .reader-bottom-bar { width: min(300px, 92vw); justify-content: center; gap: 6px; }
+        .bb-group { display: flex; align-items: center; gap: 2px; flex: 1 1 0; min-width: 0; }
+        .bb-left { justify-content: flex-end; }
+        .bb-right { justify-content: flex-start; }
         /* floating AI chat button (reader only), same style as add-book FAB */
         .fab-ai { position: fixed; right: 20px; bottom: calc(96px + env(safe-area-inset-bottom)); width: 58px; height: 58px; border-radius: 50%; border: none; background: linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; display: none; align-items:center; justify-content:center; cursor:pointer; z-index: 95; box-shadow: 0 12px 30px rgba(59,130,246,0.45); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, opacity 0.3s ease, bottom 0.4s cubic-bezier(0.34,1.56,0.64,1); }
         .fab-ai svg { width: 26px; height: 26px; stroke-width: 2.4px; }
@@ -1261,6 +1261,7 @@
                     <div class="lib-wordmark">F<span>olio</span></div>
                     <div class="lib-actions">
                         <div class="icon-btn" id="btnUploadHome" onclick="openModal('addBookModal')" title="Tambah Buku" style="display:none; background: var(--accent); color: white; border-color: var(--accent);"><i data-lucide="plus"></i></div>
+                        <div class="icon-btn" onclick="location.reload()" title="Muat ulang"><i data-lucide="refresh-cw"></i></div>
                         <div class="icon-btn" onclick="focusSearch()"><i data-lucide="search"></i></div>
                         <div class="icon-btn" onclick="openDrawer()" style="position:relative;"><i data-lucide="bell"></i><div class="notification-dot"></div></div>
                         <div class="avatar-btn" onclick="switchMainTab('profile')" id="headerAvatar">A</div>
