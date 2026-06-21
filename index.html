@@ -687,7 +687,7 @@
         .bottom-bar-ai:hover { transform: translateY(-3px) scale(1.07); box-shadow: 0 11px 24px rgba(59,130,246,0.5); }
         .bottom-bar-ai:active { transform: scale(0.91); }
         /* audio dead-center via two equal flex groups */
-        .reader-bottom-bar { width: min(300px, 92vw); justify-content: center; gap: 6px; }
+        .reader-bottom-bar { width: min(360px, 92vw); justify-content: center; gap: 6px; }
         .bb-group { display: flex; align-items: center; gap: 2px; flex: 1 1 0; min-width: 0; }
         .bb-left { justify-content: flex-end; }
         .bb-right { justify-content: flex-start; }
@@ -1100,7 +1100,15 @@
                 <i data-lucide="mic" style="color:var(--accent);width:22px;height:22px;"></i>
                 <div class="modal-title" style="color:#fff;margin-bottom:0;">Pengaturan Suara Narasi</div>
             </div>
-            <div class="modal-subtitle" style="color:var(--text-light-muted);margin-bottom:20px;">Pilih bahasa suara untuk narasi audiobook. Suara online gratis aktif otomatis; jika tidak tersedia, dipakai suara browser.</div>
+            <div class="modal-subtitle" style="color:var(--text-light-muted);margin-bottom:20px;">Pilih sumber & bahasa suara untuk narasi audiobook. Google Translate = suara online gratis; Web = suara bawaan browser.</div>
+
+            <div class="form-group" style="margin-bottom:16px;">
+                <label class="form-label" style="color:var(--text-light-muted);">Sumber Audio</label>
+                <select class="form-input" id="ttsSourceSelect" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:#fff;">
+                    <option value="google">Google Translate (online)</option>
+                    <option value="web">Suara Browser (Web)</option>
+                </select>
+            </div>
 
             <div class="form-group" style="margin-bottom:20px;">
                 <label class="form-label" style="color:var(--text-light-muted);">Bahasa Suara</label>
@@ -1473,6 +1481,7 @@
             </div>
             <button class="bottom-bar-audio" id="btnTTS" onclick="ttsToggle()" title="Dengarkan (Audiobook)"><i data-lucide="headphones"></i></button>
             <div class="bb-group bb-right">
+                <button class="bottom-bar-btn" onclick="toggleSettings()" title="Pengaturan Teks"><i data-lucide="a-large-small"></i></button>
                 <button class="bottom-bar-btn" id="btnHighlight" onclick="toggleHighlightMode()" title="Sorot Paragraf (Highlight)"><i data-lucide="highlighter"></i></button>
                 <button class="bottom-bar-btn" id="btnPin" onclick="togglePinMode()" title="Tandai Paragraf (Pin)"><i data-lucide="pin"></i></button>
             </div>
@@ -2929,6 +2938,10 @@ INSTRUKSI:
         function elGetKey()     { return localStorage.getItem(EL_KEY_STORAGE) || ''; }
         function elGetVoiceId() { return localStorage.getItem(EL_VOICE_STORAGE) || EL_VOICES[0].id; }
 
+        // ── Sumber audio: 'google' (online) atau 'web' (suara browser) ──
+        const TTS_SOURCE_STORAGE = 'folio-tts-source';
+        function ttsGetSource() { return localStorage.getItem(TTS_SOURCE_STORAGE) || 'google'; }
+
         // ── Init ──
         window.ttsInit = function() {
             // Web Speech voice setup
@@ -2936,7 +2949,13 @@ INSTRUKSI:
                 tts.wsVoice = ttsFindWSVoice();
                 window.speechSynthesis.onvoiceschanged = () => { tts.wsVoice = ttsFindWSVoice(); };
             }
-            // Suara premium (ElevenLabs) dikonfigurasi di server (env var) — tanpa UI key.
+            // Sumber audio sesuai pilihan user: 'web' = paksa suara browser.
+            if (ttsGetSource() === 'web') {
+                tts.elProvider = 'webspeech';
+                ttsUpdateProviderBadge();
+                return;
+            }
+            // 'google' = suara online (Google Translate), dikonfirmasi via health check.
             tts.elProvider = 'elevenlabs'; // optimistis; dikonfirmasi via health check
             ttsUpdateProviderBadge();
             if (typeof window.folioAudioHealth === 'function') {
@@ -3162,7 +3181,7 @@ INSTRUKSI:
             const btn = document.getElementById('ttsProviderBadge');
             if (!btn) return;
             if (tts.elProvider === 'elevenlabs') {
-                btn.textContent = 'Online';
+                btn.textContent = 'Google';
                 btn.style.color = '#A78BFA';
                 btn.style.borderColor = 'rgba(167,139,250,0.3)';
                 btn.style.background  = 'rgba(167,139,250,0.1)';
@@ -3208,14 +3227,32 @@ INSTRUKSI:
         window.elSaveSettings = function() {
             const voiceId = document.getElementById('elVoiceSelect')?.value;
             if (voiceId) localStorage.setItem(EL_VOICE_STORAGE, voiceId);
-            ttsUpdateProviderBadge();
+            const source = document.getElementById('ttsSourceSelect')?.value || 'google';
+            localStorage.setItem(TTS_SOURCE_STORAGE, source);
+            // Hentikan narasi aktif agar sumber baru dipakai saat diputar lagi.
+            if (tts.isPlaying || tts.isPaused) ttsStop();
+            if (source === 'web') {
+                tts.elProvider = 'webspeech';
+                ttsUpdateProviderBadge();
+            } else {
+                tts.elProvider = 'elevenlabs';
+                ttsUpdateProviderBadge();
+                if (typeof window.folioAudioHealth === 'function') {
+                    window.folioAudioHealth().then(function(ok) {
+                        tts.elProvider = ok ? 'elevenlabs' : 'webspeech';
+                        ttsUpdateProviderBadge();
+                    });
+                }
+            }
             window.closeModal('ttsSettingsModal');
-            window.showToast('Suara narasi disimpan', '✅');
+            window.showToast('Pengaturan suara disimpan', '✅');
         }
 
         window.openTTSSettings = function() {
             const voiceSel = document.getElementById('elVoiceSelect');
             if (voiceSel) voiceSel.value = elGetVoiceId();
+            const srcSel = document.getElementById('ttsSourceSelect');
+            if (srcSel) srcSel.value = ttsGetSource();
             window.openModal('ttsSettingsModal');
         }
 
