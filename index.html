@@ -10,14 +10,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Folio">
-​
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-​
+
     <style>
         :root {
             --bg-parchment: #FBF8F1; --bg-white: #FFFFFF; --bg-sepia: #F4ECD8; --bg-dark: #0F1729;
@@ -41,18 +41,18 @@
             --transition-spring: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
             --transition-smooth: all 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
         }
-​
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-​
+
         body {
             font-family: var(--font-ui); font-size: 15px; line-height: 1.6;
             min-height: 100dvh; overflow-x: hidden; -webkit-font-smoothing: antialiased;
             transition: background 0.5s ease, color 0.5s ease;
             background: #0B1020; color: var(--text-light);
         }
-​
+
         .lucide { width: 18px; height: 18px; stroke-width: 1.5px; }
-​
+
         ::-webkit-scrollbar { width: 10px; height: 10px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.03); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.45); border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
@@ -64,13 +64,13 @@
         textarea::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 6px; }
         textarea::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.5); border-radius: 6px; border: 2px solid transparent; background-clip: content-box; }
         textarea::-webkit-scrollbar-thumb:hover { background: rgba(59,130,246,0.9); background-clip: border-box; border: none; }
-​
+
         body.theme-parchment { background: var(--bg-parchment); color: var(--text-parchment); }
         body.theme-white { background: var(--bg-white); color: var(--text-white); }
         body.theme-sepia { background: var(--bg-sepia); color: var(--text-sepia); }
         body.theme-dark { background: var(--bg-dark); color: var(--text-dark); }
         body.app-mode { background: var(--bg-primary); color: var(--text-primary); }
-​
+
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         @keyframes floatSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
@@ -78,13 +78,13 @@
         @keyframes bookmarkPop { 0% { transform: scale(1); } 35% { transform: scale(1.3) translateY(-5px); } 60% { transform: scale(0.9); } 100% { transform: scale(1.05); } }
         @keyframes highlightPulse { 0% { background: rgba(59,130,246,0); } 40% { background: rgba(59,130,246,0.25); } 100% { background: rgba(59,130,246,0.1); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
-​
+
         .splash-screen { position: fixed; inset: 0; z-index: 99999; background: #0B1020; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s; }
         .splash-screen.hide { opacity: 0; visibility: hidden; pointer-events: none; }
         .splash-logo { font-family: var(--font-display); font-size: 56px; color: var(--text-light); animation: scaleIn 0.8s cubic-bezier(0.34,1.56,0.64,1), pulseLogo 2s infinite alternate; }
         .splash-logo span { color: var(--accent); font-style: italic; }
         @keyframes pulseLogo { from { opacity: 1; transform: scale(1); text-shadow: 0 0 10px rgba(59,130,246,0.2); } to { opacity: 0.8; transform: scale(0.98); text-shadow: 0 0 30px rgba(59,130,246,0.6); } }
-​
+
         @keyframes pageTurnNextOut { 0% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: left center; } 100% { transform: perspective(1200px) rotateY(-90deg); opacity: 0; transform-origin: left center; box-shadow: 15px 0 30px rgba(0,0,0,0.15); } }
         @keyframes pageTurnNextIn { 0% { transform: perspective(1200px) rotateY(90deg); opacity: 0; transform-origin: right center; box-shadow: -15px 0 30px rgba(0,0,0,0.15); } 100% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: right center; } }
         @keyframes pageTurnPrevOut { 0% { transform: perspective(1200px) rotateY(0deg); opacity: 1; transform-origin: right center; } 100% { transform: perspective(1200px) rotateY(90deg); opacity: 0; transform-origin: right center; box-shadow: -15px 0 30px rgba(0,0,0,0.15); } }
@@ -93,15 +93,15 @@
         .page-turn-next-in { animation: pageTurnNextIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         .page-turn-prev-out { animation: pageTurnPrevOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         .page-turn-prev-in { animation: pageTurnPrevIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-​
+
         @keyframes jumpPulse { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.8); background-color: rgba(59,130,246,0.3); } 100% { box-shadow: 0 0 0 10px rgba(59,130,246,0); background-color: transparent; } }
         .jump-pulse { animation: jumpPulse 1.5s ease-out; border-radius: 4px; }
         .slide-next-in { animation: slideNextIn 0.4s var(--transition-smooth); }
         @keyframes slideNextIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-​
+
         .toast { position: fixed; bottom: calc(100px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); background: #0F172A; color: #EEF2FF; padding: 12px 20px; border-radius: var(--radius-full); font-size: 13px; font-family: var(--font-ui); z-index: 9999; box-shadow: var(--shadow-float); display: none; align-items: center; gap: 8px; white-space: nowrap; animation: fadeInUp 0.35s cubic-bezier(0.34,1.56,0.64,1); border: 1px solid rgba(255,255,255,0.1); }
         .toast.show { display: flex; }
-​
+
         .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; }
         .drawer-overlay.show { display: block; }
         .drawer { position: fixed; top: 0; right: 0; width: 380px; max-width: 100vw; height: 100dvh; background: var(--bg-card); z-index: 1001; box-shadow: var(--shadow-xl); border-left: 1px solid var(--border); padding: calc(24px + env(safe-area-inset-top)) 24px 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
@@ -134,7 +134,7 @@
         .toc-item.active { background: var(--accent-pale); color: var(--accent-dark); border-color: var(--accent); font-weight: 600; }
         body.theme-dark .toc-item.active { background: rgba(59,130,246,0.15); color: var(--accent-light); }
         .toc-section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 16px 0 8px 4px; }
-​
+
         .bookmark-item { padding: 14px 16px; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); border: 1px solid var(--border); margin-bottom: 8px; background: var(--bg-secondary); display: flex; flex-direction: column; gap: 6px; }
         body.theme-dark .bookmark-item { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); }
         .bookmark-item:hover { border-color: var(--accent); background: var(--accent-pale); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
@@ -143,7 +143,7 @@
         body.theme-dark .bookmark-chapter { color: var(--accent-light); }
         .bookmark-text { font-family: var(--font-body); font-style: italic; font-size: 14px; color: var(--text-primary); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         body.theme-dark .bookmark-text { color: var(--text-dark); }
-​
+
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; align-items: center; justify-content: center; padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
         .modal-overlay.show { display: flex; }
         .modal-content { background: var(--bg-card); border-radius: var(--radius-lg); padding: 28px; max-width: 440px; width: 90%; max-height: calc(90dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)); box-shadow: var(--shadow-xl); border: 1px solid var(--border); animation: scaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1); position: relative; }
@@ -151,12 +151,12 @@
         .modal-close:hover { background: #D45353; color: #fff; border-color: #D45353; transform: rotate(90deg); }
         .modal-title { font-family: var(--font-display); font-size: 20px; color: var(--text-primary); margin-bottom: 4px; }
         .modal-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
-​
+
         .fav-list-item { padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
         .fav-list-item:hover { border-color: var(--accent); background: var(--accent-pale); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
         .fav-list-item-title { font-size: 14px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
         .fav-list-item-author { font-size: 12px; color: var(--text-muted); display:flex; justify-content:space-between; }
-​
+
         .reader-body p { transition: background-color 0.2s ease, box-shadow 0.2s ease; border-radius: 4px; }
         .reader-body.interactive-mode-active p { cursor: pointer; }
         .reader-body.interactive-mode-active p:hover { background-color: rgba(59,130,246,0.08); box-shadow: 0 0 0 4px rgba(59,130,246,0.08); }
@@ -165,7 +165,7 @@
         body.theme-dark .highlighted-text { background-color: rgba(59,130,246,0.35); box-shadow: 0 0 0 4px rgba(59,130,246,0.35); }
         .pinned-paragraph { border-bottom: 2.5px solid var(--accent); padding-bottom: 4px; transition: all 0.3s ease; }
         body.theme-dark .pinned-paragraph { border-bottom: 2.5px solid var(--accent-light); }
-​
+
         .onboarding-wrapper { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom)); position: relative; background: #0B1020; overflow: hidden; }
         .onboarding-wrapper::before { content: ''; position: absolute; top: -30%; left: -20%; width: 80%; height: 80%; background: radial-gradient(ellipse at center, rgba(59,130,246,0.08) 0%, transparent 70%); pointer-events: none; animation: floatSlow 8s ease-in-out infinite; }
         .particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
@@ -230,7 +230,7 @@
         .welcome-icon { animation: bookmarkPop 1s cubic-bezier(0.34,1.56,0.64,1) infinite; color: var(--accent); }
         .password-wrapper { position: relative; }
         .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-light-muted); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
-​
+
         .library-shell { background: var(--bg-primary); min-height: 100dvh; padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
         .lib-topbar { background: var(--bg-primary); padding: calc(24px + env(safe-area-inset-top)) 32px 0; position: sticky; top: 0; z-index: 10; }
         .lib-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
@@ -299,7 +299,7 @@
         .book-tag { display: inline-block; margin-top: 6px; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 500; background: var(--sage-pale); color: var(--sage); }
         .book-tag.unread { background: var(--accent-pale); color: var(--accent-dark); }
         .fav-badge { position: absolute; top: -8px; right: -8px; background: #D45353; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); z-index: 5;}
-​
+
         .app-bottom-nav { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.5); padding: 8px 12px; border-radius: 100px; box-shadow: 0 12px 40px rgba(15,23,42,0.18), inset 0 1px 0 rgba(255,255,255,0.6); z-index: 900; width: fit-content; gap: 8px; transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.5s; }
         .app-bottom-nav.hidden { transform: translate(-50%, 150%); opacity: 0; pointer-events: none; }
         body.theme-dark .app-bottom-nav { background: rgba(20, 28, 46, 0.55); border-color: rgba(255,255,255,0.14); box-shadow: 0 16px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); }
@@ -312,11 +312,11 @@
         .nav-item.active .nav-icon { transform: scale(1.1); }
         .nav-label { font-size: 13px; font-weight: 600; font-family: var(--font-ui); max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; margin-left: 0; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); }
         .nav-item.active .nav-label { max-width: 100px; opacity: 1; margin-left: 8px; }
-​
+
         .profile-stat-box { background: var(--bg-secondary); padding: 20px; border-radius: var(--radius-xl); border: 1px solid var(--border); flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: var(--shadow-sm); }
         .profile-stat-val { font-size: 28px; font-weight: 700; color: var(--accent); font-family: var(--font-display); line-height: 1; }
         .profile-stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; font-weight: 500; }
-​
+
         .reader-progress-top { position: fixed; top: env(safe-area-inset-top); left: 0; right: 0; height: 2.5px; background: rgba(0,0,0,0.1); z-index: 101; }
         .reader-progress-fill { height: 100%; background: #A3E635; width: 0%; border-radius: 0 2px 2px 0; transition: width 0.15s linear; }
         .reader-topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: calc(10px + env(safe-area-inset-top)) 16px 10px; background: linear-gradient(135deg, #3B82F6, #8B5CF6); border-bottom: 1px solid rgba(255,255,255,0.14); box-shadow: 0 4px 20px rgba(59,130,246,0.30); }
@@ -335,14 +335,14 @@
             .reader-top-actions { gap: 0; }
             .reader-top-btn { width: 32px; height: 32px; }
         }
-​
+
         .reader-container { max-width: 720px; margin: 0 auto; padding: calc(85px + env(safe-area-inset-top)) 32px calc(160px + env(safe-area-inset-bottom)); transition: padding 0.3s ease; }
         #readerContentAnimator { padding: 20px 0; border-radius: 8px; min-height: 85vh; background-color: inherit; transform-style: preserve-3d; }
         body.theme-parchment #readerContentAnimator { background-color: var(--bg-parchment); }
         body.theme-white #readerContentAnimator { background-color: var(--bg-white); }
         body.theme-sepia #readerContentAnimator { background-color: var(--bg-sepia); }
         body.theme-dark #readerContentAnimator { background-color: var(--bg-dark); }
-​
+
         .reader-chapter-title { font-family: var(--font-display); font-size: 36px; line-height: 1.15; margin-bottom: 40px; font-style: italic; letter-spacing: -0.01em; }
         .reader-body { font-family: var(--font-body); font-size: 18px; line-height: 1.9; text-align: justify; word-spacing: 0.02em; transition: font-size 0.3s ease, line-height 0.3s ease; }
         .reader-body p { margin-bottom: 1.6em; }
@@ -385,7 +385,7 @@
         .screen.active { display: block; }
         .auth-section { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 20px; margin-top: 16px; border: 1px solid rgba(255,255,255,0.08); }
         .auth-title { font-family: var(--font-display); font-size: 18px; color: var(--text-light); text-align: center; margin-bottom: 16px; font-style: italic; }
-​
+
         @media (max-width: 768px) {
             .onboarding-wrapper { padding: calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom)); }
             .onboarding-card { height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); min-height: 80dvh; border-radius: 28px; }
@@ -404,12 +404,12 @@
             .lib-topbar { padding: calc(16px + env(safe-area-inset-top)) 16px 0; }
             .drawer { padding: calc(16px + env(safe-area-inset-top)) 16px 16px; width: 100%; }
         }
-​
+
         /* ===================== AI CHAT STYLES ===================== */
         @keyframes aiSlideUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
         @keyframes aiTyping { 0%,80%,100%{transform:scale(0.6);opacity:0.4} 40%{transform:scale(1);opacity:1} }
         @keyframes aiShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-​
+
         .ai-chat-drawer {
             position: fixed; inset: 0; z-index: 1010;
             display: flex; align-items: flex-end; justify-content: center;
@@ -417,7 +417,7 @@
             transition: background 0.3s ease;
         }
         .ai-chat-drawer.open { background: rgba(0,0,0,0.55); pointer-events: all; }
-​
+
         .ai-chat-panel {
             width: 100%; max-width: 720px;
             height: 82dvh; max-height: 680px;
@@ -432,7 +432,7 @@
             box-shadow: 0 -12px 48px rgba(0,0,0,0.5);
         }
         .ai-chat-drawer.open .ai-chat-panel { transform: translateY(0); }
-​
+
         .ai-chat-header {
             display: flex; align-items: center; justify-content: space-between;
             padding: 16px 20px 14px;
@@ -448,7 +448,7 @@
         }
         .ai-chat-title { font-family: var(--font-display); font-size: 16px; color: #EDE8E0; font-style: italic; }
         .ai-chat-subtitle { font-size: 11px; color: var(--text-dark-secondary); margin-top: 1px; }
-​
+
         .ai-provider-toggle {
             display: flex; gap: 6px; align-items: center;
         }
@@ -458,7 +458,7 @@
             color: var(--text-dark-secondary); cursor: pointer; transition: var(--transition);
         }
         .ai-provider-btn.active { background: rgba(59,130,246,0.2); border-color: rgba(59,130,246,0.5); color: var(--accent-light); }
-​
+
         .ai-chat-close {
             width: 30px; height: 30px; border-radius: 50%; border: none;
             background: rgba(255,255,255,0.06); cursor: pointer;
@@ -466,7 +466,7 @@
             transition: var(--transition); flex-shrink: 0;
         }
         .ai-chat-close:hover { background: rgba(212,83,83,0.2); color: #D45353; }
-​
+
         .ai-chat-context-bar {
             padding: 8px 20px; background: rgba(59,130,246,0.07);
             border-bottom: 1px solid rgba(59,130,246,0.1);
@@ -474,7 +474,7 @@
             display: flex; align-items: center; gap: 6px;
             flex-shrink: 0;
         }
-​
+
         .ai-chat-messages {
             flex: 1; overflow-y: auto; padding: 16px 20px;
             display: flex; flex-direction: column; gap: 14px;
@@ -482,10 +482,10 @@
         }
         .ai-chat-messages::-webkit-scrollbar { width: 4px; }
         .ai-chat-messages::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.3); border-radius: 4px; }
-​
+
         .ai-msg { display: flex; gap: 10px; animation: aiSlideUp 0.3s ease; }
         .ai-msg.user { flex-direction: row-reverse; }
-​
+
         .ai-msg-bubble {
             max-width: 80%; padding: 11px 15px;
             border-radius: 16px; font-family: var(--font-body);
@@ -499,7 +499,7 @@
             background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.25);
             border-radius: 16px 4px 16px 16px; color: #EEF2FF;
         }
-​
+
         .ai-typing-indicator {
             display: flex; gap: 5px; align-items: center; padding: 14px 16px;
             background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
@@ -511,7 +511,7 @@
         }
         .ai-typing-dot:nth-child(2) { animation-delay: 0.2s; }
         .ai-typing-dot:nth-child(3) { animation-delay: 0.4s; }
-​
+
         .ai-quick-chips {
             display: flex; gap: 8px; flex-wrap: wrap;
             padding: 10px 20px 0; flex-shrink: 0;
@@ -525,7 +525,7 @@
             transition: var(--transition); white-space: nowrap;
         }
         .ai-chip:hover { background: rgba(59,130,246,0.18); border-color: rgba(59,130,246,0.5); }
-​
+
         .ai-chat-input-area {
             padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
             border-top: 1px solid rgba(255,255,255,0.07);
@@ -541,7 +541,7 @@
         }
         .ai-chat-input:focus { border-color: rgba(59,130,246,0.5); background: rgba(59,130,246,0.05); }
         .ai-chat-input::placeholder { color: rgba(196,186,176,0.35); }
-​
+
         .ai-send-btn {
             width: 42px; height: 42px; border-radius: 50%; border: none;
             background: var(--accent); cursor: pointer;
@@ -550,7 +550,7 @@
         }
         .ai-send-btn:hover { background: var(--accent-light); transform: scale(1.08); }
         .ai-send-btn:disabled { background: rgba(59,130,246,0.3); cursor: not-allowed; transform: none; }
-​
+
         /* API Key Setup Modal */
         .ai-setup-modal {
             padding: 24px; display: flex; flex-direction: column; gap: 14px; flex: 1;
@@ -570,7 +570,7 @@
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .ai-generate-btn:hover { background: rgba(59,130,246,0.25); }
-​
+
         /* Generate Insight button di insights screen */
         .ai-insight-generate-btn {
             width: 100%; padding: 14px 20px;
@@ -589,11 +589,11 @@
             border-radius: 6px; height: 14px; margin-bottom: 10px;
         }
         /* ===================== END AI CHAT STYLES ===================== */
-​
+
         /* ===================== WEB SPEECH TTS ===================== */
         @keyframes ttsWave { 0%,100%{transform:scaleY(0.4)} 50%{transform:scaleY(1)} }
         @keyframes ttsFadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-​
+
         .tts-bar {
             position: fixed;
             bottom: calc(118px + env(safe-area-inset-bottom));
@@ -618,31 +618,31 @@
             pointer-events: all;
         }
         .tts-bar.paused .tts-wave-bar { animation-play-state: paused; opacity: 0.35; }
-​
+
         .tts-waveform { display:flex; align-items:center; gap:3px; width:22px; height:18px; flex-shrink:0; }
         .tts-wave-bar { width:3px; background:var(--accent); border-radius:2px; transform-origin:bottom; }
         .tts-wave-bar:nth-child(1){height:7px; animation:ttsWave 0.7s ease-in-out infinite;}
         .tts-wave-bar:nth-child(2){height:14px;animation:ttsWave 0.7s ease-in-out 0.1s infinite;}
         .tts-wave-bar:nth-child(3){height:18px;animation:ttsWave 0.7s ease-in-out 0.2s infinite;}
         .tts-wave-bar:nth-child(4){height:11px;animation:ttsWave 0.7s ease-in-out 0.3s infinite;}
-​
+
         .tts-info { flex:1; min-width:0; }
         .tts-info-chapter { font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--accent); }
         .tts-info-para { font-size:11px; color:rgba(212,207,196,0.65); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-​
+
         .tts-speed { font-family:var(--font-ui); font-size:11px; font-weight:600; color:var(--accent-light); background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.2); border-radius:6px; padding:4px 8px; cursor:pointer; transition:var(--transition); flex-shrink:0; }
         .tts-speed:hover { background:rgba(59,130,246,0.22); }
-​
+
         .tts-btn { width:32px; height:32px; border-radius:50%; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:rgba(212,207,196,0.7); transition:var(--transition); flex-shrink:0; }
         .tts-btn:hover { background:rgba(255,255,255,0.08); color:#fff; }
         .tts-btn.primary { width:36px; height:36px; background:var(--accent); color:#fff; }
         .tts-btn.primary:hover { background:var(--accent-light); }
         .tts-btn svg { width:15px; height:15px; stroke-width:2px; }
         .tts-btn.primary svg { width:17px; height:17px; }
-​
+
         .tts-progress-track { position:absolute; bottom:0; left:0; right:0; height:2px; background:rgba(255,255,255,0.06); border-radius:0 0 var(--radius-full) var(--radius-full); overflow:hidden; }
         .tts-progress-fill { height:100%; background:linear-gradient(90deg,var(--accent-dark),var(--accent-light)); transition:width 0.4s linear; }
-​
+
         /* Paragraf aktif yang sedang dibacakan */
         .tts-reading {
             background-color: rgba(59,130,246,0.13) !important;
@@ -653,7 +653,7 @@
             transition: background-color 0.3s ease !important;
         }
         body.theme-dark .tts-reading { background-color: rgba(59,130,246,0.2) !important; }
-​
+
         /* Tombol mic aktif */
         .bottom-bar-btn.tts-active { color: var(--accent) !important; }
         /* ===== Reader redesign (req #12) ===== */
@@ -721,7 +721,7 @@
         .hs-bar.today { background:linear-gradient(180deg,#A78BFA,#8B5CF6); }
         .hs-bar-lbl { font-size:10px; color:var(--text-muted); font-weight:600; }
         body.theme-dark .home-stats-card { background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.1); }
-​
+
         /* ===== Micro-interactions ===== */
         .book-card:active { transform:scale(0.97); }
         .feat-read-btn:active, .btn-primary:active, .social-btn:active, .filter-chip:active { transform:scale(0.96); }
@@ -729,7 +729,7 @@
         .profile-stat-box { transition:var(--transition-spring); }
         .profile-stat-box:active { transform:scale(0.97); }
         .home-streak, .home-stats-card { animation:fadeInUp 0.5s cubic-bezier(0.34,1.56,0.64,1); }
-​
+
         /* ===== Profil lebih ringkas di mobile ===== */
         @media (max-width: 600px) {
             #screen-profile .lib-body { padding:18px 18px 100px !important; }
@@ -748,7 +748,7 @@
         .fab-add svg { width: 26px; height: 26px; stroke-width: 2.4px; }
         .fab-add:hover { transform: translateY(-3px) scale(1.06); box-shadow: 0 16px 38px rgba(59,130,246,0.55); }
         .fab-add:active { transform: scale(0.9); }
-​
+
         /* ===== Kartu Insight Harian + judul kartu statistik ===== */
         .hs-card-title { display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:16px; }
         .hs-card-title svg { width:18px; height:18px; color:var(--accent); }
@@ -757,7 +757,7 @@
         .insight-head svg { width:16px; height:16px; color:#FDE68A; }
         .insight-quote { font-family:var(--font-display); font-style:italic; font-size:18px; line-height:1.5; }
         .insight-author { font-size:13px; opacity:0.85; margin-top:10px; }
-​
+
         /* ===== Micro-interactions (lebih terasa) ===== */
         .book-card { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s; }
         .book-card:hover { transform: translateY(-6px) scale(1.03); }
@@ -774,7 +774,7 @@
     </style>
 </head>
 <body>
-​
+
     <div class="splash-screen" id="splashScreen">
         <div class="splash-logo" style="display:flex; flex-direction:column; align-items:center;">
             <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
@@ -782,9 +782,9 @@
             <div style="font-size: 12px; font-family: var(--font-ui); color: rgba(255,255,255,0.6); font-style: normal; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; margin-top: 10px; text-shadow: none;">Book Summaries</div>
         </div>
     </div>
-​
+
     <div class="toast" id="toast"><span id="toastIcon"><i data-lucide="book-open"></i></span><span id="toastMessage"></span></div>
-​
+
     <div class="drawer-overlay" id="notifOverlay" onclick="closeDrawer()"></div>
     <div class="drawer" id="notifDrawer">
         <div class="drawer-header">
@@ -807,7 +807,7 @@
             </div>
         </div>
     </div>
-​
+
     <!-- MODAL EDIT PROFILE -->
     <div class="modal-overlay" id="editProfileModal">
         <div class="modal-content">
@@ -821,7 +821,7 @@
             <button class="btn-primary" style="margin-top:24px;" onclick="submitEditProfile()" id="btnSaveProfile"><i data-lucide="save" style="width:16px;"></i> Simpan Perubahan</button>
         </div>
     </div>
-​
+
     <!-- MODAL PREFERENSI MEMBACA -->
     <div class="modal-overlay" id="preferencesModal">
         <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
@@ -850,7 +850,7 @@
             <button class="btn-primary" onclick="savePreferences()"><i data-lucide="save" style="width:16px;"></i> Simpan Pengaturan</button>
         </div>
     </div>
-​
+
     <!-- MODAL DAFTAR BUKU FAVORIT -->
     <div class="modal-overlay" id="favoritesModal">
         <div class="modal-content" style="max-height: 85vh; overflow-y: auto; padding: 24px;">
@@ -862,7 +862,7 @@
             <div id="favoritesList" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
     </div>
-​
+
     <!-- MODAL ADMIN PANEL -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
@@ -881,7 +881,7 @@
             <div id="adminOfflineUsers" style="display:flex; flex-direction:column; gap:8px;"></div>
         </div>
     </div>
-​
+
     <!-- MODAL ADD BOOK -->
     <div class="modal-overlay" id="addBookModal">
         <div class="modal-content" style="background: var(--bg-dark); color: var(--text-light); border-color: rgba(255,255,255,0.1); width: 95%; max-width: 680px; padding: 0;">
@@ -953,10 +953,10 @@
                         <button type="submit" id="btnSubmitBook" class="btn-primary" style="margin-top:24px;"><i data-lucide="upload-cloud" style="width:18px;"></i> Proses Excel ke Firebase</button>
                     </form>
                 </div>
-​
+
                 <!-- TAB 3: GENERATE AI -->
                 <div id="tabAI" class="tab-pane" style="display: none;">
-​
+
                     <!-- STEP 1: Input Info Buku -->
                     <div id="aiStep1">
                         <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);border-radius:8px;padding:14px 16px;margin-bottom:20px;display:flex;gap:10px;align-items:flex-start;">
@@ -965,7 +965,7 @@
                                 <strong>Cara kerja:</strong> Masukkan judul buku → AI buat outline (daftar bab) dulu → kamu pilih bab mana yang mau di-generate isinya. <strong>Hemat token</strong> — tidak langsung generate semua.
                             </div>
                         </div>
-​
+
                         <div class="form-group">
                             <label class="form-label" style="color:var(--accent-light);">URL Cover Buku (Opsional)</label>
                             <input type="url" class="form-input" id="aiCoverUrl" placeholder="https://..." style="background:rgba(59,130,246,0.05);border-color:rgba(59,130,246,0.3);color:#fff;">
@@ -1004,7 +1004,7 @@
                             <i data-lucide="sparkles" style="width:18px;"></i> Generate Outline Buku
                         </button>
                     </div>
-​
+
                     <!-- STEP 2: Review outline + generate per bab -->
                     <div id="aiStep2" style="display:none;">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
@@ -1014,28 +1014,28 @@
                             </div>
                             <button type="button" onclick="aiResetToStep1()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text-light-muted);font-size:12px;padding:7px 12px;cursor:pointer;font-family:var(--font-ui);display:flex;align-items:center;gap:6px;"><i data-lucide="arrow-left" style="width:13px;"></i> Ubah Info</button>
                         </div>
-​
+
                         <!-- Token counter -->
                         <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.15);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
                             <span style="font-size:12px;color:rgba(167,139,250,0.8);">Estimasi token terpakai</span>
                             <span style="font-family:var(--font-mono);font-size:13px;font-weight:600;color:#A78BFA;" id="aiTokenCounter">~0 token</span>
                         </div>
-​
+
                         <!-- Daftar bab -->
                         <div id="aiOutlineList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;"></div>
-​
+
                         <!-- Simpan ke Firebase -->
                         <button type="button" class="btn-primary" id="btnSaveAIBook" onclick="aiSaveBook()" style="margin-bottom:8px;">
                             <i data-lucide="save" style="width:18px;"></i> <span id="btnSaveAILabel">Simpan Buku ke Firebase</span>
                         </button>
                         <div style="font-size:11px;color:var(--text-dark-secondary);text-align:center;">Bisa simpan meski belum semua bab di-generate. Bab kosong tetap tersimpan sebagai placeholder.</div>
                     </div>
-​
+
                 </div>
             </div>
         </div>
     </div>
-​
+
     <!-- MODAL EDIT BUKU -->
     <div class="modal-overlay" id="editBookModal">
         <div class="modal-content" style="background: var(--bg-dark); color: var(--text-light); border-color: rgba(255,255,255,0.1); width: 95%; max-width: 680px; padding: 0;">
@@ -1090,7 +1090,7 @@
             </div>
         </div>
     </div>
-​
+
     <!-- MODAL TTS SETTINGS (ElevenLabs) -->
     <div class="modal-overlay" id="ttsSettingsModal">
         <div class="modal-content" style="background:var(--bg-dark);color:var(--text-light);border-color:rgba(255,255,255,0.1);max-width:420px;">
@@ -1100,7 +1100,7 @@
                 <div class="modal-title" style="color:#fff;margin-bottom:0;">Pengaturan Suara Narasi</div>
             </div>
             <div class="modal-subtitle" style="color:var(--text-light-muted);margin-bottom:20px;">Pilih karakter suara untuk narasi audiobook. Suara premium aktif otomatis bila tersedia; jika tidak, dipakai suara browser (gratis, tanpa limit).</div>
-​
+
             <div class="form-group" style="margin-bottom:20px;">
                 <label class="form-label" style="color:var(--text-light-muted);">Pilih Suara ElevenLabs</label>
                 <select class="form-input" id="elVoiceSelect" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:#fff;">
@@ -1110,7 +1110,7 @@
                     <option value="N2lVS1w4EtoT3dr4eOWO">Callum (laki-laki, santai)</option>
                 </select>
             </div>
-​
+
             <button class="btn-primary" onclick="elSaveSettings()" style="margin-bottom:10px;">
                 <i data-lucide="save" style="width:16px;"></i> Simpan Pengaturan
             </button>
@@ -1120,7 +1120,7 @@
             </div>
         </div>
     </div>
-​
+
     <!-- SCREEN ONBOARDING -->
     <div class="screen active" id="screen-onboarding">
         <div class="onboarding-wrapper">
@@ -1253,7 +1253,7 @@
             </div>
         </div>
     </div>
-​
+
     <!-- SCREEN LIBRARY -->
     <div class="screen" id="screen-library">
         <div class="library-shell">
@@ -1288,7 +1288,7 @@
             </div>
         </div>
     </div>
-​
+
     <!-- SCREEN COLLECTION -->
     <div class="screen" id="screen-collection">
         <div class="library-shell">
@@ -1318,7 +1318,7 @@
             </div>
         </div>
     </div>
-​
+
     <!-- SCREEN PROFILE -->
     <div class="screen" id="screen-profile">
         <div class="library-shell">
@@ -1373,18 +1373,18 @@
             </div>
         </div>
     </div>
-​
+
     <!-- BOTTOM NAV -->
     <nav class="app-bottom-nav hidden" id="appBottomNav">
         <button class="nav-item active" data-tab="library" onclick="switchMainTab('library')"><i class="nav-icon" data-lucide="home"></i><span class="nav-label">Home</span></button>
         <button class="nav-item" data-tab="collection" onclick="switchMainTab('collection')"><i class="nav-icon" data-lucide="library"></i><span class="nav-label">Library</span></button>
         <button class="nav-item" data-tab="profile" onclick="switchMainTab('profile')"><i class="nav-icon" data-lucide="user"></i><span class="nav-label">Profil</span></button>
     </nav>
-​
+
     <!-- FAB Tambah Buku (admin) -->
     <button id="btnFabAdd" class="fab-add" onclick="openModal('addBookModal')" title="Tambah Buku" style="display:none;"><i data-lucide="plus"></i></button>
     <button id="btnFabAI" class="fab-ai" onclick="openAIChat()" title="Tanya AI tentang buku ini"><i data-lucide="bot"></i></button>
-​
+
     <!-- SCREEN READER -->
     <div class="screen" id="screen-reader">
         <div class="reader-topbar" id="readerTopBar">
@@ -1409,7 +1409,7 @@
             <button class="reader-menu-item" id="btnEditBook" onclick="openEditBookModal(); closeReaderMenu();" style="display:none;"><i data-lucide="edit" style="width:18px;"></i> <span>Edit buku</span></button>
             <button class="reader-menu-item" id="btnDeleteBook" onclick="deleteActiveBook(); closeReaderMenu();" style="display:none; color:#D45353;"><i data-lucide="trash-2" style="width:18px;"></i> <span>Hapus buku</span></button>
         </div>
-​
+
         <div class="drawer-overlay" id="tocOverlay" onclick="toggleTOC()"></div>
         <div class="reader-toc-drawer" id="readerTOC">
             <div class="reader-toc-header">
@@ -1418,7 +1418,7 @@
             </div>
             <div class="toc-list" id="tocList"></div>
         </div>
-​
+
         <div class="drawer-overlay" id="bookmarksOverlay" onclick="toggleBookmarksDrawer()"></div>
         <div class="reader-toc-drawer" id="readerBookmarksDrawer">
             <div class="reader-toc-header">
@@ -1427,14 +1427,14 @@
             </div>
             <div class="toc-list" id="bookmarksListContent" style="padding-bottom: 20px;"></div>
         </div>
-​
+
         <div class="reader-container" id="readerScrollContainer">
             <div id="readerContentAnimator">
                 <div class="reader-chapter-title" id="readerChapterTitle">Memuat Buku...</div>
                 <div class="reader-body" id="readerBody"></div>
             </div>
         </div>
-​
+
         <!-- TTS floating bar -->
         <div class="tts-bar" id="ttsBar">
             <div class="tts-waveform" aria-hidden="true">
@@ -1464,7 +1464,7 @@
             </button>
             <div class="tts-progress-track"><div class="tts-progress-fill" id="ttsProgressFill" style="width:0%"></div></div>
         </div>
-​
+
         <div class="reader-bottom-bar visible" id="readerBottomBar">
             <div class="bb-group bb-left">
                 <button class="bottom-bar-btn" id="btnPrevChapter" onclick="navigateChapter('prev')" title="Bab sebelumnya"><i data-lucide="chevron-left"></i></button>
@@ -1478,11 +1478,11 @@
                 <button class="bottom-bar-btn" id="btnPin" onclick="togglePinMode()" title="Tandai Paragraf (Pin)"><i data-lucide="pin"></i></button>
             </div>
         </div>
-​
+
         <!-- ===================== AI CHAT DRAWER ===================== -->
         <div class="ai-chat-drawer" id="aiChatDrawer" onclick="handleAIChatDrawerClick(event)">
             <div class="ai-chat-panel" id="aiChatPanel">
-​
+
                 <!-- Header -->
                 <div class="ai-chat-header">
                     <div class="ai-chat-header-left">
@@ -1502,13 +1502,13 @@
                         <button class="ai-chat-close" onclick="closeAIChat()"><i data-lucide="x" style="width:14px;"></i></button>
                     </div>
                 </div>
-​
+
                 <!-- Context bar — judul buku aktif -->
                 <div class="ai-chat-context-bar" id="aiContextBar">
                     <i data-lucide="book-open" style="width:12px;height:12px;flex-shrink:0;"></i>
                     <span id="aiContextTitle">Memuat buku...</span>
                 </div>
-​
+
                 <!-- Setup API Key (tampil jika belum ada key) -->
                 <div class="ai-setup-modal" id="aiSetupPanel" style="display:none;">
                     <div class="ai-setup-icon">
@@ -1528,10 +1528,10 @@
                     </div>
                     <div style="font-size:11px;color:rgba(160,152,136,0.6);margin-top:4px;">URL disimpan di browser kamu (localStorage)</div>
                 </div>
-​
+
                 <!-- Chat messages -->
                 <div class="ai-chat-messages" id="aiChatMessages"></div>
-​
+
                 <!-- Quick chips -->
                 <div class="ai-quick-chips" id="aiQuickChips">
                     <button class="ai-chip" onclick="sendQuickPrompt('Apa poin paling penting dari buku ini?')">Poin penting</button>
@@ -1539,7 +1539,7 @@
                     <button class="ai-chip" onclick="sendQuickPrompt('Berikan contoh nyata dari konsep di buku ini')">Contoh nyata</button>
                     <button class="ai-chip" onclick="sendQuickPrompt('Apa yang harus saya lakukan setelah membaca buku ini?')">Langkah aksi</button>
                 </div>
-​
+
                 <!-- Input -->
                 <div class="ai-chat-input-area">
                     <textarea class="ai-chat-input" id="aiChatInput" placeholder="Tanya tentang buku ini..." rows="1"
@@ -1549,18 +1549,18 @@
                         <i data-lucide="send" style="width:16px;height:16px;"></i>
                     </button>
                 </div>
-​
+
             </div>
         </div>
         <!-- ===================== END AI CHAT DRAWER ===================== -->
-​
+
         <div class="settings-popover" id="settingsPopover">
             <div class="settings-row"><span class="settings-label">Ukuran Font</span><div class="font-size-group"><button class="font-size-option" onclick="setFontSize('small',this)" style="font-size:13px;">A</button><button class="font-size-option active" onclick="setFontSize('medium',this)" style="font-size:16px;">A</button><button class="font-size-option" onclick="setFontSize('large',this)" style="font-size:20px;">A</button></div></div>
             <div class="settings-row"><span class="settings-label">Tema</span><div class="theme-dots"><div class="theme-dot td-parchment active" onclick="setTheme('parchment',this)"></div><div class="theme-dot td-white" onclick="setTheme('white',this)"></div><div class="theme-dot td-sepia" onclick="setTheme('sepia',this)"></div><div class="theme-dot td-dark" onclick="setTheme('dark',this)"></div></div></div>
             <button class="btn-regen" onclick="closeSettings()" style="color:inherit;background:rgba(0,0,0,0.03);border:1px solid var(--border);">Tutup</button>
         </div>
     </div>
-​
+
     <!-- SCREEN INSIGHTS -->
     <div class="screen" id="screen-insights">
         <div class="reader-topbar" id="insightTopBar">
@@ -1578,13 +1578,13 @@
         <div class="reader-container" id="insightScrollContainer">
             <div class="reader-chapter-title" id="insightBookTitle" style="margin-bottom: 8px;">Memuat Judul...</div>
             <div style="font-family: var(--font-ui); font-size: 13px; opacity: 0.6; margin-bottom: 24px; font-weight: 500;" id="insightSubtitle">Analisis Data · Selesai 0%</div>
-​
+
             <!-- Tombol Generate AI Insight -->
             <button class="ai-insight-generate-btn" id="btnGenerateAIInsight" onclick="generateAIInsight()">
                 <i data-lucide="sparkles" style="width:18px;height:18px;"></i>
                 <span id="generateInsightLabel">Generate Insight dengan AI</span>
             </button>
-​
+
             <div class="reader-body" id="insightBody">
                 <h3 style="font-family: var(--font-display); font-style: italic; margin-top: 32px; margin-bottom: 16px; font-size: 1.4em; color: var(--accent);">Kesimpulan</h3>
                 <div id="insightKesimpulan"></div>
@@ -1600,7 +1600,7 @@
             </div>
         </div>
     </div>
-​
+
     <script src="js/audio.js"></script>
     <script>
         // ===== GLOBAL STATE =====
@@ -1611,12 +1611,12 @@
         let previousScreenInfo = { name: 'library', scrollY: 0 };
         let readingTimer = null;
         let authMode = 'login';
-​
+
         // =====================================================================
         // Admin check — berdasarkan email (tambahkan email admin di sini)
         const ADMIN_EMAILS = ['hari@gmail.com', 'haripamungkas519@gmail.com', 'hari.pamungkas@rumahzakat.org'];
         window.isCurrentUserAdmin = false;
-​
+
         window.APP_STATE = {
             currentSlide: 0,
             totalSlides: 5,
@@ -1633,7 +1633,7 @@
             settingsOpen: false,
             toastTimeout: null,
         };
-​
+
         const fontSizes = { small: 15, medium: 18, large: 22 };
         const lineHeights = { small: 1.7, medium: 1.9, large: 2.1 };
         const aiQuotes = [
@@ -1642,7 +1642,7 @@
             { text: "Kita cenderung melebih-lebihkan pemahaman kita tentang dunia." },
         ];
         let currentQuoteIdx = 0;
-​
+
         let paragraphObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if(entry.isIntersecting && activeBook) {
@@ -1658,7 +1658,7 @@
                 }
             });
         }, { threshold: 0.5 });
-​
+
         function updateInteractiveModes() {
             const btnHL = document.getElementById('btnHighlight');
             const btnPin = document.getElementById('btnPin');
@@ -1674,7 +1674,7 @@
                 readerBody.classList.remove('interactive-mode-active');
             }
         }
-​
+
         window.toggleHighlightMode = function() {
             window.APP_STATE.highlightMode = !window.APP_STATE.highlightMode;
             if(window.APP_STATE.highlightMode) { window.APP_STATE.pinMode = false; window.showToast('Mode Highlight AKTIF. Pilih 1 paragraf untuk disorot.', 'highlighter'); }
@@ -1722,7 +1722,7 @@
             }
             window.showToast('Kembali ke posisi yang ditandai.', 'map-pin');
         }
-​
+
         // ===== Statistik baca & streak (data nyata via localStorage) =====
         function folioDateKey(d) {
             d = d || new Date();
@@ -1828,7 +1828,7 @@
             }
             if (window.lucide) lucide.createIcons();
         };
-​
+
         function startReadingTimer() {
             if (readingTimer) clearInterval(readingTimer);
             readingTimer = setInterval(() => {
@@ -1848,7 +1848,7 @@
                 }
             }, 1000);
         }
-​
+
         function initApp() {
             setTimeout(() => { const splash = document.getElementById('splashScreen'); if (splash) splash.classList.add('hide'); }, 800);
             lucide.createIcons();
@@ -1861,7 +1861,7 @@
             startReadingTimer();
             window.addChapterField('chapterList');
         }
-​
+
         // =====================================================================
         function checkAdminUI(email) {
             if (!email) { window.isCurrentUserAdmin = false; }
@@ -1880,7 +1880,7 @@
             if (btnEditBook)         btnEditBook.style.display         = window.isCurrentUserAdmin ? 'flex' : 'none';
             if (btnAdminPanel)       btnAdminPanel.style.display       = window.isCurrentUserAdmin ? 'flex' : 'none';
         }
-​
+
         window.addNotification = function(title, desc, time) {
             const list = document.getElementById('notifList');
             const notif = document.createElement('div');
@@ -1890,7 +1890,7 @@
             list.prepend(notif);
             document.querySelectorAll('.notification-dot').forEach(d => d.style.display = 'block');
         }
-​
+
         function updateProfileDisplay() {
             const initial = window.APP_STATE.userName ? window.APP_STATE.userName.charAt(0).toUpperCase() : 'U';
             const headerAvatar = document.getElementById('headerAvatar');
@@ -1967,7 +1967,7 @@
             if(currentBooksToDisplay.length > 0) { activeBook = currentBooksToDisplay.find(b => b.progress > 0) || currentBooksToDisplay[0]; activeChapterIdx = 0; openInsights(); showToast("Membuka Insights...", "sparkles"); }
             else { showToast("Belum ada buku di library.", "⚠️"); }
         }
-​
+
         function showScreen(name) {
             // Tutup AI chat drawer saat keluar dari reader
             if (name !== 'reader' && document.getElementById('aiChatDrawer')?.classList.contains('open')) {
@@ -2000,10 +2000,10 @@
             if ((name === 'library' || name === 'profile') && window.renderHomeStats) { renderHomeStats(); }
             if (name === 'profile') { updateReadingGoalDisplay(); }
         }
-​
+
         function switchScreen(name) { showScreen(name); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         window.switchMainTab = function(tabName) { showScreen(tabName); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-​
+
         window.showToast = function(message, iconCode = 'book-open') {
             const toast = document.getElementById('toast');
             let lucideIcon = iconCode;
@@ -2017,7 +2017,7 @@
             toast.classList.add('show');
             window.APP_STATE.toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
         }
-​
+
         function openDrawer() { document.getElementById('notifOverlay').classList.add('show'); document.getElementById('notifDrawer').classList.add('open'); document.querySelectorAll('.notification-dot').forEach(d => d.style.display = 'none'); }
         function closeDrawer() { document.getElementById('notifDrawer').classList.remove('open'); setTimeout(() => document.getElementById('notifOverlay').classList.remove('show'), 400); }
         window.openModal = function(id) { document.getElementById(id).classList.add('show'); }
@@ -2028,7 +2028,7 @@
             else { input.type='password'; btn.innerHTML='<i data-lucide="eye" style="width:16px;"></i>'; }
             lucide.createIcons();
         }
-​
+
         function goToSlide(index) {
             const slides = document.querySelectorAll('.onboarding-slide');
             if (slides[window.APP_STATE.currentSlide]) { slides[window.APP_STATE.currentSlide].classList.remove('active'); slides[window.APP_STATE.currentSlide].classList.add('exit-left'); }
@@ -2065,14 +2065,14 @@
             localStorage.setItem('folio-reading-goal', minutes);
             updateReadingGoalDisplay();
         }
-​
+
         window.generateBookCard = function(b) {
             const style = b.coverUrl ? `background-image: url('${b.coverUrl}'); background-size: cover; background-position: center;` : '';
             const innerClass = b.coverUrl ? 'has-image' : '';
             const coverTextHtml = b.coverUrl ? '' : `<div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div>`;
             return `<div class="book-card" onclick="openReader('${b.id}')">${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}<div class="book-cover ${b.coverUrl ? '' : b.cover}" style="${style}"><div class="book-cover-inner ${innerClass}">${coverTextHtml}</div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div><div class="book-title">${b.title}</div><div class="book-author-name"><span>${b.author}</span><span class="book-genre-label">${b.category}</span></div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span></div>`;
         }
-​
+
         window.updateDynamicFilters = function(books) {
             const filterRow = document.getElementById('dynamicFilterRow');
             if (!filterRow) return;
@@ -2083,7 +2083,7 @@
             categories.forEach(cat => { const catLabel = cat.split(' ').map(w => w.charAt(0).toUpperCase()+w.slice(1)).join(' '); html += `<div class="filter-chip ${activeText===cat?'active':''}" onclick="filterCollectionBooks(this, '${cat}')">${catLabel}</div>`; });
             filterRow.innerHTML = html;
         };
-​
+
         // =====================================================================
         // FIX #3: renderBooks() — diffing sederhana, hanya update card yang berubah
         // Mencegah full re-render DOM saat progress/favorite update dari Firestore
@@ -2097,7 +2097,7 @@
             const favBooks = books.filter(b => b.isFavorite);
             if(document.getElementById('statFavCount')) document.getElementById('statFavCount').textContent = favBooks.length;
             if (window.renderHomeStats) window.renderHomeStats();
-​
+
             // Featured card (always re-render — single card, murah)
             const featuredContainer = document.getElementById('featuredBookContainer');
             if (featuredContainer) {
@@ -2112,16 +2112,16 @@
                     featuredContainer.innerHTML = `<div class="lib-featured" onclick="openReader('${featBook.id}')"><div class="feat-cover ${featBook.coverUrl?'':featBook.cover}" style="${featStyle}"><div class="feat-cover-inner ${featInnerClass}">${featCoverText}</div></div><div class="feat-meta"><div class="feat-badge">✦ ${featBook.progress>0?'SEDANG DIBACA':'BUKU BARU'}</div><div class="feat-title">${featBook.title}</div><div class="feat-author">${featBook.author} &bull; <span style="color:var(--accent); text-transform:capitalize;">${featBook.category}</span></div><div class="progress-label"><span>Progres Membaca</span><strong>${featBook.progress}%</strong></div><div class="progress-track"><div class="progress-fill" style="width:${featBook.progress}%"></div></div><button class="feat-read-btn">${featBook.progress>0?'Lanjutkan Membaca':'Mulai Membaca'} <i data-lucide="arrow-right" style="width:14px;"></i></button></div></div>`;
                 }
             }
-​
+
             // Diffing untuk grids — hanya re-render card yang ID-nya berubah/baru
             function diffRenderGrid(container, bookList) {
                 if (!container) return;
                 const existingIds = new Set([...container.querySelectorAll('.book-card')].map(el => el.dataset.bookId));
                 const newIds      = new Set(bookList.map(b => b.id));
-​
+
                 // Hapus card yang tidak ada lagi
                 container.querySelectorAll('.book-card').forEach(el => { if (!newIds.has(el.dataset.bookId)) el.remove(); });
-​
+
                 bookList.forEach((b, i) => {
                     const newHtml = generateBookCard(b);
                     const existing = container.querySelector(`.book-card[data-book-id="${b.id}"]`);
@@ -2147,10 +2147,10 @@
                     }
                 });
             }
-​
+
             diffRenderGrid(document.getElementById('bookGrid'), books.slice(0, 6));
             diffRenderGrid(document.getElementById('collectionGrid'), books);
-​
+
             // Favorites modal (kecil, re-render ok)
             if (listFavorites) {
                 if (favBooks.length === 0) { listFavorites.innerHTML = `<div style="text-align:center; padding: 30px; font-size:13px; color:var(--text-muted); background:var(--bg-secondary); border-radius:8px; border:1px dashed var(--border);">Belum ada buku favorit.</div>`; }
@@ -2158,7 +2158,7 @@
             }
             lucide.createIcons();
         }
-​
+
         window.filterHomeBooks = function(chip, filterType) {
             chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
@@ -2178,7 +2178,7 @@
             if(grid) { grid.innerHTML = filtered.map(b => generateBookCard(b)).join(''); }
             lucide.createIcons();
         }
-​
+
         function focusSearch() { document.getElementById('searchInput')?.focus(); }
         function focusSearchCollection() { document.getElementById('searchInputCollection')?.focus(); }
         window.clickSearchItem = function(id) {
@@ -2204,7 +2204,7 @@
             }
             lucide.createIcons();
         }
-​
+
         function initReader() { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); }
         function applyReaderTheme(theme) { document.body.className = 'theme-' + theme; document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active')); const ad = document.querySelector(`.theme-dot.td-${theme}`); if(ad) ad.classList.add('active'); window.APP_STATE.readerTheme = theme; localStorage.setItem('folio-reader-theme', theme); }
         function applyReaderFontSize(size) {
@@ -2218,7 +2218,7 @@
         function closeSettings() { document.getElementById('settingsPopover')?.classList.remove('show'); window.APP_STATE.settingsOpen = false; }
         function setFontSize(size, btn) { applyReaderFontSize(size); window.showToast('Font: '+size); }
         function setTheme(theme, dot) { applyReaderTheme(theme); closeSettings(); window.showToast('Tema: '+theme); }
-​
+
         window.saveChapterNote = function(text) {
             if(!activeBook) return;
             if(!activeBook.chapterNotes) activeBook.chapterNotes = {};
@@ -2264,7 +2264,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         function regenQuote() { currentQuoteIdx = (currentQuoteIdx+1) % aiQuotes.length; document.getElementById('aiQuoteText').textContent = '"' + aiQuotes[currentQuoteIdx].text + '"'; }
-​
+
         window.toggleTOC = function() { document.getElementById('readerTOC').classList.toggle('open'); document.getElementById('tocOverlay').classList.toggle('show'); };
         window.toggleBookmarksDrawer = function() {
             const drawer = document.getElementById('readerBookmarksDrawer');
@@ -2308,14 +2308,14 @@
         };
         // Cache chapters in-memory agar tidak fetch ulang saat buka buku yang sama
         const _chaptersCache = {};
-​
+
         window.openReader = async function(bookId) {
             previousScreenInfo.name    = activeScreenName;
             previousScreenInfo.scrollY = window.scrollY;
-​
+
             activeBook = currentBooksToDisplay.find(b => b.id === bookId);
             if (!activeBook) return;
-​
+
             // Tampilkan reader segera dengan loading state
             document.getElementById('topbarBookTitle').textContent = activeBook.title;
             document.getElementById('topbarBookAuthor').innerHTML = `${activeBook.author} &bull; <span style="text-transform:capitalize; opacity: 0.9;">${activeBook.category}</span>`;
@@ -2326,15 +2326,15 @@
                 </div>`;
             showScreen('reader');
             window.scrollTo({ top: 0, behavior: 'auto' });
-​
+
             activeBook.lastReadAt = Date.now();
             if (window.firebaseUpdateLastRead) window.firebaseUpdateLastRead(activeBook.id, activeBook.lastReadAt);
             activeChapterIdx = activeBook.lastReadChapter !== undefined ? activeBook.lastReadChapter : 0;
-​
+
             const btnFav = document.getElementById('btnFavorite');
             if (activeBook.isFavorite) { btnFav.style.color='#D45353'; btnFav.innerHTML='<i data-lucide="heart" fill="#D45353" style="width:16px;"></i>'; }
             else { btnFav.style.color=''; btnFav.innerHTML='<i data-lucide="heart" style="width:16px;"></i>'; }
-​
+
             // Lazy load chapters — ambil dari cache dulu, baru dari Firestore
             if (!activeBook.chapters?.length) {
                 if (_chaptersCache[bookId]) {
@@ -2378,7 +2378,7 @@
                     savedPin: activeBook.savedPin,
                 };
             }
-​
+
             renderChapter();
             renderTOC();
         }
@@ -2386,7 +2386,7 @@
             showScreen(previousScreenInfo.name);
             setTimeout(() => window.scrollTo({ top: previousScreenInfo.scrollY, behavior: 'auto' }), 30);
         }
-​
+
         function renderChapter() {
             if(!activeBook) return;
             const hasChapters = activeBook.chapters?.length > 0;
@@ -2446,7 +2446,7 @@
             }
             if (progress > activeBook.progress) { activeBook.progress = progress; if(window.firebaseUpdateProgress) window.firebaseUpdateProgress(activeBook.id, progress); }
         }
-​
+
         window.navigateChapter = function(dir) {
             if(!activeBook || !activeBook.chapters) return;
             // Stop TTS saat ganti bab
@@ -2460,7 +2460,7 @@
                 setTimeout(() => { activeChapterIdx--; activeBook.lastReadChapter=activeChapterIdx; activeBook.lastReadParagraph=0; window.scrollTo({top:0, behavior:'auto'}); renderChapter(); renderTOC(); animator.classList.remove('page-turn-prev-out'); animator.classList.add('page-turn-prev-in'); setTimeout(()=>animator.classList.remove('page-turn-prev-in'),400); }, 350);
             } else { window.showToast(dir==='next' ? 'Ini adalah bab terakhir.' : 'Ini adalah bab pertama.', 'book-open'); }
         }
-​
+
         window.switchAddBookTab = function(tab) {
             const btnManual = document.getElementById('tabBtnManual');
             const btnExcel  = document.getElementById('tabBtnExcel');
@@ -2468,11 +2468,11 @@
             const paneManual = document.getElementById('tabManual');
             const paneExcel  = document.getElementById('tabExcel');
             const paneAI     = document.getElementById('tabAI');
-​
+
             // Reset semua
             [btnManual, btnExcel, btnAI].forEach(b => { if(b){ b.style.background='transparent'; b.style.color='var(--text-light-muted)'; }});
             [paneManual, paneExcel, paneAI].forEach(p => { if(p) p.style.display='none'; });
-​
+
             if (tab === 'manual') {
                 btnManual.style.background='var(--accent)'; btnManual.style.color='#fff';
                 paneManual.style.display='block';
@@ -2563,12 +2563,12 @@
             if(window.firebaseSaveManualBook) window.firebaseSaveManualBook(bookData);
             else { window.showToast("Koneksi Firebase gagal","❌"); btn.innerHTML=`<i data-lucide="save" style="width:18px;"></i> Simpan Buku ke Firebase`; btn.disabled=false; }
         }
-​
+
         document.addEventListener('keydown', (e) => {
             if ((e.metaKey||e.ctrlKey) && e.key==='k') { e.preventDefault(); focusSearch(); }
             if (e.key==='Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); window.closeModal('editProfileModal'); window.closeModal('preferencesModal'); window.closeModal('favoritesModal'); window.closeModal('adminModal'); window.closeModal('editBookModal'); closeSettings(); window.closeModal('ttsSettingsModal'); }
         });
-​
+
         window.goToSlide=goToSlide; window.showScreen=showScreen; window.updateProfileDisplay=updateProfileDisplay;
         window.openDrawer=openDrawer; window.closeDrawer=closeDrawer; window.toggleGenre=toggleGenre;
         window.selectGoal=selectGoal; window.openReader=openReader; window.goBackFromReader=goBackFromReader;
@@ -2577,7 +2577,7 @@
         window.toggleTOC=toggleTOC; window.deleteActiveBook=deleteActiveBook;
         window.toggleBookmarksDrawer=toggleBookmarksDrawer; window.renderBookmarksList=renderBookmarksList;
         window.jumpToHighlight=jumpToHighlight;
-​
+
         // =====================================================================
         // AI CHAT ENGINE — Groq (primary) + OpenRouter (fallback)
         // Kedua provider gratis, tanpa kartu kredit
@@ -2588,47 +2588,47 @@
         // Contoh: 'https://folio-ai-api.vercel.app'
         // =====================================================================
         const FOLIO_API_URL = "https://book-summary-alpha.vercel.app/";
-​
+
         let aiChatHistory = [];
         let aiIsLoading   = false;
-​
+
         // ── Cek apakah URL API sudah diset ──
         function aiServerReady() {
             return !!FOLIO_API_URL.trim();
         }
-​
+
         // ── Buka/tutup drawer ──
         window.openAIChat = function() {
             const drawer = document.getElementById('aiChatDrawer');
             drawer.classList.add('open');
             lucide.createIcons();
-​
+
             if (activeBook) {
                 document.getElementById('aiContextTitle').textContent   = activeBook.title + ' · Bab ' + (activeChapterIdx + 1);
                 document.getElementById('aiChatSubtitle').textContent   = 'Konteks: ' + (activeBook.chapters?.[activeChapterIdx]?.title || 'Ringkasan');
             }
-​
+
             const ready = aiServerReady();
             document.getElementById('aiSetupPanel').style.display                                    = ready ? 'none' : 'flex';
             document.getElementById('aiChatMessages').style.display                                  = ready ? 'flex' : 'none';
             document.getElementById('aiQuickChips').style.display                                    = ready ? 'flex' : 'none';
             document.getElementById('aiChatInput').closest('.ai-chat-input-area').style.display      = ready ? 'flex' : 'none';
-​
+
             if (ready && aiChatHistory.length === 0) {
                 addAIChatMessage('assistant', 'Halo! Saya siap membantu kamu memahami **' + (activeBook?.title || 'buku ini') + '**. Mau tanya apa?');
             }
-​
+
             setTimeout(() => document.getElementById('aiChatInput')?.focus(), 400);
         }
-​
+
         window.closeAIChat = function() {
             document.getElementById('aiChatDrawer').classList.remove('open');
         }
-​
+
         window.handleAIChatDrawerClick = function(e) {
             if (e.target === document.getElementById('aiChatDrawer')) closeAIChat();
         }
-​
+
         // ── Tombol provider — hanya kosmetik, keduanya pakai server yang sama ──
         window.setAIProvider = function(provider, btn) {
             document.querySelectorAll('.ai-provider-btn').forEach(b => b.classList.remove('active'));
@@ -2636,7 +2636,7 @@
             // Catatan: provider toggle di sini hanya label UI
             // Karena API key disimpan di server, tidak ada key yang perlu diisi user
         }
-​
+
         // ── Setup panel — user cukup masukkan URL Vercel ──
         // Teks dan placeholder di HTML di-update agar sesuai flow baru
         window.saveAIApiKey = function() {
@@ -2648,18 +2648,18 @@
             // Reload state tanpa refresh
             location.reload();
         }
-​
+
         window.openAIKeyPage = function() {
             // Arahkan ke panduan deploy
             window.open('https://vercel.com/dashboard', '_blank');
         }
-​
+
         // ── Tambah pesan ke UI ──
         function addAIChatMessage(role, content) {
             const container = document.getElementById('aiChatMessages');
             const div = document.createElement('div');
             div.className = `ai-msg ${role}`;
-​
+
             const bubble = document.createElement('div');
             bubble.className = 'ai-msg-bubble';
             // Render markdown sederhana: **bold**, *italic*, newline
@@ -2667,12 +2667,12 @@
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/\n/g, '<br>');
-​
+
             div.appendChild(bubble);
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
         }
-​
+
         function showAITyping() {
             const container = document.getElementById('aiChatMessages');
             const div = document.createElement('div');
@@ -2682,39 +2682,39 @@
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
         }
-​
+
         function removeAITyping() {
             document.getElementById('aiTypingIndicator')?.remove();
         }
-​
+
         // ── Buat system prompt berbasis isi buku ──
         function buildAISystemPrompt() {
             if (!activeBook) return 'Kamu adalah asisten membaca yang membantu.';
-​
+
             const chapterContent = activeBook.chapters?.[activeChapterIdx]?.content || '';
             const chapterTitle   = activeBook.chapters?.[activeChapterIdx]?.title || 'Ringkasan';
             const allChapterTitles = activeBook.chapters?.map((c, i) => `${i+1}. ${c.title}`).join(', ') || '';
-​
+
             // Batasi context agar tidak melebihi token limit
             const maxChars = 3000;
             const trimmedContent = chapterContent.length > maxChars
                 ? chapterContent.substring(0, maxChars) + '...[teks dipotong]'
                 : chapterContent;
-​
+
             return `Kamu adalah asisten membaca cerdas untuk aplikasi Folio. Tugasmu membantu pembaca memahami buku dengan mendalam.
-​
+
 INFORMASI BUKU:
 - Judul: ${activeBook.title}
 - Penulis: ${activeBook.author}
 - Kategori: ${activeBook.category}
 - Semua bab: ${allChapterTitles}
-​
+
 BAB YANG SEDANG DIBACA (Bab ${activeChapterIdx + 1}: ${chapterTitle}):
 ${trimmedContent}
-​
+
 KESIMPULAN BUKU:
 ${activeBook.kesimpulan || 'Belum tersedia'}
-​
+
 INSTRUKSI:
 - Jawab dalam Bahasa Indonesia yang hangat dan mudah dipahami
 - Berikan jawaban yang spesifik dan relevan dengan isi buku di atas
@@ -2722,7 +2722,7 @@ INSTRUKSI:
 - Gunakan contoh nyata dan analogi yang mudah dipahami
 - Maksimal 3-4 paragraf per jawaban kecuali diminta lebih panjang`;
         }
-​
+
         // ── Kirim ke API ──
         // ── Kirim ke Vercel API server (key tersembunyi di server) ──
         async function callAIAPI(messages) {
@@ -2740,38 +2740,38 @@ INSTRUKSI:
             if (!res.ok) throw new Error(data.error || `Server error ${res.status}`);
             return data.reply;
         }
-​
+
         // ── Kirim pesan ──
         window.sendAIMessage = async function() {
             const input = document.getElementById('aiChatInput');
             const text = input.value.trim();
             if (!text || aiIsLoading) return;
-​
+
             input.value = '';
             input.style.height = 'auto';
             document.getElementById('aiSendBtn').disabled = true;
             aiIsLoading = true;
-​
+
             addAIChatMessage('user', text);
             aiChatHistory.push({ role: 'user', content: text });
-​
+
             showAITyping();
-​
+
             try {
                 const systemPrompt = buildAISystemPrompt();
                 const messages = [
                     { role: 'system', content: systemPrompt },
                     ...aiChatHistory.slice(-8), // Kirim maks 8 pesan terakhir untuk hemat token
                 ];
-​
+
                 const reply = await callAIAPI(messages);
                 removeAITyping();
                 addAIChatMessage('assistant', reply);
                 aiChatHistory.push({ role: 'assistant', content: reply });
-​
+
                 // Sembunyikan quick chips setelah chat mulai
                 document.getElementById('aiQuickChips').style.display = 'none';
-​
+
             } catch (err) {
                 removeAITyping();
                 addAIChatMessage('assistant', '⚠️ ' + err.message);
@@ -2792,45 +2792,45 @@ INSTRUKSI:
                 input.focus();
             }
         }
-​
+
         window.sendQuickPrompt = function(text) {
             document.getElementById('aiChatInput').value = text;
             sendAIMessage();
         }
-​
+
         window.handleAIChatKeydown = function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendAIMessage();
             }
         }
-​
+
         window.autoResizeAIInput = function(el) {
             el.style.height = 'auto';
             el.style.height = Math.min(el.scrollHeight, 120) + 'px';
         }
-​
+
         // ── Generate AI Insight otomatis di Insights screen ──
         // ── Generate insight via Vercel server ──
         window.generateAIInsight = async function() {
             if (!activeBook) return;
-​
+
             if (!FOLIO_API_URL) {
                 openAIChat();
                 window.showToast('Masukkan URL API Vercel dulu', '⚠️');
                 return;
             }
-​
+
             const btn   = document.getElementById('btnGenerateAIInsight');
             const label = document.getElementById('generateInsightLabel');
             btn.disabled = true;
             label.textContent = 'Sedang generate...';
-​
+
             const shimmerHTML = `<div class="ai-shimmer" style="width:90%;"></div><div class="ai-shimmer" style="width:75%;"></div><div class="ai-shimmer" style="width:85%;"></div>`;
             document.getElementById('insightKesimpulan').innerHTML = shimmerHTML;
             document.getElementById('insightKeyPoints').innerHTML  = shimmerHTML;
             document.getElementById('insightLangkahAksi').innerHTML = shimmerHTML;
-​
+
             try {
                 const res = await fetch(`${FOLIO_API_URL}/api/generate-insight`, {
                     method: 'POST',
@@ -2846,24 +2846,24 @@ INSTRUKSI:
                         })),
                     }),
                 });
-​
+
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || `Server error ${res.status}`);
-​
+
                 // Update UI
                 const elK  = document.getElementById('insightKesimpulan');
                 const elKP = document.getElementById('insightKeyPoints');
                 const elLA = document.getElementById('insightLangkahAksi');
-​
+
                 elK.innerHTML  = `<p style="margin-bottom:1.2em;">${data.kesimpulan}</p><div style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-ui);font-size:11px;color:var(--accent);padding:4px 10px;background:rgba(59,130,246,0.1);border-radius:20px;margin-top:4px;"><i data-lucide="sparkles" style="width:12px;"></i> Groq AI · ${data.model || ''}</div>`;
                 elKP.innerHTML = data.keyPoints.map(p  => `<li style="margin-bottom:12px;">${p}</li>`).join('');
                 elLA.innerHTML = data.langkahAksi.map(p => `<li style="margin-bottom:12px;">${p}</li>`).join('');
-​
+
                 lucide.createIcons();
                 label.textContent = '✓ Insight Diperbarui — Generate Ulang';
                 btn.disabled = false;
                 window.showToast('Insight AI berhasil digenerate!', '✅');
-​
+
                 // Simpan ke Firebase jika admin
                 if (window.isCurrentUserAdmin && window.firebaseUpdateFullBook) {
                     window.firebaseUpdateFullBook(activeBook.id, {
@@ -2872,7 +2872,7 @@ INSTRUKSI:
                         langkahAksi:  data.langkahAksi.join('\n'),
                     }).catch(e => console.warn('Gagal simpan ke Firebase:', e));
                 }
-​
+
             } catch (err) {
                 document.getElementById('insightKesimpulan').innerHTML  = `<p style="color:rgba(212,83,83,0.8);">⚠️ ${err.message}</p>`;
                 document.getElementById('insightKeyPoints').innerHTML   = '<li><em>Gagal generate. Coba lagi.</em></li>';
@@ -2887,18 +2887,18 @@ INSTRUKSI:
             if (activeBook?.id !== bookId) aiChatHistory = [];
             _origOpenReader(bookId);
         }
-​
+
         // Tutup chat saat keluar dari reader
         const _origShowScreen = window.showScreen || function(){};
         // (ditangani di patch showScreen di bawah via event)
-​
-​
+
+
         // =====================================================================
         // TTS ENGINE v2 — ElevenLabs (primary) + Web Speech API (fallback)
         // ElevenLabs: suara natural, id-ID tersedia
         // Web Speech : gratis, offline, tidak ada limit
         // =====================================================================
-​
+
         const tts = {
             isPlaying:    false,
             isPaused:     false,
@@ -2908,18 +2908,18 @@ INSTRUKSI:
             speedOptions: [0.8, 1.0, 1.2, 1.5, 1.8],
             speedIdx:     1,
             speedLabels:  ['0.8×','1×','1.2×','1.5×','1.8×'],
-​
+
             // Web Speech fallback
             utterance:    null,
             wsVoice:      null,
             wsSupported:  ('speechSynthesis' in window),
-​
+
             // ElevenLabs
             elProvider:   'elevenlabs',   // 'elevenlabs' | 'webspeech'
             elAudio:      null,            // HTMLAudioElement aktif
             elAborting:   false,
         };
-​
+
         // ── Konstanta ElevenLabs ──
         const EL_VOICES = [
             { id: 'pFZP5JQG7iQjIQuC4Bku', name: 'Lilly (perempuan)' },
@@ -2930,10 +2930,10 @@ INSTRUKSI:
         const EL_KEY_STORAGE   = 'folio-el-api-key';
         const EL_VOICE_STORAGE = 'folio-el-voice-id';
         const EL_ENDPOINT      = 'https://api.elevenlabs.io/v1/text-to-speech';
-​
+
         function elGetKey()     { return localStorage.getItem(EL_KEY_STORAGE) || ''; }
         function elGetVoiceId() { return localStorage.getItem(EL_VOICE_STORAGE) || EL_VOICES[0].id; }
-​
+
         // ── Init ──
         window.ttsInit = function() {
             // Web Speech voice setup
@@ -2954,7 +2954,7 @@ INSTRUKSI:
                 ttsUpdateProviderBadge();
             }
         }
-​
+
         function ttsFindWSVoice() {
             const voices = window.speechSynthesis.getVoices();
             return (
@@ -2964,7 +2964,7 @@ INSTRUKSI:
                 voices[0] || null
             );
         }
-​
+
         // ── Load paragraf setelah renderChapter() ──
         window.ttsLoadParagraphs = function() {
             tts.paragraphs = [];
@@ -2973,18 +2973,18 @@ INSTRUKSI:
                 if (text) tts.paragraphs.push({ el, text });
             });
         }
-​
+
         // ── Toggle on/off dari tombol mic ──
         window.ttsToggle = function() {
             if (tts.isPlaying || tts.isPaused) { ttsStop(); return; }
             tts.paraIdx = 0;
             ttsPlayCurrent();
         }
-​
+
         // ── Play/Pause ──
         window.ttsTogglePlayPause = function() {
             if (!tts.isPlaying && !tts.isPaused) { ttsPlayCurrent(); return; }
-​
+
             if (tts.elProvider === 'elevenlabs' && tts.elAudio) {
                 // ElevenLabs: pause/resume audio element
                 if (tts.isPlaying) {
@@ -3007,39 +3007,39 @@ INSTRUKSI:
                 ttsUpdateUI();
             }
         }
-​
+
         // ── Core: play paragraf saat ini ──
         async function ttsPlayCurrent() {
             if (!tts.paragraphs.length) return;
             const para = tts.paragraphs[tts.paraIdx];
             if (!para) { ttsStop(); return; }
-​
+
             ttsHighlight(tts.paraIdx);
             ttsScrollTo(tts.paraIdx);
             ttsShowBar();
-​
+
             if (tts.elProvider === 'elevenlabs') {
                 await ttsPlayElevenLabs(para.text);
             } else {
                 ttsPlayWebSpeech(para.text);
             }
         }
-​
+
         // ── ElevenLabs TTS (via serverless proxy /api/tts — key di server) ──
         async function ttsPlayElevenLabs(text) {
             tts.elAborting = false;
-​
+
             try {
                 ttsSetStatus('Memuat suara...');
                 const blob = await window.folioSynthesizeSpeech(text, { voiceId: elGetVoiceId() });
                 if (tts.elAborting) return;
-​
+
                 const url = URL.createObjectURL(blob);
                 const audio = new Audio(url);
                 tts.elAudio = audio;
                 tts.isPlaying = true; tts.isPaused = false;
                 ttsUpdateUI();
-​
+
                 audio.onended = () => {
                     URL.revokeObjectURL(url);
                     if (tts.elAborting) return;
@@ -3047,7 +3047,7 @@ INSTRUKSI:
                     if (tts.paraIdx < tts.paragraphs.length) ttsPlayCurrent();
                     else { ttsStop(); window.showToast('Narasi bab selesai', 'mic'); }
                 };
-​
+
                 audio.onerror = () => {
                     URL.revokeObjectURL(url);
                     if (!tts.elAborting) {
@@ -3057,9 +3057,9 @@ INSTRUKSI:
                         ttsPlayWebSpeech(tts.paragraphs[tts.paraIdx]?.text || '');
                     }
                 };
-​
+
                 audio.play();
-​
+
             } catch(e) {
                 if (tts.elAborting) return;
                 const st = e && e.status;
@@ -3077,7 +3077,7 @@ INSTRUKSI:
                 ttsPlayWebSpeech(tts.paragraphs[tts.paraIdx]?.text || '');
             }
         }
-​
+
         // ── Web Speech TTS (fallback) ──
         function ttsPlayWebSpeech(text) {
             if (!tts.wsSupported) {
@@ -3091,7 +3091,7 @@ INSTRUKSI:
             utt.volume = 1.0;
             utt.lang   = 'id-ID';
             if (tts.wsVoice) utt.voice = tts.wsVoice;
-​
+
             utt.onstart = () => { tts.isPlaying = true; tts.isPaused = false; ttsUpdateUI(); };
             utt.onend   = () => {
                 tts.paraIdx++;
@@ -3105,7 +3105,7 @@ INSTRUKSI:
             tts.utterance = utt;
             window.speechSynthesis.speak(utt);
         }
-​
+
         // ── Stop total ──
         window.ttsStop = function() {
             tts.elAborting = true;
@@ -3114,7 +3114,7 @@ INSTRUKSI:
             tts.isPlaying = false; tts.isPaused = false; tts.paraIdx = 0;
             ttsRemoveHighlight(); ttsUpdateUI(); ttsHideBar();
         }
-​
+
         // ── Skip paragraf ──
         window.ttsSkip = function(delta) {
             const newIdx = tts.paraIdx + delta;
@@ -3125,7 +3125,7 @@ INSTRUKSI:
             tts.paraIdx = newIdx;
             setTimeout(() => { tts.elAborting = false; ttsPlayCurrent(); }, 80);
         }
-​
+
         // ── Toggle kecepatan (hanya berlaku untuk Web Speech) ──
         window.ttsToggleSpeed = function() {
             tts.speedIdx = (tts.speedIdx + 1) % tts.speedOptions.length;
@@ -3135,7 +3135,7 @@ INSTRUKSI:
                 ttsPlayCurrent();
             }
         }
-​
+
         // ── Highlight paragraf aktif ──
         function ttsHighlight(idx) {
             ttsRemoveHighlight();
@@ -3149,7 +3149,7 @@ INSTRUKSI:
                 tts.paragraphs[idx]?.el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
         }
-​
+
         // ── Double-klik paragraf → mulai dari sana ──
         window.ttsStartFromParagraph = function(pIndex) {
             tts.elAborting = true;
@@ -3158,13 +3158,13 @@ INSTRUKSI:
             tts.paraIdx = pIndex;
             setTimeout(() => { tts.elAborting = false; ttsPlayCurrent(); }, 80);
         }
-​
+
         // ── Update UI bar ──
         function ttsSetStatus(text) {
             const el = document.getElementById('ttsInfoPara');
             if (el) el.textContent = text;
         }
-​
+
         function ttsUpdateProviderBadge() {
             const btn = document.getElementById('ttsProviderBadge');
             if (!btn) return;
@@ -3180,7 +3180,7 @@ INSTRUKSI:
                 btn.style.background  = 'rgba(59,130,246,0.1)';
             }
         }
-​
+
         function ttsUpdateUI() {
             const playIcon  = document.getElementById('ttsIconPlay');
             const pauseIcon = document.getElementById('ttsIconPause');
@@ -3189,28 +3189,28 @@ INSTRUKSI:
             const chapter   = document.getElementById('ttsInfoChapter');
             const paraInfo  = document.getElementById('ttsInfoPara');
             const bar       = document.getElementById('ttsBar');
-​
+
             const total   = tts.paragraphs.length;
             const current = tts.paraIdx + 1;
-​
+
             if (playIcon)  playIcon.style.display  = tts.isPlaying ? 'none'  : 'block';
             if (pauseIcon) pauseIcon.style.display = tts.isPlaying ? 'block' : 'none';
             if (bar)       bar.classList.toggle('paused', tts.isPaused);
             if (btnMic)    btnMic.classList.toggle('tts-active', tts.isPlaying || tts.isPaused);
             if (fill)      fill.style.width = total > 0 ? `${(current / total) * 100}%` : '0%';
-​
+
             const chTitle = document.getElementById('readerChapterTitle');
             if (chapter)  chapter.textContent  = chTitle?.textContent || 'Bab';
             if (paraInfo) paraInfo.textContent = `Paragraf ${current} dari ${total}`;
         }
-​
+
         function ttsShowBar() { document.getElementById('ttsBar')?.classList.add('show'); document.body.classList.add('tts-bar-open'); ttsUpdateUI(); }
         function ttsHideBar() { document.getElementById('ttsBar')?.classList.remove('show'); document.body.classList.remove('tts-bar-open'); }
-​
+
         window.ttsStopIfActive = function() {
             if (tts.isPlaying || tts.isPaused) ttsStop();
         }
-​
+
         // ── Settings ElevenLabs — simpan/ambil key & voice ──
         window.elSaveSettings = function() {
             const voiceId = document.getElementById('elVoiceSelect')?.value;
@@ -3219,33 +3219,33 @@ INSTRUKSI:
             window.closeModal('ttsSettingsModal');
             window.showToast('Suara narasi disimpan', '✅');
         }
-​
+
         window.openTTSSettings = function() {
             const voiceSel = document.getElementById('elVoiceSelect');
             if (voiceSel) voiceSel.value = elGetVoiceId();
             window.openModal('ttsSettingsModal');
         }
-​
+
         // =====================================================================
         // END TTS ENGINE v2
         // =====================================================================
-​
-​
+
+
         // =====================================================================
         // AI GENERATE BOOK ENGINE — Opsi A
         // Flow: Input info → Generate outline (~400 token)
         //       → User pilih bab → Generate isi per bab on-demand (~800 token/bab)
         // =====================================================================
-​
+
         let aiGenBook = { title:'', author:'', category:'', coverUrl:'', chapters:[] };
         let aiTokensUsed = 0;
-​
+
         // ── Init tab — cek key ──
         window.aiInitTab = function() {
             // Key dikelola server — hanya cek apakah URL Vercel sudah diset
             lucide.createIcons();
         }
-​
+
         // ── Panggil Vercel API server (key tersembunyi di ENV) ──
         async function aiCallServer(action, payload) {
             if (!FOLIO_API_URL) throw new Error('URL Vercel API belum diset. Klik tombol 🤖 di reader untuk mengatur.');
@@ -3262,7 +3262,7 @@ INSTRUKSI:
             if (counterEl) counterEl.textContent = `~${aiTokensUsed.toLocaleString()} token`;
             return data;
         }
-​
+
         // ── STEP 1: Generate outline ──
         window.aiGenerateOutline = async function() {
             const title    = document.getElementById('aiJudul')?.value.trim();
@@ -3270,17 +3270,17 @@ INSTRUKSI:
             const category = document.getElementById('aiKategori')?.value.trim();
             const jumlah   = document.getElementById('aiJumlahBab')?.value || '7';
             const coverUrl = document.getElementById('aiCoverUrl')?.value.trim() || '';
-​
+
             if (!title || !author) return window.showToast('Judul dan penulis wajib diisi', '⚠️');
             if (!FOLIO_API_URL) {
-                return window.showToast('URL Vercel API belum diset. Klik tombol 🤖 di reader untuk mengatur.', '���️');
+                return window.showToast('URL Vercel API belum diset. Klik tombol 🤖 di reader untuk mengatur.', '   ️');
             }
-​
+
             const btn = document.getElementById('btnGenerateOutline');
             btn.innerHTML = '<i data-lucide="loader" style="width:16px;animation:spin 1s linear infinite;"></i> Generating outline...';
             btn.disabled = true;
             lucide.createIcons();
-​
+
             try {
                 aiTokensUsed = 0;
                 const result = await aiCallServer('outline', {
@@ -3288,7 +3288,7 @@ INSTRUKSI:
                 });
                 const parsed = result;
                 if (!parsed.bab || !Array.isArray(parsed.bab)) throw new Error('Format outline tidak valid. Coba lagi.');
-​
+
                 // Simpan ke state
                 aiGenBook = {
                     title, author, category: category.toLowerCase() || 'lainnya', coverUrl,
@@ -3302,12 +3302,12 @@ INSTRUKSI:
                         generated: false,
                     })),
                 };
-​
+
                 // Tampilkan step 2
                 aiRenderOutline();
                 document.getElementById('aiStep1').style.display = 'none';
                 document.getElementById('aiStep2').style.display = 'block';
-​
+
             } catch(e) {
                 window.showToast(e.message, '❌');
                 btn.innerHTML = '<i data-lucide="sparkles" style="width:18px;"></i> Generate Outline Buku';
@@ -3315,7 +3315,7 @@ INSTRUKSI:
                 lucide.createIcons();
             }
         }
-​
+
         // ── Render daftar bab di step 2 ──
         function aiRenderOutline() {
             const listEl  = document.getElementById('aiOutlineList');
@@ -3323,7 +3323,7 @@ INSTRUKSI:
             const metaEl  = document.getElementById('aiOutlineBookMeta');
             if (titleEl) titleEl.textContent = aiGenBook.title;
             if (metaEl)  metaEl.textContent  = `${aiGenBook.author} · ${aiGenBook.category}`;
-​
+
             if (!listEl) return;
             listEl.innerHTML = aiGenBook.chapters.map((ch, i) => `
                 <div style="background:rgba(255,255,255,0.03);border:1px solid ${ch.generated ? 'rgba(122,140,110,0.4)' : 'rgba(255,255,255,0.08)'};border-radius:10px;padding:14px 16px;transition:0.2s;" id="aiChCard-${i}">
@@ -3342,7 +3342,7 @@ INSTRUKSI:
                 </div>
             `).join('');
             lucide.createIcons();
-​
+
             // Update save button label
             const generatedCount = aiGenBook.chapters.filter(c => c.generated).length;
             const saveLabel = document.getElementById('btnSaveAILabel');
@@ -3350,16 +3350,16 @@ INSTRUKSI:
                 ? `Simpan Buku (${generatedCount}/${aiGenBook.chapters.length} bab selesai)`
                 : 'Simpan Buku ke Firebase';
         }
-​
+
         // ── STEP 2: Generate isi 1 bab ──
         window.aiGenerateChapter = async function(idx) {
             const ch  = aiGenBook.chapters[idx];
             const btn = document.getElementById(`aiBtnCh-${idx}`);
             if (!ch || !btn) return;
-​
+
             btn.textContent = '⏳ Generating...';
             btn.disabled = true;
-​
+
             try {
                 const result = await aiCallServer('chapter', {
                     title:           aiGenBook.title,
@@ -3368,22 +3368,22 @@ INSTRUKSI:
                     chapterSinopsis: ch.sinopsis,
                     chapterIdx:      idx,
                 });
-​
+
                 // Simpan ke state
                 aiGenBook.chapters[idx].content   = result.content || '';
                 aiGenBook.chapters[idx].generated = true;
-​
+
                 // Re-render outline
                 aiRenderOutline();
                 window.showToast(`Bab ${idx+1} berhasil digenerate!`, '✅');
-​
+
             } catch(e) {
                 window.showToast(e.message, '❌');
                 btn.textContent = '▶ Generate Isi';
                 btn.disabled = false;
             }
         }
-​
+
         // ── Reset ke step 1 ──
         window.aiResetToStep1 = function() {
             document.getElementById('aiStep1').style.display = 'block';
@@ -3391,19 +3391,19 @@ INSTRUKSI:
             const btn = document.getElementById('btnGenerateOutline');
             if (btn) { btn.innerHTML = '<i data-lucide="sparkles" style="width:18px;"></i> Generate Outline Buku'; btn.disabled = false; lucide.createIcons(); }
         }
-​
+
         // ── Simpan buku ke Firebase ──
         window.aiSaveBook = async function() {
             const generatedCount = aiGenBook.chapters.filter(c => c.generated).length;
             if (generatedCount === 0) {
                 if (!confirm('Belum ada bab yang di-generate. Simpan buku dengan bab kosong?')) return;
             }
-​
+
             const btn = document.getElementById('btnSaveAIBook');
             btn.innerHTML = '<i data-lucide="loader" style="width:16px;animation:spin 1s linear infinite;"></i> Menyimpan...';
             btn.disabled = true;
             lucide.createIcons();
-​
+
             const covers = ['bc1','bc2','bc3','bc4','bc5','bc6'];
             const bookData = {
                 title:       aiGenBook.title,
@@ -3429,7 +3429,7 @@ INSTRUKSI:
                 savedPin:    null,
                 savedQuotes: [],
             };
-​
+
             if (window.firebaseSaveManualBook) {
                 window.firebaseSaveManualBook(bookData).then ? 
                     window.firebaseSaveManualBook(bookData) : 
@@ -3447,7 +3447,7 @@ INSTRUKSI:
                 if (btnOut) { btnOut.innerHTML = '<i data-lucide="sparkles" style="width:18px;"></i> Generate Outline Buku'; btnOut.disabled=false; lucide.createIcons(); }
             }
         }
-​
+
         // CSS untuk animasi spin loader
         if (!document.getElementById('aiGenStyles')) {
             const s = document.createElement('style');
@@ -3458,16 +3458,16 @@ INSTRUKSI:
         // =====================================================================
         // END AI GENERATE BOOK ENGINE
         // =====================================================================
-​
+
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
-​
+
     <!-- ===== FIREBASE INTEGRATION ===== -->
     <script type="module">
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, OAuthProvider, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
-​
+
         // =====================================================================
         // FIX #2: Firebase config — key tetap harus ada di sini karena ini
         // single-file HTML (tidak ada server/build step).
@@ -3503,7 +3503,7 @@ INSTRUKSI:
             appId: "1:414399752577:web:e5b1939344418b63dfa080",
             measurementId: "G-GK6BK3ZMMD"
         };
-​
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
@@ -3512,7 +3512,7 @@ INSTRUKSI:
         const appleProvider = new OAuthProvider('apple.com');
         appleProvider.addScope('email');
         appleProvider.addScope('name');
-​
+
         // Routing setelah login sosial berhasil (dipakai oleh popup & redirect).
         window.handlePostLogin = (providerName) => {
             window.showToast("Berhasil masuk dengan " + (providerName || 'akun') + "!", "✅");
@@ -3523,7 +3523,7 @@ INSTRUKSI:
                 window.switchMainTab('library');
             }
         };
-​
+
         // Tangani hasil redirect (fallback bila popup diblokir).
         getRedirectResult(auth).then((result) => {
             if (result && result.user) {
@@ -3537,7 +3537,7 @@ INSTRUKSI:
             if (error.code === 'auth/unauthorized-domain') window.showToast("Domain belum diizinkan di Firebase (Authorized domains).", "⚠️");
             else if (error.code !== 'auth/redirect-cancelled-by-user') window.showToast("Gagal login. Coba lagi.", "❌");
         });
-​
+
         // =====================================================================
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -3548,16 +3548,16 @@ INSTRUKSI:
                 localStorage.setItem('folio-user-name', window.APP_STATE.userName);
                 localStorage.setItem('folio-user-logged-in', 'true');
                 window.updateProfileDisplay();
-​
+
                 // Cek admin berdasarkan email
                 checkAdminUI(user.email);
-​
+
                 setDoc(doc(db, "users", user.uid), {
                     uid: user.uid, email: user.email,
                     name: user.displayName || user.email.split('@')[0],
                     isOnline: true, lastActive: serverTimestamp()
                 }, { merge: true }).catch(e => console.warn("Status online:", e));
-​
+
                 if (document.getElementById('screen-onboarding').classList.contains('active') && window.APP_STATE.currentSlide === 1) {
                     window.goToSlide(2);
                 }
@@ -3565,13 +3565,13 @@ INSTRUKSI:
                 checkAdminUI('');
             }
         });
-​
+
         window.socialLogin = async (providerName) => {
             let provider;
             if (providerName === 'Google') provider = googleProvider;
             else if (providerName === 'Apple') provider = appleProvider;
             else { window.showToast(providerName + " login belum tersedia.", "⚠️"); return; }
-​
+
             try {
                 // Popup lebih andal di mobile modern: tetap dalam konteks yang sama,
                 // tidak terganggu storage-partitioning (ITP) Safari/Chrome seperti redirect.
@@ -3601,7 +3601,7 @@ INSTRUKSI:
                 }
             }
         };
-​
+
         window.firebaseResetPassword = async (email) => {
             try { await sendPasswordResetEmail(auth, email); window.showToast("Link reset password telah dikirim ke email Anda!", "✅"); }
             catch (error) { window.showToast("Gagal mengirim link: Email tidak ditemukan atau tidak valid.", "❌"); }
@@ -3646,7 +3646,7 @@ INSTRUKSI:
                 window.showScreen('onboarding'); window.goToSlide(1);
             } catch (error) { console.error(error); window.showToast("Gagal logout. Cek console.", "❌"); }
         };
-​
+
         let adminUnsubscribe = null;
         window.openAdminPanel = () => {
             if(!window.isCurrentUserAdmin) return;
@@ -3674,7 +3674,7 @@ INSTRUKSI:
                 catch(e) { window.showToast('Gagal menghapus data.', '❌'); }
             }
         };
-​
+
         window.firebaseUpdateProgress    = async (bookId, p)  => { try { await updateDoc(doc(db,"buku_bacaan",bookId), {progress:p}); } catch(e){console.error(e);} }
         window.firebaseToggleFavorite    = async (bookId, f)  => { try { await updateDoc(doc(db,"buku_bacaan",bookId), {isFavorite:f}); } catch(e){console.error(e);} }
         window.firebaseUpdateHighlights  = async (bookId, h)  => { try { await updateDoc(doc(db,"buku_bacaan",bookId), {highlights:h}); } catch(e){console.error(e);} }
@@ -3684,7 +3684,7 @@ INSTRUKSI:
         window.firebaseUpdateChapterNotes= async (bookId, n)  => { try { await updateDoc(doc(db,"buku_bacaan",bookId), {chapterNotes:n}); } catch(e){console.error(e);} }
         window.firebaseUpdatePin         = async (bookId, p)  => { try { await updateDoc(doc(db,"buku_bacaan",bookId), {savedPin:p}); } catch(e){console.error(e);} }
         window.firebaseUpdateFullBook    = async (bookId, d)  => { try { await updateDoc(doc(db,"buku_bacaan",bookId), d); } catch(e){console.error(e); throw e;} }
-​
+
         window.firebaseSaveManualBook = async (bookData) => {
             try {
                 bookData.createdAt = serverTimestamp();
@@ -3697,7 +3697,7 @@ INSTRUKSI:
             } catch (error) { console.error(error); if(window.showToast) window.showToast("Gagal menyimpan buku.", "❌"); }
             finally { const btn=document.getElementById('btnSubmitManual'); btn.innerHTML=`<i data-lucide="save" style="width:18px;"></i> Simpan Buku ke Firebase`; btn.disabled=false; lucide.createIcons(); }
         };
-​
+
         // =====================================================================
         // =====================================================================
         // OPTIMASI LOADING:
@@ -3706,7 +3706,7 @@ INSTRUKSI:
         // 3. Debounce 300ms hanya untuk update selanjutnya (burst protection)
         // 4. Offline cache (IndexedDB) membuat data muncul instan di kunjungan kedua
         // =====================================================================
-​
+
         // Tampilkan skeleton segera agar user tahu sesuatu sedang dimuat
         function showSkeletonLoading() {
             const skeletonCard = (i) => `
@@ -3717,7 +3717,7 @@ INSTRUKSI:
                     <div style="height:13px;background:var(--bg-secondary);border-radius:4px;margin-bottom:6px;width:${70+Math.random()*20|0}%;animation:skeletonPulse 1.4s ease-in-out ${i*0.1}s infinite;"></div>
                     <div style="height:11px;background:var(--bg-secondary);border-radius:4px;width:50%;animation:skeletonPulse 1.4s ease-in-out ${i*0.1+0.2}s infinite;"></div>
                 </div>`;
-​
+
             const featEl = document.getElementById('featuredBookContainer');
             if (featEl && !featEl.innerHTML.trim()) {
                 featEl.innerHTML = `<div style="background:var(--bg-dark);border-radius:20px;padding:28px;display:grid;grid-template-columns:90px 1fr;gap:20px;margin-bottom:32px;animation:skeletonPulse 1.4s ease-in-out infinite;"><div style="width:90px;height:130px;border-radius:8px;background:rgba(255,255,255,0.06);"></div><div style="display:flex;flex-direction:column;gap:12px;justify-content:center;"><div style="height:12px;background:rgba(255,255,255,0.06);border-radius:4px;width:40%;"></div><div style="height:22px;background:rgba(255,255,255,0.06);border-radius:4px;width:80%;"></div><div style="height:11px;background:rgba(255,255,255,0.06);border-radius:4px;width:55%;"></div><div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;width:100%;"></div></div></div>`;
@@ -3731,18 +3731,18 @@ INSTRUKSI:
                 colGridEl.innerHTML = [0,1,2,3,4,5,6,7].map(i => skeletonCard(i)).join('');
             }
         }
-​
+
         // Inject animasi skeleton ke <style>
         const skeletonStyle = document.createElement('style');
         skeletonStyle.textContent = `@keyframes skeletonPulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} }`;
         document.head.appendChild(skeletonStyle);
-​
+
         // Tampilkan skeleton segera jika user sudah pernah login
         if (window.APP_STATE.onboardingComplete) showSkeletonLoading();
-​
+
         let renderDebounceTimer = null;
         let firstRenderDone = false;
-​
+
         const q = query(collection(db, "buku_bacaan"), orderBy("createdAt", "desc"));
         onSnapshot(q, (snapshot) => {
             // First render: TANPA debounce — data dari cache/server langsung tampil
@@ -3766,7 +3766,7 @@ INSTRUKSI:
                 if(window.renderBooks) window.renderBooks(books);
                 return;
             }
-​
+
             // Update selanjutnya: debounce 300ms untuk cegah burst
             clearTimeout(renderDebounceTimer);
             renderDebounceTimer = setTimeout(() => {
@@ -3788,7 +3788,7 @@ INSTRUKSI:
                 if(window.renderBooks) window.renderBooks(books);
             }, 300);
         }, (error) => { console.warn("Gagal membaca Firebase.", error.message); });
-​
+
         const addBookForm  = document.getElementById('addBookForm');
         const btnSubmitBook = document.getElementById('btnSubmitBook');
         addBookForm.addEventListener('submit', async (e) => {
@@ -3836,14 +3836,14 @@ INSTRUKSI:
                     let msg = `Berhasil menyimpan ${savedCount} buku!`;
                     if(skippedTitles.size>0) msg += ` (${skippedTitles.size} buku dilewati karena duplikat)`;
                     if(window.showToast) window.showToast(msg, "✅");
-                    if(window.addNotification && savedCount>0) window.addNotification('Buku Baru Siap! ����', msg, 'Baru saja');
+                    if(window.addNotification && savedCount>0) window.addNotification('Buku Baru Siap!     ', msg, 'Baru saja');
                     window.closeModal('addBookModal'); addBookForm.reset();
                 } catch (error) { if(window.showToast) window.showToast("Gagal memproses. Pastikan format kolom sesuai.", "❌"); }
                 finally { btnSubmitBook.innerHTML=`<i data-lucide="upload-cloud" style="width:18px;"></i> Proses Excel ke Firebase`; btnSubmitBook.disabled=false; lucide.createIcons(); }
             };
             reader.readAsArrayBuffer(file);
         });
-​
+
         window.firebaseDeleteBook = async (bookId) => {
             try { await deleteDoc(doc(db,"buku_bacaan",bookId)); if(window.showToast) window.showToast("Buku berhasil dihapus dari server!", "🗑️"); }
             catch (error) { if(window.showToast) window.showToast("Terjadi kesalahan saat menghapus.", "❌"); }
