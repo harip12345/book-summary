@@ -687,8 +687,8 @@
         .bottom-bar-ai:hover { transform: translateY(-3px) scale(1.07); box-shadow: 0 11px 24px rgba(59,130,246,0.5); }
         .bottom-bar-ai:active { transform: scale(0.91); }
         /* audio dead-center via two equal flex groups */
-        .reader-bottom-bar { width: min(440px, 94vw); justify-content: space-between; }
-        .bb-group { display: flex; align-items: center; gap: 4px; flex: 1 1 0; min-width: 0; }
+        .reader-bottom-bar { width: auto; max-width: 92vw; justify-content: center; gap: 6px; }
+        .bb-group { display: flex; align-items: center; gap: 2px; flex: 0 0 auto; min-width: 0; }
         .bb-left { justify-content: flex-start; }
         .bb-right { justify-content: flex-end; }
         /* floating AI chat button (reader only), same style as add-book FAB */
@@ -1472,7 +1472,6 @@
             </div>
             <button class="bottom-bar-audio" id="btnTTS" onclick="ttsToggle()" title="Dengarkan (Audiobook)"><i data-lucide="headphones"></i></button>
             <div class="bb-group bb-right">
-                <button class="bottom-bar-btn" onclick="toggleSettings()" title="Pengaturan Teks"><i data-lucide="a-large-small"></i></button>
                 <button class="bottom-bar-btn" id="btnHighlight" onclick="toggleHighlightMode()" title="Sorot Paragraf (Highlight)"><i data-lucide="highlighter"></i></button>
                 <button class="bottom-bar-btn" id="btnPin" onclick="togglePinMode()" title="Tandai Paragraf (Pin)"><i data-lucide="pin"></i></button>
             </div>
@@ -1494,10 +1493,6 @@
                         </div>
                     </div>
                     <div style="display:flex;align-items:center;gap:8px;">
-                        <div class="ai-provider-toggle">
-                            <button class="ai-provider-btn active" id="providerGroq" onclick="setAIProvider('groq',this)">Groq</button>
-                            <button class="ai-provider-btn" id="providerOpenRouter" onclick="setAIProvider('openrouter',this)">OpenRouter</button>
-                        </div>
                         <button class="ai-chat-close" onclick="closeAIChat()"><i data-lucide="x" style="width:14px;"></i></button>
                     </div>
                 </div>
