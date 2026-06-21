@@ -1100,15 +1100,13 @@
                 <i data-lucide="mic" style="color:var(--accent);width:22px;height:22px;"></i>
                 <div class="modal-title" style="color:#fff;margin-bottom:0;">Pengaturan Suara Narasi</div>
             </div>
-            <div class="modal-subtitle" style="color:var(--text-light-muted);margin-bottom:20px;">Pilih karakter suara untuk narasi audiobook. Suara premium aktif otomatis bila tersedia; jika tidak, dipakai suara browser (gratis, tanpa limit).</div>
+            <div class="modal-subtitle" style="color:var(--text-light-muted);margin-bottom:20px;">Pilih bahasa suara untuk narasi audiobook. Suara online gratis aktif otomatis; jika tidak tersedia, dipakai suara browser.</div>
 
             <div class="form-group" style="margin-bottom:20px;">
-                <label class="form-label" style="color:var(--text-light-muted);">Pilih Suara ElevenLabs</label>
+                <label class="form-label" style="color:var(--text-light-muted);">Bahasa Suara</label>
                 <select class="form-input" id="elVoiceSelect" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:#fff;">
-                    <option value="pFZP5JQG7iQjIQuC4Bku">Lilly (perempuan, natural)</option>
-                    <option value="onwK4e9ZLuTAKqWW03F9">Daniel (laki-laki, tegas)</option>
-                    <option value="XB0fDUnXU5powFXDhCwa">Charlotte (perempuan, hangat)</option>
-                    <option value="N2lVS1w4EtoT3dr4eOWO">Callum (laki-laki, santai)</option>
+                    <option value="id">Bahasa Indonesia</option>
+                    <option value="en">English</option>
                 </select>
             </div>
 
@@ -1116,7 +1114,7 @@
                 <i data-lucide="save" style="width:16px;"></i> Simpan Pengaturan
             </button>
             <div style="font-size:11px;color:rgba(160,152,136,0.5);text-align:center;margin-top:10px;line-height:1.6;">
-                Suara premium dikonfigurasi otomatis di server.<br>
+                Suara online gratis, tanpa API key & tanpa kartu kredit.<br>
                 Jika tidak tersedia → otomatis memakai suara browser.
             </div>
         </div>
@@ -3066,12 +3064,10 @@ INSTRUKSI:
                 const st = e && e.status;
                 try { console.warn('[Folio TTS] gagal:', st, (e && (e.detail || e.message)) || e); } catch(_) {}
                 const reason = st === 429
-                    ? 'Quota suara premium habis'
-                    : st === 401
-                    ? 'Suara premium ditolak ElevenLabs (cek plan/aktivitas akun)'
-                    : (st === 503 || st === 500)
-                    ? 'Suara premium belum dikonfigurasi di server'
-                    : 'Suara premium tidak tersedia';
+                    ? 'Batas suara online tercapai, coba lagi nanti'
+                    : (st === 503 || st === 500 || st === 502)
+                    ? 'Layanan suara online sedang bermasalah'
+                    : 'Suara online tidak tersedia';
                 window.showToast(`${reason} — beralih ke suara browser`, '⚠️');
                 tts.elProvider = 'webspeech';
                 ttsUpdateProviderBadge();
@@ -3170,7 +3166,7 @@ INSTRUKSI:
             const btn = document.getElementById('ttsProviderBadge');
             if (!btn) return;
             if (tts.elProvider === 'elevenlabs') {
-                btn.textContent = 'ElevenLabs';
+                btn.textContent = 'Online';
                 btn.style.color = '#A78BFA';
                 btn.style.borderColor = 'rgba(167,139,250,0.3)';
                 btn.style.background  = 'rgba(167,139,250,0.1)';
