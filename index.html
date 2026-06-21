@@ -1084,7 +1084,7 @@
                             <button class="social-btn" onclick="socialLogin('Google')">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="16px" height="16px"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Google
                             </button>
-                            <button class="social-btn" onclick="socialLogin('Apple')"><i data-lucide="smartphone" style="width:16px;"></i> Apple</button>
+                            <button class="social-btn" onclick="socialLogin('Apple')"><i data-lucide="apple" style="width:16px;"></i> Apple</button>
                         </div>
                     </div>
                     <div class="onboarding-slide" data-slide="2">
@@ -3250,7 +3250,7 @@ INSTRUKSI:
 
     <!-- ===== FIREBASE INTEGRATION ===== -->
     <script type="module">
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, OAuthProvider, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
@@ -3294,16 +3294,34 @@ INSTRUKSI:
         const db = getFirestore(app);
         const auth = getAuth(app);
         const googleProvider = new GoogleAuthProvider();
+        googleProvider.setCustomParameters({ prompt: 'select_account' });
+        const appleProvider = new OAuthProvider('apple.com');
+        appleProvider.addScope('email');
+        appleProvider.addScope('name');
 
+        // Routing setelah login sosial berhasil (dipakai oleh popup & redirect).
+        window.handlePostLogin = (providerName) => {
+            window.showToast("Berhasil masuk dengan " + (providerName || 'akun') + "!", "✅");
+            if (!window.APP_STATE.onboardingComplete) {
+                window.showScreen('onboarding');
+                setTimeout(() => window.goToSlide(2), 300);
+            } else {
+                window.switchMainTab('library');
+            }
+        };
+
+        // Tangani hasil redirect (fallback bila popup diblokir).
         getRedirectResult(auth).then((result) => {
             if (result && result.user) {
-                window.showToast("Berhasil masuk dengan Google!", "✅");
-                if (!window.APP_STATE.onboardingComplete) { window.showScreen('onboarding'); setTimeout(() => window.goToSlide(2), 300); }
-                else { window.switchMainTab('library'); }
+                const pendingProvider = sessionStorage.getItem('folio-pending-provider') || 'akun';
+                sessionStorage.removeItem('folio-pending-provider');
+                window.handlePostLogin(pendingProvider);
             }
         }).catch((error) => {
+            sessionStorage.removeItem('folio-pending-provider');
             console.error("Redirect Error:", error);
-            if(error.code !== 'auth/redirect-cancelled-by-user') window.showToast("Gagal login dengan Google.", "❌");
+            if (error.code === 'auth/unauthorized-domain') window.showToast("Domain belum diizinkan di Firebase (Authorized domains).", "⚠️");
+            else if (error.code !== 'auth/redirect-cancelled-by-user') window.showToast("Gagal login. Coba lagi.", "❌");
         });
 
         // =====================================================================
@@ -3334,23 +3352,40 @@ INSTRUKSI:
             }
         });
 
-        window.socialLogin = async (provider) => {
-            if(provider==='Google') {
-                try {
-                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-                    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-                    if (isIOS || isSafari) { await signInWithRedirect(auth, googleProvider); }
-                    else {
-                        await signInWithPopup(auth, googleProvider);
-                        window.showToast("Berhasil masuk dengan Google!", "✅");
-                        if (!window.APP_STATE.onboardingComplete) window.goToSlide(2);
-                        else window.switchMainTab('library');
+        window.socialLogin = async (providerName) => {
+            let provider;
+            if (providerName === 'Google') provider = googleProvider;
+            else if (providerName === 'Apple') provider = appleProvider;
+            else { window.showToast(providerName + " login belum tersedia.", "⚠️"); return; }
+
+            try {
+                // Popup lebih andal di mobile modern: tetap dalam konteks yang sama,
+                // tidak terganggu storage-partitioning (ITP) Safari/Chrome seperti redirect.
+                await signInWithPopup(auth, provider);
+                window.handlePostLogin(providerName);
+            } catch (error) {
+                const fallbackCodes = ['auth/popup-blocked', 'auth/popup-closed-by-user', 'auth/cancelled-popup-request', 'auth/operation-not-supported-in-this-environment'];
+                if (fallbackCodes.includes(error.code)) {
+                    // Popup gagal/diblokir -> coba redirect sebagai cadangan.
+                    try {
+                        sessionStorage.setItem('folio-pending-provider', providerName);
+                        await signInWithRedirect(auth, provider);
+                    } catch (e2) {
+                        sessionStorage.removeItem('folio-pending-provider');
+                        console.error(e2);
+                        window.showToast("Gagal login dengan " + providerName + ".", "❌");
                     }
-                } catch(error) {
-                    if (error.code==='auth/popup-blocked' || error.code==='auth/popup-closed-by-user') { await signInWithRedirect(auth, googleProvider); }
-                    else { console.error(error); window.showToast("Login dibatalkan atau gagal.", "❌"); }
+                } else if (error.code === 'auth/account-exists-with-different-credential') {
+                    window.showToast("Email ini sudah terdaftar dengan metode login lain.", "⚠️");
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    window.showToast("Domain belum diizinkan di Firebase (Authorized domains).", "⚠️");
+                } else if (error.code === 'auth/operation-not-allowed') {
+                    window.showToast("Provider " + providerName + " belum diaktifkan di Firebase Console.", "⚠️");
+                } else {
+                    console.error(error);
+                    window.showToast("Login dibatalkan atau gagal.", "❌");
                 }
-            } else { window.showToast(provider+" login belum tersedia.", "⚠️"); }
+            }
         };
 
         window.firebaseResetPassword = async (email) => {
