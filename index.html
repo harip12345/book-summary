@@ -596,7 +596,7 @@
 
         .tts-bar {
             position: fixed;
-            bottom: calc(78px + env(safe-area-inset-bottom));
+            bottom: calc(118px + env(safe-area-inset-bottom));
             left: 50%; transform: translateX(-50%);
             background: rgba(26,24,20,0.95);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -691,11 +691,13 @@
         .bb-left { justify-content: flex-start; }
         .bb-right { justify-content: flex-end; }
         /* floating AI chat button (reader only), same style as add-book FAB */
-        .fab-ai { position: fixed; right: 20px; bottom: calc(96px + env(safe-area-inset-bottom)); width: 58px; height: 58px; border-radius: 50%; border: none; background: linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; display: none; align-items:center; justify-content:center; cursor:pointer; z-index: 95; box-shadow: 0 12px 30px rgba(59,130,246,0.45); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, opacity 0.3s ease; }
+        .fab-ai { position: fixed; right: 20px; bottom: calc(96px + env(safe-area-inset-bottom)); width: 58px; height: 58px; border-radius: 50%; border: none; background: linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; display: none; align-items:center; justify-content:center; cursor:pointer; z-index: 95; box-shadow: 0 12px 30px rgba(59,130,246,0.45); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, opacity 0.3s ease, bottom 0.4s cubic-bezier(0.34,1.56,0.64,1); }
         .fab-ai svg { width: 26px; height: 26px; stroke-width: 2.4px; }
         .fab-ai:hover { transform: translateY(-3px) scale(1.06); box-shadow: 0 16px 38px rgba(59,130,246,0.55); }
         .fab-ai:active { transform: scale(0.9); }
         body.reader-immersive .fab-ai { transform: translateY(120%); opacity: 0; pointer-events: none; }
+        /* lift AI FAB above the audio bar while narration is active */
+        body.tts-bar-open .fab-ai { bottom: calc(184px + env(safe-area-inset-bottom)); }
         /* ===================== END WEB SPEECH TTS ===================== */
         /* ===== Home: streak + statistik mingguan ===== */
         .home-streak { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#3B82F6,#8B5CF6); border-radius:var(--radius-xl); padding:16px 18px; margin-bottom:16px; color:#fff; box-shadow:0 10px 30px rgba(59,130,246,0.28); }
@@ -1097,13 +1099,7 @@
                 <i data-lucide="mic" style="color:var(--accent);width:22px;height:22px;"></i>
                 <div class="modal-title" style="color:#fff;margin-bottom:0;">Pengaturan Suara Narasi</div>
             </div>
-            <div class="modal-subtitle" style="color:var(--text-light-muted);margin-bottom:20px;">ElevenLabs menghasilkan suara lebih natural. Jika kosong, otomatis pakai suara browser (gratis, tanpa limit).</div>
-
-            <div class="form-group" style="margin-bottom:8px;">
-                <label class="form-label" style="color:var(--accent-light);">ElevenLabs API Key (Opsional)</label>
-                <input type="password" class="form-input" id="elApiKeyInput" placeholder="sk_..." style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:#fff;">
-                <div style="font-size:11px;color:rgba(160,152,136,0.6);margin-top:5px;">Kosongkan untuk pakai suara browser (gratis, tanpa limit)</div>
-            </div>
+            <div class="modal-subtitle" style="color:var(--text-light-muted);margin-bottom:20px;">Pilih karakter suara untuk narasi audiobook. Suara premium aktif otomatis bila tersedia; jika tidak, dipakai suara browser (gratis, tanpa limit).</div>
 
             <div class="form-group" style="margin-bottom:20px;">
                 <label class="form-label" style="color:var(--text-light-muted);">Pilih Suara ElevenLabs</label>
@@ -1118,12 +1114,9 @@
             <button class="btn-primary" onclick="elSaveSettings()" style="margin-bottom:10px;">
                 <i data-lucide="save" style="width:16px;"></i> Simpan Pengaturan
             </button>
-            <button class="ai-generate-btn" onclick="window.open('https://elevenlabs.io/app/settings/api-keys','_blank')" style="width:100%;">
-                <i data-lucide="external-link" style="width:14px;"></i> Dapatkan API Key ElevenLabs Gratis ↗
-            </button>
             <div style="font-size:11px;color:rgba(160,152,136,0.5);text-align:center;margin-top:10px;line-height:1.6;">
-                Free tier: 10.000 karakter/bulan · Model: eleven_multilingual_v2<br>
-                Jika quota habis → otomatis beralih ke suara browser
+                Suara premium dikonfigurasi otomatis di server.<br>
+                Jika tidak tersedia → otomatis memakai suara browser.
             </div>
         </div>
     </div>
@@ -1608,6 +1601,7 @@
         </div>
     </div>
 
+    <script src="js/audio.js"></script>
     <script>
         // ===== GLOBAL STATE =====
         let currentBooksToDisplay = [];
@@ -2947,9 +2941,18 @@ INSTRUKSI:
                 tts.wsVoice = ttsFindWSVoice();
                 window.speechSynthesis.onvoiceschanged = () => { tts.wsVoice = ttsFindWSVoice(); };
             }
-            // Jika ada ElevenLabs key, pakai ElevenLabs
-            tts.elProvider = elGetKey() ? 'elevenlabs' : 'webspeech';
+            // Suara premium (ElevenLabs) dikonfigurasi di server (env var) — tanpa UI key.
+            tts.elProvider = 'elevenlabs'; // optimistis; dikonfirmasi via health check
             ttsUpdateProviderBadge();
+            if (typeof window.folioAudioHealth === 'function') {
+                window.folioAudioHealth().then(function(ok) {
+                    tts.elProvider = ok ? 'elevenlabs' : 'webspeech';
+                    ttsUpdateProviderBadge();
+                });
+            } else {
+                tts.elProvider = 'webspeech';
+                ttsUpdateProviderBadge();
+            }
         }
 
         function ttsFindWSVoice() {
@@ -3015,57 +3018,20 @@ INSTRUKSI:
             ttsScrollTo(tts.paraIdx);
             ttsShowBar();
 
-            if (tts.elProvider === 'elevenlabs' && elGetKey()) {
+            if (tts.elProvider === 'elevenlabs') {
                 await ttsPlayElevenLabs(para.text);
             } else {
                 ttsPlayWebSpeech(para.text);
             }
         }
 
-        // ── ElevenLabs TTS ──
+        // ── ElevenLabs TTS (via serverless proxy /api/tts — key di server) ──
         async function ttsPlayElevenLabs(text) {
             tts.elAborting = false;
 
-            // Potong teks maks 500 karakter per paragraf agar hemat quota
-            const chunk = text.length > 500 ? text.substring(0, 500) + '...' : text;
-
             try {
                 ttsSetStatus('Memuat suara...');
-                const res = await fetch(`${EL_ENDPOINT}/${elGetVoiceId()}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type':  'application/json',
-                        'xi-api-key':    elGetKey(),
-                        'Accept':        'audio/mpeg',
-                    },
-                    body: JSON.stringify({
-                        text:           chunk,
-                        model_id:       'eleven_multilingual_v2',
-                        voice_settings: { stability: 0.5, similarity_boost: 0.75 },
-                    }),
-                });
-
-                if (tts.elAborting) return;
-
-                if (!res.ok) {
-                    const err = await res.json().catch(() => ({}));
-                    // 401 = key salah, 429 = quota habis → fallback ke Web Speech
-                    if (res.status === 401 || res.status === 429 || res.status === 422) {
-                        const reason = res.status === 429
-                            ? 'Quota ElevenLabs habis'
-                            : res.status === 401
-                            ? 'API key ElevenLabs tidak valid'
-                            : 'ElevenLabs error';
-                        window.showToast(`${reason} — beralih ke suara browser`, '⚠️');
-                        tts.elProvider = 'webspeech';
-                        ttsUpdateProviderBadge();
-                        ttsPlayWebSpeech(tts.paragraphs[tts.paraIdx]?.text || '');
-                        return;
-                    }
-                    throw new Error(err?.detail?.message || `ElevenLabs error ${res.status}`);
-                }
-
-                const blob = await res.blob();
+                const blob = await window.folioSynthesizeSpeech(text, { voiceId: elGetVoiceId() });
                 if (tts.elAborting) return;
 
                 const url = URL.createObjectURL(blob);
@@ -3096,7 +3062,12 @@ INSTRUKSI:
 
             } catch(e) {
                 if (tts.elAborting) return;
-                window.showToast('ElevenLabs gagal — beralih ke suara browser', '⚠️');
+                const reason = e && e.status === 429
+                    ? 'Quota suara premium habis'
+                    : (e && (e.status === 503 || e.status === 500))
+                    ? 'Suara premium belum dikonfigurasi'
+                    : 'Suara premium tidak tersedia';
+                window.showToast(`${reason} — beralih ke suara browser`, '⚠️');
                 tts.elProvider = 'webspeech';
                 ttsUpdateProviderBadge();
                 ttsPlayWebSpeech(tts.paragraphs[tts.paraIdx]?.text || '');
@@ -3229,8 +3200,8 @@ INSTRUKSI:
             if (paraInfo) paraInfo.textContent = `Paragraf ${current} dari ${total}`;
         }
 
-        function ttsShowBar() { document.getElementById('ttsBar')?.classList.add('show'); ttsUpdateUI(); }
-        function ttsHideBar() { document.getElementById('ttsBar')?.classList.remove('show'); }
+        function ttsShowBar() { document.getElementById('ttsBar')?.classList.add('show'); document.body.classList.add('tts-bar-open'); ttsUpdateUI(); }
+        function ttsHideBar() { document.getElementById('ttsBar')?.classList.remove('show'); document.body.classList.remove('tts-bar-open'); }
 
         window.ttsStopIfActive = function() {
             if (tts.isPlaying || tts.isPaused) ttsStop();
@@ -3238,27 +3209,16 @@ INSTRUKSI:
 
         // ── Settings ElevenLabs — simpan/ambil key & voice ──
         window.elSaveSettings = function() {
-            const key     = document.getElementById('elApiKeyInput')?.value.trim();
             const voiceId = document.getElementById('elVoiceSelect')?.value;
-            if (key) {
-                localStorage.setItem(EL_KEY_STORAGE, key);
-                tts.elProvider = 'elevenlabs';
-            } else {
-                localStorage.removeItem(EL_KEY_STORAGE);
-                tts.elProvider = 'webspeech';
-            }
             if (voiceId) localStorage.setItem(EL_VOICE_STORAGE, voiceId);
             ttsUpdateProviderBadge();
             window.closeModal('ttsSettingsModal');
-            window.showToast(key ? 'ElevenLabs aktif!' : 'Beralih ke suara browser', '✅');
+            window.showToast('Suara narasi disimpan', '✅');
         }
 
         window.openTTSSettings = function() {
-            const keyInput    = document.getElementById('elApiKeyInput');
-            const voiceSel    = document.getElementById('elVoiceSelect');
-            const currentKey  = elGetKey();
-            if (keyInput)  keyInput.value = currentKey;
-            if (voiceSel)  voiceSel.value = elGetVoiceId();
+            const voiceSel = document.getElementById('elVoiceSelect');
+            if (voiceSel) voiceSel.value = elGetVoiceId();
             window.openModal('ttsSettingsModal');
         }
 
