@@ -5,7 +5,7 @@
 // If the proxy is unavailable, the app falls back to the free browser voice.
 (function () {
 	'use strict';
-
+​
 	var CONFIG = {
 		endpoint: '/api/tts',
 		modelId: 'eleven_multilingual_v2',
@@ -19,7 +19,7 @@
 		],
 	};
 	window.FOLIO_AUDIO_CONFIG = CONFIG;
-
+​
 	// Health check: is the premium voice configured on the server?
 	// Returns a Promise<boolean>. Uses no TTS quota.
 	window.folioAudioHealth = function () {
@@ -28,7 +28,7 @@
 			.then(function (j) { return !!(j && j.enabled); })
 			.catch(function () { return false; });
 	};
-
+​
 	// Synthesize speech for a piece of text.
 	// Returns a Promise<Blob> (audio/mpeg). Throws an Error with a `.status`
 	// property on failure so the caller can decide whether to fall back.
@@ -37,7 +37,7 @@
 		var voiceId = opts.voiceId || CONFIG.defaultVoiceId;
 		var src = (text || '').toString();
 		var chunk = src.length > CONFIG.maxChars ? src.slice(0, CONFIG.maxChars) + '...' : src;
-
+​
 		return fetch(CONFIG.endpoint, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
@@ -47,6 +47,8 @@
 				return res.json().catch(function () { return {}; }).then(function (j) {
 					var err = new Error((j && j.error) || ('TTS error ' + res.status));
 					err.status = res.status;
+					err.detail = j && (j.detail || j.error);
+					try { console.warn('[Folio Audio] /api/tts gagal', res.status, err.detail); } catch (e) {}
 					throw err;
 				});
 			}
