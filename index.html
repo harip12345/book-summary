@@ -1859,7 +1859,7 @@
             updateProfileDisplay();
             updateReadingGoalDisplay();
             ttsInit(); // Web Speech TTS
-            if (window.APP_STATE.onboardingComplete) { switchMainTab('library'); }
+            if (window.APP_STATE.onboardingComplete) { if (window.routerInitialNavigate) window.routerInitialNavigate(); else switchMainTab('library'); }
             else { showScreen('onboarding'); resetOnboardingSlides(); }
             if (window.APP_STATE.onboardingComplete) initReader();
             startReadingTimer();
@@ -2006,7 +2006,7 @@
         }
 
         function switchScreen(name) { showScreen(name); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        window.switchMainTab = function(tabName) { showScreen(tabName); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        window.switchMainTab = function(tabName) { showScreen(tabName); window.scrollTo({ top: 0, behavior: 'smooth' }); if (window.routerWriteTab) window.routerWriteTab(tabName); }
 
         window.showToast = function(message, iconCode = 'book-open') {
             const toast = document.getElementById('toast');
@@ -2266,6 +2266,7 @@
             applyReaderFontSize(window.APP_STATE.readerFontSize);
             switchScreen('insights');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (window.routerWrite && activeBook) window.routerWrite('#/insights/' + encodeURIComponent(activeBook.id));
         }
         function regenQuote() { currentQuoteIdx = (currentQuoteIdx+1) % aiQuotes.length; document.getElementById('aiQuoteText').textContent = '"' + aiQuotes[currentQuoteIdx].text + '"'; }
 
@@ -2389,6 +2390,7 @@
         window.goBackFromReader = function() {
             showScreen(previousScreenInfo.name);
             setTimeout(() => window.scrollTo({ top: previousScreenInfo.scrollY, behavior: 'auto' }), 30);
+            if (window.routerWriteTab) window.routerWriteTab(previousScreenInfo.name);
         }
 
         function renderChapter() {
@@ -2890,11 +2892,91 @@ INSTRUKSI:
         window.openReader = function(bookId) {
             if (activeBook?.id !== bookId) aiChatHistory = [];
             _origOpenReader(bookId);
+            if (window.routerWriteBook) window.routerWriteBook(bookId);
         }
 
         // Tutup chat saat keluar dari reader
         const _origShowScreen = window.showScreen || function(){};
         // (ditangani di patch showScreen di bawah via event)
+
+        // ===================================================================
+        // HASH ROUTER - URL bisa dibagikan, tombol Back browser, refresh persist
+        // Format: #/<kategori>/<idBuku> (mis. #/Test/12345); juga #/home #/library #/profile
+        // ===================================================================
+        let routerBooksReady = false;
+        const ROUTER_TAB_BY_SCREEN = { library: 'home', collection: 'library', profile: 'profile' };
+        const ROUTER_SCREEN_BY_TAB = { home: 'library', library: 'collection', profile: 'profile' };
+
+        function routerSlug(s) {
+            const v = String(s == null ? 'buku' : s).trim().replace(/\s+/g, '-');
+            return encodeURIComponent(v || 'buku');
+        }
+        function routerWrite(hash) {
+            if (location.hash !== hash) location.hash = hash;
+        }
+        window.routerWrite = routerWrite;
+        window.routerWriteTab = function(screenName) {
+            const tok = ROUTER_TAB_BY_SCREEN[screenName];
+            if (tok) routerWrite('#/' + tok);
+        };
+        window.routerWriteBook = function(bookId) {
+            const b = (currentBooksToDisplay || []).find(function(x){ return x.id === bookId; });
+            const cat = b ? routerSlug(b.category) : 'buku';
+            routerWrite('#/' + cat + '/' + encodeURIComponent(bookId));
+        };
+
+        function routerApply() {
+            if (!window.APP_STATE || !window.APP_STATE.onboardingComplete) return;
+            const raw = (location.hash || '').replace(/^#\/?/, '');
+            const seg = raw.split('/').filter(Boolean).map(function(s){ try { return decodeURIComponent(s); } catch(_) { return s; } });
+
+            if (seg.length === 0) {
+                if (activeScreenName !== 'library') { showScreen('library'); window.scrollTo({ top: 0 }); }
+                return;
+            }
+            const first = (seg[0] || '').toLowerCase();
+
+            if (seg.length === 1 && ROUTER_SCREEN_BY_TAB[first]) {
+                const target = ROUTER_SCREEN_BY_TAB[first];
+                if (activeScreenName !== target) { showScreen(target); window.scrollTo({ top: 0 }); }
+                return;
+            }
+
+            if (first === 'insights' && seg[1]) {
+                if (!routerBooksReady) return;
+                const bi = (currentBooksToDisplay || []).find(function(x){ return x.id === seg[1]; });
+                if (bi) { activeBook = bi; if (window.openInsights) window.openInsights(); }
+                return;
+            }
+
+            const bookId = seg.length >= 2 ? seg[seg.length - 1] : seg[0];
+            if (!routerBooksReady) return; // tunggu data buku; routerOnBooksReady akan memanggil lagi
+            const book = (currentBooksToDisplay || []).find(function(x){ return x.id === bookId; });
+            if (book) {
+                if (!(activeScreenName === 'reader' && activeBook && activeBook.id === bookId)) {
+                    if (window.openReader) window.openReader(bookId);
+                }
+            } else {
+                if (activeScreenName !== 'library') { showScreen('library'); }
+                if (window.showToast) window.showToast('Buku untuk tautan ini tidak ditemukan', 'alert-triangle');
+            }
+        }
+        window.routerApply = routerApply;
+
+        window.routerInitialNavigate = function() {
+            const raw = (location.hash || '').replace(/^#\/?/, '');
+            const seg = raw.split('/').filter(Boolean);
+            if (seg.length === 0) { showScreen('library'); window.scrollTo({ top: 0 }); return; }
+            showScreen('library'); // dasar tampilan; route buku menyusul saat data siap
+            routerApply();
+        };
+
+        window.routerOnBooksReady = function() {
+            routerBooksReady = true;
+            routerApply();
+        };
+
+        window.addEventListener('hashchange', routerApply);
 
 
         // =====================================================================
@@ -3550,7 +3632,7 @@ INSTRUKSI:
                 window.showScreen('onboarding');
                 setTimeout(() => window.goToSlide(2), 300);
             } else {
-                window.switchMainTab('library');
+                if (window.routerInitialNavigate) window.routerInitialNavigate(); else window.switchMainTab('library');
             }
         };
 
@@ -3794,6 +3876,7 @@ INSTRUKSI:
                 });
                 if(window.updateDynamicFilters) window.updateDynamicFilters(books);
                 if(window.renderBooks) window.renderBooks(books);
+                if(window.routerOnBooksReady) window.routerOnBooksReady();
                 return;
             }
 
