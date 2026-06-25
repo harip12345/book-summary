@@ -1353,11 +1353,10 @@
         .chart-sort-toggle{display:inline-flex;background:var(--bg-secondary);border-radius:10px;padding:3px;gap:2px;}
         .chart-sort-btn{border:none;background:transparent;color:var(--text-secondary);font-size:13px;font-weight:600;padding:7px 16px;border-radius:8px;cursor:pointer;}
         .chart-sort-btn.active{background:var(--bg-card);color:var(--accent-dark);box-shadow:var(--shadow-sm);}
-        .chart-month-row{margin-top:10px;display:flex;align-items:center;gap:8px;}
+        .chart-month-row{margin-top:10px;margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
         .chart-month-label{font-size:12px;color:var(--text-secondary);font-weight:600;display:flex;align-items:center;gap:5px;white-space:nowrap;}
-        .chart-month-select{flex:1;max-width:220px;border:1px solid rgba(99,102,241,0.28);background:var(--bg-card);color:var(--text-primary);font-size:13px;font-weight:600;padding:8px 12px;border-radius:10px;cursor:pointer;outline:none;}
+        .chart-month-select{flex:0 0 auto;width:auto;border:1px solid rgba(99,102,241,0.28);background:var(--bg-card);color:var(--text-primary);font-size:13px;font-weight:600;padding:8px 10px;border-radius:10px;cursor:pointer;outline:none;}
         .chart-month-select:focus{border-color:var(--accent);}
-        .chart-region-row{margin-top:10px;display:flex;align-items:center;gap:8px;}
         .chart-region-toggle{display:inline-flex;background:var(--bg-secondary);border-radius:10px;padding:3px;gap:2px;}
         .chart-region-btn{border:none;background:transparent;color:var(--text-secondary);font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;}
         .chart-region-btn.active{background:var(--bg-card);color:var(--accent-dark);box-shadow:var(--shadow-sm);}
@@ -1464,9 +1463,7 @@
                 <div class="chart-month-row" id="chartMonthRow" style="display:none;">
                     <span class="chart-month-label"><i data-lucide="calendar" style="width:14px;"></i> Bulan</span>
                     <select class="chart-month-select" id="chartMonthSelect" onchange="window.chartSetMonth && window.chartSetMonth(this.value)"></select>
-                </div>
-                <div class="chart-region-row" id="chartRegionRow" style="display:none;">
-                    <span class="chart-month-label"><i data-lucide="globe" style="width:14px;"></i> Wilayah</span>
+                    <span class="chart-month-label" style="margin-left:8px;"><i data-lucide="globe" style="width:14px;"></i> Wilayah</span>
                     <div class="chart-region-toggle">
                         <button class="chart-region-btn active" data-region="id" onclick="window.chartSetRegion('id', this)">Indonesia</button>
                         <button class="chart-region-btn" data-region="intl" onclick="window.chartSetRegion('intl', this)">Internasional</button>
@@ -3140,6 +3137,8 @@ INSTRUKSI:
         // CHART BOOK - daftar buku via Google Books API + Pilihan Editor (admin)
         // ===================================================================
         const CHART_PUBLISHERS = ['Semua', 'Gramedia', 'Mizan', 'Bentang', 'Republika', 'Elex Media', 'Erlangga', 'Noura', 'Bhuana Ilmu Populer', 'GagasMedia'];
+        const CHART_SRC_ID = ['gramedia.com', 'gpu.id', 'mizanstore.com', 'bentangpustaka.com', 'republikapenerbit.com', 'bukukita.com', 'periplus.com', 'goodreads.com'];
+        const CHART_SRC_INTL = ['nytimes.com', 'publishersweekly.com', 'goodreads.com', 'amazon.com', 'waterstones.com', 'usatoday.com'];
         let chartState = { publisher: 'Semua', sort: 'newest', term: '', month: '', region: 'id', loaded: false, _bsCache: {} };
 
         function chartEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
@@ -3165,8 +3164,6 @@ INSTRUKSI:
             if (el) el.classList.add('active');
             const mr = document.getElementById('chartMonthRow');
             if (mr) mr.style.display = (s === 'bestseller') ? 'flex' : 'none';
-            const rr = document.getElementById('chartRegionRow');
-            if (rr) rr.style.display = (s === 'bestseller') ? 'flex' : 'none';
             chartLoad();
         };
         window.chartSetRegion = function(r, el) {
@@ -3236,13 +3233,15 @@ INSTRUKSI:
             chartState.month = val;
             chartLoad();
         };
-        async function chartWebSearch(query) {
+        async function chartWebSearch(query, includeDomains) {
             if (!FOLIO_API_URL) return null;
             try {
+                const payload = { query: query, max_results: 12 };
+                if (includeDomains && includeDomains.length) payload.include_domains = includeDomains;
                 const res = await fetch(`${FOLIO_API_URL}/api/web-search`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: query, max_results: 8 })
+                    body: JSON.stringify(payload)
                 });
                 if (!res.ok) return null;
                 const data = await res.json();
@@ -3429,10 +3428,12 @@ INSTRUKSI:
                 : ((pub === 'Semua')
                     ? ('daftar buku best seller terlaris di Indonesia bulan ' + monthLabel + ' Gramedia Mizan Bentang toko buku')
                     : ('buku best seller terlaris penerbit ' + pub + ' ' + monthLabel + ' Indonesia'));
+            const srcDomains = isIntl ? CHART_SRC_INTL : CHART_SRC_ID;
+            const srcLabel = srcDomains.join(', ');
             let webContext = '';
             let usedWeb = false;
             try {
-                const ws = await chartWebSearch(wsQuery);
+                const ws = await chartWebSearch(wsQuery, srcDomains);
                 if (ws && (ws.answer || (ws.results && ws.results.length))) {
                     usedWeb = true;
                     if (ws.answer) webContext += 'Ringkasan: ' + ws.answer + '\n\n';
@@ -3443,12 +3444,12 @@ INSTRUKSI:
             } catch (e) { usedWeb = false; }
             const exclude = chartState._items.map(function(b) { return b.title; }).filter(Boolean);
             const excludeTxt = exclude.length ? ('\nJANGAN ulangi judul berikut yang sudah terdaftar: ' + exclude.join('; ') + '.') : '';
-            const sys = 'Kamu adalah kurator buku berpengalaman. Jawab HANYA dengan JSON array valid, tanpa teks pembuka, tanpa penutup, tanpa markdown atau pagar kode. Setiap elemen objek: {"title":"judul nyata","author":"nama penulis","publisher":"penerbit","genre":"genre buku misal Novel, Bisnis, Psikologi"}.';
+            const sys = 'Kamu adalah kurator buku yang sangat teliti dan akurat. Susun daftar best seller NYATA hanya berdasarkan sumber web resmi yang diberikan. DILARANG mengarang judul atau penulis; jika sebuah judul tidak didukung sumber, jangan masukkan. Pertahankan urutan peringkat sesuai sumber. Jawab HANYA dengan JSON array valid, tanpa teks pembuka, tanpa penutup, tanpa markdown atau pagar kode. Setiap elemen objek: {"title":"judul persis dari sumber","author":"nama penulis","publisher":"penerbit","genre":"genre buku misal Novel, Bisnis, Psikologi","source":"domain sumber"}.';
             let user;
             if (usedWeb) {
-                user = 'Bulan target: ' + monthLabel + '. Berikut hasil pencarian web terkait buku best seller:\n\n' + webContext + '\nDari informasi web di atas, susun buku best seller peringkat ' + startRank + ' sampai ' + endRank + ' (tepat 20 buku) untuk ' + scope + ' pada ' + monthLabel + '. Utamakan judul dan penulis nyata dari hasil web. Jika kurang, lengkapi dengan buku populer yang masuk akal.' + excludeTxt + ' Jawab HANYA JSON array.';
+                user = 'Sumber web resmi (' + srcLabel + ') untuk best seller ' + (isIntl ? 'internasional' : 'Indonesia') + ' periode ' + monthLabel + ':\n\n' + webContext + '\nDari sumber resmi di atas, susun daftar best seller peringkat ' + startRank + ' sampai ' + endRank + '. Gunakan HANYA judul dan penulis yang benar-benar muncul di sumber, persis. Pertahankan urutan peringkat sesuai sumber. JANGAN menambah buku yang tidak ada di sumber. Jika buku di sumber kurang dari 20, kembalikan hanya yang ada (boleh kurang).' + excludeTxt + ' Jawab HANYA JSON array.';
             } else {
-                user = 'Berikan buku best seller peringkat ' + startRank + ' sampai ' + endRank + ' (tepat 20 buku) ' + (isIntl ? 'di pasar internasional' : 'di Indonesia') + ' dari ' + scope + ' untuk periode ' + monthLabel + '. Gunakan judul dan penulis yang nyata.' + excludeTxt + ' Jawab HANYA JSON array.';
+                user = 'Berikan buku best seller peringkat ' + startRank + ' sampai ' + endRank + ' (maksimal 20 buku) ' + (isIntl ? 'di pasar internasional' : 'di Indonesia') + ' dari ' + scope + ' untuk periode ' + monthLabel + '. Gunakan HANYA judul dan penulis yang benar-benar nyata dan terkenal; jangan mengarang.' + excludeTxt + ' Jawab HANYA JSON array.';
             }
             let reply = '';
             try {
@@ -4348,7 +4349,7 @@ INSTRUKSI:
         };
 
         window.firebaseResetPassword = async (email) => {
-            try { await sendPasswordResetEmail(auth, email); window.showToast("Link reset password telah dikirim ke email Anda!", "✅"); }
+            try { await sendPasswordResetEmail(auth, email); window.showToast("Link reset password telah dikirim ke email Anda!", "  "); }
             catch (error) { window.showToast("Gagal mengirim link: Email tidak ditemukan atau tidak valid.", "❌"); }
         };
         window.firebaseUpdateProfileAuth = async (newName) => {
