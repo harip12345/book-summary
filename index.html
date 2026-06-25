@@ -810,6 +810,12 @@
     </div>
 
     <!-- MODAL EDIT PROFILE -->
+    <div class="modal-overlay" id="chartDetailModal">
+        <div class="modal-content chart-detail-content">
+            <button class="modal-close" onclick="closeModal('chartDetailModal')"><i data-lucide="x"></i></button>
+            <div id="chartDetailBody"></div>
+        </div>
+    </div>
     <div class="modal-overlay" id="editProfileModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('editProfileModal')"><i data-lucide="x"></i></button>
@@ -1387,6 +1393,46 @@
         .chart-ai-spinner{width:38px;height:38px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--accent);animation:chartSpin .8s linear infinite;}
         @keyframes chartSpin{to{transform:rotate(360deg);}}
         .chart-bestseller-note{font-size:11.5px;color:var(--text-secondary);background:rgba(99,102,241,0.08);border:1px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:14px;display:flex;align-items:center;gap:8px;line-height:1.45;}
+        /* ---- Chart Blinkist redesign ---- */
+        .chart-list{display:flex;flex-direction:column;gap:12px;}
+        .chart-row{display:flex;align-items:center;gap:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
+        .chart-row:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(37,99,235,0.15);border-color:var(--accent-light);}
+        .chart-row::after{content:'';position:absolute;inset:0;border-radius:18px;pointer-events:none;background:linear-gradient(120deg,rgba(59,130,246,0.06),rgba(139,92,246,0.06));opacity:0;transition:opacity .2s ease;}
+        .chart-row:hover::after{opacity:1;}
+        .chart-row.top::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--accent),var(--sage));}
+        .chart-rank{flex:0 0 34px;text-align:center;font-family:var(--font-display);font-weight:700;font-size:21px;font-variant-numeric:tabular-nums;color:var(--text-muted);letter-spacing:-0.5px;}
+        .chart-rank.rank-1{color:#D97706;}
+        .chart-rank.rank-2{color:#64748B;}
+        .chart-rank.rank-3{color:#B45309;}
+        .chart-thumb{flex:0 0 auto;width:52px;height:74px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,var(--bg-secondary),#EEF2FF);display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(0,0,0,0.14);}
+        .chart-thumb img{width:100%;height:100%;object-fit:cover;}
+        .chart-thumb-fallback{color:var(--accent);opacity:0.55;}
+        .chart-info{flex:1;min-width:0;}
+        .chart-info-title{font-family:var(--font-display);font-weight:600;font-size:15.5px;color:var(--text-primary);line-height:1.25;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+        .chart-info-author{font-size:12.5px;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .chart-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;align-items:center;}
+        .chart-cat{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:0.2px;white-space:nowrap;max-width:170px;overflow:hidden;text-overflow:ellipsis;}
+        .chart-year{font-size:10.5px;font-weight:600;color:var(--text-muted);background:var(--bg-secondary);padding:3px 9px;border-radius:999px;}
+        .chart-reason{font-size:11.5px;color:var(--accent-dark);background:rgba(59,130,246,0.10);border-radius:9px;padding:5px 10px;margin-top:8px;line-height:1.4;display:flex;align-items:center;gap:5px;}
+        .chart-actions{flex:0 0 auto;display:flex;flex-direction:column;gap:7px;align-items:center;}
+        .chart-act{width:36px;height:36px;border-radius:11px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease;text-decoration:none;}
+        .chart-act:hover{color:#fff;background:var(--accent);border-color:var(--accent);transform:scale(1.08);}
+        .chart-act-primary{background:linear-gradient(135deg,var(--accent),var(--sage));border-color:transparent;color:#fff;}
+        .chart-act-primary:hover{filter:brightness(1.08);}
+        .chart-loadmore{margin-top:6px;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:14px;border:1.5px dashed rgba(99,102,241,0.4);background:rgba(99,102,241,0.06);color:var(--accent-dark);font-family:var(--font-ui);font-size:13.5px;font-weight:700;cursor:pointer;transition:all .18s ease;}
+        .chart-loadmore:hover{background:rgba(99,102,241,0.14);border-color:var(--accent);}
+        .chart-loadmore:disabled{opacity:0.7;cursor:default;}
+        .chart-empty{padding:44px 16px;text-align:center;color:var(--text-muted);font-size:14px;border:1px dashed var(--border);border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+        .chart-detail-content{max-width:480px;width:92%;max-height:88dvh;overflow-y:auto;padding:24px;}
+        .chart-detail-head{display:flex;gap:16px;margin-bottom:18px;margin-top:6px;}
+        .chart-detail-cover{flex:0 0 auto;width:96px;height:140px;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,var(--bg-secondary),#EEF2FF);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(0,0,0,0.18);}
+        .chart-detail-cover img{width:100%;height:100%;object-fit:cover;}
+        .chart-detail-meta{flex:1;min-width:0;}
+        .chart-detail-title{font-family:var(--font-display);font-weight:600;font-size:19px;line-height:1.25;color:var(--text-primary);}
+        .chart-detail-author{font-size:13px;color:var(--text-secondary);margin-top:4px;}
+        .chart-detail-section-title{font-family:var(--font-ui);font-size:11.5px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+        .chart-detail-desc{font-size:14px;line-height:1.65;color:var(--text-secondary);margin-bottom:20px;white-space:pre-wrap;}
+        .chart-detail-actions{display:flex;gap:10px;flex-wrap:wrap;}
     </style>
 
     <!-- SCREEN CHART BOOK -->
@@ -2673,7 +2719,7 @@
 
         document.addEventListener('keydown', (e) => {
             if ((e.metaKey||e.ctrlKey) && e.key==='k') { e.preventDefault(); focusSearch(); }
-            if (e.key==='Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); window.closeModal('editProfileModal'); window.closeModal('preferencesModal'); window.closeModal('favoritesModal'); window.closeModal('adminModal'); window.closeModal('editBookModal'); closeSettings(); window.closeModal('ttsSettingsModal'); }
+            if (e.key==='Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); window.closeModal('editProfileModal'); window.closeModal('preferencesModal'); window.closeModal('favoritesModal'); window.closeModal('adminModal'); window.closeModal('editBookModal'); closeSettings(); window.closeModal('ttsSettingsModal'); window.closeModal('chartDetailModal'); }
         });
 
         window.goToSlide=goToSlide; window.showScreen=showScreen; window.updateProfileDisplay=updateProfileDisplay;
@@ -3118,7 +3164,7 @@ INSTRUKSI:
 
         function chartGbUrl(q, max, opts) {
             opts = opts || {};
-            let u = 'https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(q) + '&maxResults=' + max + '&printType=books';
+            let u = 'https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(q) + '&maxResults=' + max + '&printType=books&country=ID';
             if (opts.lang) u += '&langRestrict=id';
             if (opts.newest) u += '&orderBy=newest';
             return u;
@@ -3200,48 +3246,156 @@ INSTRUKSI:
             const cover = chartHttps((b.imageLinks && (b.imageLinks.thumbnail || b.imageLinks.smallThumbnail)) || b.cover);
             const author = (b.authors && b.authors.join(', ')) || b.author || 'Penulis tidak diketahui';
             const year = String(b.publishedDate || '').slice(0, 4);
-            const meta = [b.publisher || '', year].filter(Boolean).join(' - ');
+            const cat = b.publisher || '';
+            const cc = chartCatColor(cat);
             const payload = chartPayload(b, cover);
             const topCls = rank <= 3 ? ' top' : '';
+            const medal = rank <= 3 ? (' rank-' + rank) : '';
             const coverHtml = cover ? '<img src="' + cover + '" alt="" loading="lazy">' : '<div class="chart-thumb-fallback"><i data-lucide="book"></i></div>';
-            const reason = b.reason ? '<div class="chart-reason">' + chartEsc(b.reason) + '</div>' : '';
-            const linkBtn = b.infoLink ? '<a class="chart-act" href="' + b.infoLink + '" target="_blank" rel="noopener" title="Detail di Google Books"><i data-lucide="external-link" style="width:15px;"></i></a>' : '';
-            const adminBtn = window.isCurrentUserAdmin ? '<button class="chart-act" title="Jadikan Pilihan Editor" onclick="window.chartMakeEditorPick(\'' + payload + '\')"><i data-lucide="star" style="width:15px;"></i></button>' : '';
-            return '<div class="chart-row' + topCls + '">' +
-                '<div class="chart-rank">' + rank + '</div>' +
+            const reason = b.reason ? '<div class="chart-reason"><i data-lucide="trending-up" style="width:12px;"></i> ' + chartEsc(b.reason) + '</div>' : '';
+            const catPill = cat ? '<span class="chart-cat" style="background:' + cc.bg + ';color:' + cc.fg + ';">' + chartEsc(cat) + '</span>' : '';
+            const yearPill = year ? '<span class="chart-year">' + chartEsc(year) + '</span>' : '';
+            const linkBtn = b.infoLink ? '<a class="chart-act" href="' + b.infoLink + '" target="_blank" rel="noopener" title="Detail di Google Books" onclick="event.stopPropagation();"><i data-lucide="external-link" style="width:15px;"></i></a>' : '';
+            const adminBtn = window.isCurrentUserAdmin ? '<button class="chart-act" title="Jadikan Pilihan Editor" onclick="event.stopPropagation();window.chartMakeEditorPick(\'' + payload + '\')"><i data-lucide="star" style="width:15px;"></i></button>' : '';
+            return '<div class="chart-row' + topCls + '" onclick="window.chartOpenBook(\'' + (b.id || '') + '\')">' +
+                '<div class="chart-rank' + medal + '">' + rank + '</div>' +
                 '<div class="chart-thumb">' + coverHtml + '</div>' +
                 '<div class="chart-info">' +
                     '<div class="chart-info-title">' + chartEsc(b.title) + '</div>' +
                     '<div class="chart-info-author">' + chartEsc(author) + '</div>' +
-                    (meta ? '<div class="chart-info-meta">' + chartEsc(meta) + '</div>' : '') +
+                    '<div class="chart-pills">' + catPill + yearPill + '</div>' +
                     reason +
                 '</div>' +
                 '<div class="chart-actions">' +
-                    '<button class="chart-act chart-act-primary" title="Tambah ke Library" onclick="window.chartAddToLibrary(\'' + payload + '\')"><i data-lucide="plus" style="width:16px;"></i></button>' +
+                    '<button class="chart-act chart-act-primary" title="Tambah ke Library" onclick="event.stopPropagation();window.chartAddToLibrary(\'' + payload + '\')"><i data-lucide="plus" style="width:16px;"></i></button>' +
                     linkBtn + adminBtn +
                 '</div>' +
             '</div>';
         }
+        function chartCatColor(name) {
+            const palette = [
+                { bg: 'rgba(59,130,246,0.14)', fg: '#2563EB' },
+                { bg: 'rgba(139,92,246,0.14)', fg: '#7C3AED' },
+                { bg: 'rgba(236,72,153,0.14)', fg: '#DB2777' },
+                { bg: 'rgba(16,185,129,0.14)', fg: '#059669' },
+                { bg: 'rgba(245,158,11,0.16)', fg: '#D97706' },
+                { bg: 'rgba(239,68,68,0.14)', fg: '#DC2626' },
+                { bg: 'rgba(14,165,233,0.14)', fg: '#0284C7' }
+            ];
+            let h = 0; const s = String(name || '');
+            for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+            return palette[h % palette.length];
+        }
+        function chartRenderList(items, opts) {
+            opts = opts || {};
+            const box = document.getElementById('chartResults');
+            if (!box) return;
+            chartState._byId = {};
+            items.forEach(function(b) { if (b && b.id) chartState._byId[b.id] = b; });
+            let html = opts.note || '';
+            html += items.map(function(b, i) { return chartRow(b, i + 1); }).join('');
+            if (opts.canLoadMore) {
+                html += '<button class="chart-loadmore"' + (opts.loadMoreId ? ' id="' + opts.loadMoreId + '"' : '') + ' onclick="' + opts.loadMoreFn + '"><span>' + chartEsc(opts.loadMoreLabel || 'Lihat lainnya') + '</span><i data-lucide="chevron-down" style="width:16px;"></i></button>';
+            }
+            box.innerHTML = html;
+            if (window.lucide) lucide.createIcons();
+        }
+        function chartRenderBestseller() {
+            const usedWeb = chartState._bsUsedWeb;
+            const pub = chartState.publisher;
+            const monthLabel = chartMonthLabel(chartState.month) || 'terkini';
+            const note = '<div class="chart-bestseller-note"><i data-lucide="sparkles" style="width:15px;color:var(--accent);"></i> Best seller ' + chartEsc(monthLabel) + ' (' + chartEsc(pub === 'Semua' ? 'berbagai penerbit' : pub) + ')' + (usedWeb ? ', berdasarkan pencarian web' : ' (mode AI tanpa web)') + '. Tekan muat ulang untuk menyegarkan.</div>';
+            const next = chartState._items.length + 1;
+            chartRenderList(chartState._items, { note: note, canLoadMore: true, loadMoreFn: 'window.chartLoadMoreBestseller()', loadMoreLabel: 'Lihat peringkat ' + next + ' - ' + (next + 19), loadMoreId: 'chartLoadMoreBtn' });
+        }
+        window.chartLoadMoreBestseller = function() { chartGenerateBestsellers(true); };
+        window.chartOpenBook = function(id) {
+            const b = (chartState._byId && chartState._byId[id]) || null;
+            if (b) chartShowDetail(b);
+        };
+        function chartShowDetail(b) {
+            const modal = document.getElementById('chartDetailModal');
+            const body = document.getElementById('chartDetailBody');
+            if (!modal || !body) return;
+            const cover = chartHttps((b.imageLinks && (b.imageLinks.thumbnail || b.imageLinks.smallThumbnail)) || b.cover);
+            const author = (b.authors && b.authors.join(', ')) || b.author || 'Penulis tidak diketahui';
+            const cat = b.publisher || '';
+            const year = String(b.publishedDate || '').slice(0, 4);
+            const cc = chartCatColor(cat);
+            const coverHtml = cover ? '<img src="' + cover + '" alt="">' : '<div class="chart-thumb-fallback"><i data-lucide="book"></i></div>';
+            const payload = chartPayload(b, cover);
+            const reason = b.reason ? '<div class="chart-reason" style="margin-top:10px;"><i data-lucide="trending-up" style="width:12px;"></i> ' + chartEsc(b.reason) + '</div>' : '';
+            const desc = String(b.description || '').trim();
+            const descHtml = desc ? '<div class="chart-detail-desc">' + chartEsc(desc) + '</div>' : '<div class="chart-detail-desc" id="chartDetailDesc"><button class="chart-loadmore" style="margin-top:0;" onclick="window.chartGenSummary(\'' + (b.id || '') + '\')"><i data-lucide="sparkles" style="width:15px;"></i><span>Buat ringkasan dengan AI</span></button></div>';
+            const pills = (cat ? '<span class="chart-cat" style="background:' + cc.bg + ';color:' + cc.fg + ';">' + chartEsc(cat) + '</span>' : '') + (year ? '<span class="chart-year">' + chartEsc(year) + '</span>' : '');
+            body.innerHTML =
+                '<div class="chart-detail-head">' +
+                    '<div class="chart-detail-cover">' + coverHtml + '</div>' +
+                    '<div class="chart-detail-meta">' +
+                        '<div class="chart-detail-title">' + chartEsc(b.title) + '</div>' +
+                        '<div class="chart-detail-author">' + chartEsc(author) + '</div>' +
+                        '<div class="chart-pills" style="margin-top:8px;">' + pills + '</div>' +
+                        reason +
+                    '</div>' +
+                '</div>' +
+                '<div class="chart-detail-section-title">Ringkasan</div>' +
+                descHtml +
+                '<div class="chart-detail-actions">' +
+                    '<button class="chart-btn chart-btn-primary" style="flex:1;justify-content:center;" onclick="window.chartAddToLibrary(\'' + payload + '\');window.closeModal(\'chartDetailModal\');"><i data-lucide="plus" style="width:15px;"></i> Tambah ke Library</button>' +
+                    (b.infoLink ? '<a class="chart-btn chart-btn-ghost" href="' + b.infoLink + '" target="_blank" rel="noopener"><i data-lucide="external-link" style="width:15px;"></i> Google Books</a>' : '') +
+                '</div>';
+            window.openModal('chartDetailModal');
+            if (window.lucide) lucide.createIcons();
+        }
+        window.chartGenSummary = async function(id) {
+            const b = (chartState._byId && chartState._byId[id]) || null;
+            if (!b) return;
+            const el = document.getElementById('chartDetailDesc');
+            if (typeof callAIAPI !== 'function') { if (el) el.innerHTML = '<div class="chart-empty">Fitur AI belum siap.</div>'; return; }
+            if (el) el.innerHTML = '<div class="chart-ai-loading" style="padding:18px;"><div class="chart-ai-spinner"></div><div>AI sedang merangkum...</div></div>';
+            const author = (b.authors && b.authors.join(', ')) || b.author || '';
+            let reply = '';
+            try {
+                reply = await callAIAPI([
+                    { role: 'system', content: 'Kamu peringkas buku. Tulis ringkasan singkat 3-4 kalimat dalam Bahasa Indonesia tentang isi dan tema buku. Hanya teks biasa, tanpa markdown.' },
+                    { role: 'user', content: 'Ringkas buku berjudul "' + (b.title || '') + '"' + (author ? ' karya ' + author : '') + (b.publisher ? ' (' + b.publisher + ')' : '') + '.' }
+                ]);
+            } catch (e) { if (el) el.innerHTML = '<div class="chart-empty">Gagal merangkum: ' + chartEsc(e.message || 'kesalahan') + '</div>'; return; }
+            b.description = String(reply || '').trim();
+            if (el) el.innerHTML = chartEsc(b.description || 'Ringkasan tidak tersedia.');
+        };
 
-        async function chartGenerateBestsellers(box) {
+        async function chartGenerateBestsellers(loadMore) {
+            const box = document.getElementById('chartResults');
+            if (!box) return;
             const pub = chartState.publisher;
             const month = chartState.month;
             const monthLabel = chartMonthLabel(month) || 'terkini';
             const cacheKey = pub + '|' + month;
-            const note = function(extra) {
-                return '<div class="chart-bestseller-note"><i data-lucide="sparkles" style="width:15px;color:var(--accent);"></i> Daftar best seller ' + chartEsc(monthLabel) + ' (' + chartEsc(pub === 'Semua' ? 'berbagai penerbit' : pub) + ')' + (extra || '') + '. Tekan tombol muat ulang untuk menyegarkan.</div>';
-            };
-            if (chartState._bsCache[cacheKey]) {
-                box.innerHTML = note('') + chartState._bsCache[cacheKey].map(function(b, i) { return chartRow(b, i + 1); }).join('');
-                if (window.lucide) lucide.createIcons();
-                return;
+            chartState._mode = 'bestseller';
+            if (!loadMore) {
+                const cached = chartState._bsCache[cacheKey];
+                if (cached && cached.items && cached.items.length) {
+                    chartState._items = cached.items.slice();
+                    chartState._bsUsedWeb = cached.usedWeb;
+                    chartRenderBestseller();
+                    return;
+                }
+                chartState._items = [];
             }
-            const scope = (pub === 'Semua') ? 'berbagai penerbit besar Indonesia (Gramedia, Mizan, Bentang, Republika, Elex Media, dll)' : 'penerbit ' + pub;
-            box.innerHTML = '<div class="chart-ai-loading"><div class="chart-ai-spinner"></div><div>AI sedang mencari best seller ' + chartEsc(monthLabel) + ' di web...</div></div>';
             if (typeof callAIAPI !== 'function') {
                 box.innerHTML = '<div class="chart-empty">Fitur AI belum siap. Pastikan server API aktif.</div>';
                 return;
             }
+            const startRank = chartState._items.length + 1;
+            const endRank = startRank + 19;
+            if (loadMore) {
+                const btn = document.getElementById('chartLoadMoreBtn');
+                if (btn) { btn.innerHTML = '<span>Memuat peringkat ' + startRank + ' - ' + endRank + '...</span>'; btn.disabled = true; }
+            } else {
+                box.innerHTML = '<div class="chart-ai-loading"><div class="chart-ai-spinner"></div><div>AI sedang mencari best seller ' + chartEsc(monthLabel) + ' di web...</div></div>';
+            }
+            const scope = (pub === 'Semua') ? 'berbagai penerbit besar Indonesia (Gramedia, Mizan, Bentang, Republika, Elex Media, dll)' : 'penerbit ' + pub;
             const wsQuery = (pub === 'Semua')
                 ? ('daftar buku best seller terlaris di Indonesia bulan ' + monthLabel + ' Gramedia Mizan Bentang toko buku')
                 : ('buku best seller terlaris penerbit ' + pub + ' ' + monthLabel + ' Indonesia');
@@ -3257,18 +3411,21 @@ INSTRUKSI:
                     });
                 }
             } catch (e) { usedWeb = false; }
+            const exclude = chartState._items.map(function(b) { return b.title; }).filter(Boolean);
+            const excludeTxt = exclude.length ? ('\nJANGAN ulangi judul berikut yang sudah terdaftar: ' + exclude.join('; ') + '.') : '';
             const sys = 'Kamu adalah kurator buku berpengalaman di Indonesia. Jawab HANYA dengan JSON array valid, tanpa teks pembuka, tanpa penutup, tanpa markdown atau pagar kode. Setiap elemen objek: {"title":"judul nyata","author":"nama penulis","publisher":"penerbit","reason":"alasan singkat satu kalimat kenapa populer"}.';
             let user;
             if (usedWeb) {
-                user = 'Bulan target: ' + monthLabel + '. Berikut hasil pencarian web terkait buku best seller:\n\n' + webContext + '\nDari informasi web di atas, susun 12 buku best seller untuk ' + scope + ' pada ' + monthLabel + '. Utamakan judul dan penulis nyata yang disebut atau relevan dari hasil web. Jika kurang, lengkapi dengan buku populer yang masuk akal untuk periode itu. Urutkan dari peringkat 1 (paling laris). Jawab HANYA JSON array.';
+                user = 'Bulan target: ' + monthLabel + '. Berikut hasil pencarian web terkait buku best seller:\n\n' + webContext + '\nDari informasi web di atas, susun buku best seller peringkat ' + startRank + ' sampai ' + endRank + ' (tepat 20 buku) untuk ' + scope + ' pada ' + monthLabel + '. Utamakan judul dan penulis nyata dari hasil web. Jika kurang, lengkapi dengan buku populer yang masuk akal.' + excludeTxt + ' Jawab HANYA JSON array.';
             } else {
-                user = 'Berikan 12 buku best seller atau paling populer di Indonesia dari ' + scope + ' untuk periode ' + monthLabel + '. Gunakan judul dan penulis yang nyata. Urutkan dari peringkat 1 (paling laris). Jawab HANYA JSON array.';
+                user = 'Berikan buku best seller peringkat ' + startRank + ' sampai ' + endRank + ' (tepat 20 buku) di Indonesia dari ' + scope + ' untuk periode ' + monthLabel + '. Gunakan judul dan penulis yang nyata.' + excludeTxt + ' Jawab HANYA JSON array.';
             }
             let reply = '';
             try {
                 reply = await callAIAPI([{ role: 'system', content: sys }, { role: 'user', content: user }]);
             } catch (e) {
-                box.innerHTML = '<div class="chart-empty">Gagal memanggil AI: ' + chartEsc(e.message || 'kesalahan tidak diketahui') + '<br>Pastikan server API aktif lalu coba lagi.</div>';
+                if (!chartState._items.length) { box.innerHTML = '<div class="chart-empty">Gagal memanggil AI: ' + chartEsc(e.message || 'kesalahan tidak diketahui') + '<br>Pastikan server API aktif lalu coba lagi.</div>'; }
+                else { const btn = document.getElementById('chartLoadMoreBtn'); if (btn) { btn.innerHTML = '<span>Coba lagi</span>'; btn.disabled = false; } }
                 return;
             }
             let list = [];
@@ -3277,10 +3434,14 @@ INSTRUKSI:
                 list = JSON.parse(m ? m[0] : reply);
             } catch (e) { list = []; }
             if (!Array.isArray(list) || !list.length) {
-                box.innerHTML = '<div class="chart-empty">AI tidak mengembalikan daftar yang valid. Coba lagi.</div>';
+                if (!chartState._items.length) { box.innerHTML = '<div class="chart-empty">AI tidak mengembalikan daftar yang valid. Coba lagi.</div>'; }
+                else { const btn = document.getElementById('chartLoadMoreBtn'); if (btn) { btn.innerHTML = '<span>Coba lagi</span>'; btn.disabled = false; } }
                 return;
             }
-            const enriched = await Promise.all(list.slice(0, 12).map(async function(it) {
+            const existing = {};
+            chartState._items.forEach(function(b) { existing[String(b.title).toLowerCase()] = 1; });
+            const fresh = list.filter(function(it) { return it && it.title && !existing[String(it.title).toLowerCase()]; }).slice(0, 20);
+            const enriched = await Promise.all(fresh.map(async function(it) {
                 let q = 'intitle:"' + (it.title || '') + '"';
                 if (it.author) q += ' inauthor:"' + it.author + '"';
                 let g = [];
@@ -3298,9 +3459,10 @@ INSTRUKSI:
                     reason: it.reason || ''
                 };
             }));
-            chartState._bsCache[cacheKey] = enriched;
-            box.innerHTML = note(usedWeb ? ', berdasarkan pencarian web' : ' (mode AI tanpa web)') + enriched.map(function(b, i) { return chartRow(b, i + 1); }).join('');
-            if (window.lucide) lucide.createIcons();
+            chartState._items = chartState._items.concat(enriched);
+            chartState._bsUsedWeb = usedWeb;
+            chartState._bsCache[cacheKey] = { items: chartState._items.slice(), usedWeb: usedWeb };
+            chartRenderBestseller();
         }
 
         async function chartLoad() {
@@ -3313,7 +3475,7 @@ INSTRUKSI:
                     : (chartState.publisher === 'Semua' ? (chartState.sort === 'newest' ? 'Baru Rilis' : 'Buku Populer') : chartState.publisher));
             }
             if (chartState.sort === 'bestseller' && !chartState.term) {
-                await chartGenerateBestsellers(box);
+                await chartGenerateBestsellers(false);
                 return;
             }
             box.innerHTML = chartSkeleton();
@@ -3323,18 +3485,28 @@ INSTRUKSI:
                 if (chartState.publisher !== 'Semua') q += ' inpublisher:"' + chartState.publisher + '"';
                 books = await chartGbFetchSmart(q, 30);
             } else if (chartState.publisher === 'Semua') {
-                const pubs = ['Gramedia', 'Mizan', 'Bentang', 'Republika', 'Elex Media'];
-                const arrs = await Promise.all(pubs.map(function(p) { return chartGbFetchSmart('inpublisher:"' + p + '"', 10); }));
+                const subjects = ['novel', 'pengembangan diri', 'bisnis', 'psikologi', 'sejarah', 'agama islam'];
                 const seen = {};
+                const arrs = await Promise.all(subjects.map(function(s) { return chartGbFetch(s, 6, { lang: true }); }));
                 arrs.flat().forEach(function(b) { if (b && b.title && !seen[b.id]) { seen[b.id] = 1; books.push(b); } });
+                if (!books.length) {
+                    const arrs2 = await Promise.all(subjects.map(function(s) { return chartGbFetch(s, 6, {}); }));
+                    arrs2.flat().forEach(function(b) { if (b && b.title && !seen[b.id]) { seen[b.id] = 1; books.push(b); } });
+                }
             } else {
                 books = await chartGbFetchSmart('inpublisher:"' + chartState.publisher + '"', 30);
+                if (!books.length) books = await chartGbFetchSmart(chartState.publisher, 30);
             }
             books = books.filter(function(b) { return b && b.title; });
             if (chartState.sort === 'newest') books.sort(function(a, b) { return String(b.publishedDate || '').localeCompare(String(a.publishedDate || '')); });
-            box.innerHTML = books.length ? books.map(function(b, i) { return chartRow(b, i + 1); }).join('')
-                : '<div class="chart-empty">Tidak ada hasil. Coba penerbit lain, atau cari judul tertentu di kotak pencarian.</div>';
-            if (window.lucide) lucide.createIcons();
+            if (!books.length) {
+                box.innerHTML = '<div class="chart-empty"><i data-lucide="book-open" style="width:30px;opacity:0.5;"></i><div>Tidak ada hasil. Coba penerbit lain, atau cari judul tertentu di kotak pencarian.</div></div>';
+                if (window.lucide) lucide.createIcons();
+                return;
+            }
+            chartState._mode = 'browse';
+            chartState._items = books;
+            chartRenderList(books, {});
         }
 
         window.chartAddToLibrary = async function(payload) {
