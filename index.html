@@ -1357,6 +1357,10 @@
         .chart-month-label{font-size:12px;color:var(--text-secondary);font-weight:600;display:flex;align-items:center;gap:5px;white-space:nowrap;}
         .chart-month-select{flex:1;max-width:220px;border:1px solid rgba(99,102,241,0.28);background:var(--bg-card);color:var(--text-primary);font-size:13px;font-weight:600;padding:8px 12px;border-radius:10px;cursor:pointer;outline:none;}
         .chart-month-select:focus{border-color:var(--accent);}
+        .chart-region-row{margin-top:10px;display:flex;align-items:center;gap:8px;}
+        .chart-region-toggle{display:inline-flex;background:var(--bg-secondary);border-radius:10px;padding:3px;gap:2px;}
+        .chart-region-btn{border:none;background:transparent;color:var(--text-secondary);font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;}
+        .chart-region-btn.active{background:var(--bg-card);color:var(--accent-dark);box-shadow:var(--shadow-sm);}
         .chart-empty{padding:40px 16px;text-align:center;color:var(--text-muted);font-size:14px;border:1px dashed var(--border);border-radius:12px;}
         .chart-skel{opacity:0.6;}
         .chart-skel .chart-cover{animation:skeletonPulse 1.4s ease-in-out infinite;}
@@ -1460,6 +1464,13 @@
                 <div class="chart-month-row" id="chartMonthRow" style="display:none;">
                     <span class="chart-month-label"><i data-lucide="calendar" style="width:14px;"></i> Bulan</span>
                     <select class="chart-month-select" id="chartMonthSelect" onchange="window.chartSetMonth && window.chartSetMonth(this.value)"></select>
+                </div>
+                <div class="chart-region-row" id="chartRegionRow" style="display:none;">
+                    <span class="chart-month-label"><i data-lucide="globe" style="width:14px;"></i> Wilayah</span>
+                    <div class="chart-region-toggle">
+                        <button class="chart-region-btn active" data-region="id" onclick="window.chartSetRegion('id', this)">Indonesia</button>
+                        <button class="chart-region-btn" data-region="intl" onclick="window.chartSetRegion('intl', this)">Internasional</button>
+                    </div>
                 </div>
                 <div class="lib-filter-row" id="chartPublisherRow"></div>
             </div>
@@ -3129,7 +3140,7 @@ INSTRUKSI:
         // CHART BOOK - daftar buku via Google Books API + Pilihan Editor (admin)
         // ===================================================================
         const CHART_PUBLISHERS = ['Semua', 'Gramedia', 'Mizan', 'Bentang', 'Republika', 'Elex Media', 'Erlangga', 'Noura', 'Bhuana Ilmu Populer', 'GagasMedia'];
-        let chartState = { publisher: 'Semua', sort: 'newest', term: '', month: '', loaded: false, _bsCache: {} };
+        let chartState = { publisher: 'Semua', sort: 'newest', term: '', month: '', region: 'id', loaded: false, _bsCache: {} };
 
         function chartEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
         function chartHttps(u) { return String(u || '').replace('http://', 'https://'); }
@@ -3154,6 +3165,14 @@ INSTRUKSI:
             if (el) el.classList.add('active');
             const mr = document.getElementById('chartMonthRow');
             if (mr) mr.style.display = (s === 'bestseller') ? 'flex' : 'none';
+            const rr = document.getElementById('chartRegionRow');
+            if (rr) rr.style.display = (s === 'bestseller') ? 'flex' : 'none';
+            chartLoad();
+        };
+        window.chartSetRegion = function(r, el) {
+            chartState.region = r;
+            document.querySelectorAll('#chartRegionRow .chart-region-btn').forEach(function(b) { b.classList.remove('active'); });
+            if (el) el.classList.add('active');
             chartLoad();
         };
         window.chartSearch = function() {
@@ -3176,7 +3195,7 @@ INSTRUKSI:
                 const data = await res.json();
                 return (data.items || []).map(function(it) {
                     const v = it.volumeInfo || {};
-                    return { id: it.id, title: v.title, authors: v.authors, publisher: v.publisher, publishedDate: v.publishedDate, description: v.description, imageLinks: v.imageLinks, infoLink: v.infoLink };
+                    return { id: it.id, title: v.title, authors: v.authors, publisher: v.publisher, publishedDate: v.publishedDate, description: v.description, imageLinks: v.imageLinks, infoLink: v.infoLink, categories: v.categories };
                 });
             } catch (e) { console.warn('GoogleBooks error', e); return []; }
         }
@@ -3246,13 +3265,12 @@ INSTRUKSI:
             const cover = chartHttps((b.imageLinks && (b.imageLinks.thumbnail || b.imageLinks.smallThumbnail)) || b.cover);
             const author = (b.authors && b.authors.join(', ')) || b.author || 'Penulis tidak diketahui';
             const year = String(b.publishedDate || '').slice(0, 4);
-            const cat = b.publisher || '';
+            const cat = chartBookGenre(b) || b.publisher || '';
             const cc = chartCatColor(cat);
             const payload = chartPayload(b, cover);
             const topCls = rank <= 3 ? ' top' : '';
             const medal = rank <= 3 ? (' rank-' + rank) : '';
             const coverHtml = cover ? '<img src="' + cover + '" alt="" loading="lazy">' : '<div class="chart-thumb-fallback"><i data-lucide="book"></i></div>';
-            const reason = b.reason ? '<div class="chart-reason"><i data-lucide="trending-up" style="width:12px;"></i> ' + chartEsc(b.reason) + '</div>' : '';
             const catPill = cat ? '<span class="chart-cat" style="background:' + cc.bg + ';color:' + cc.fg + ';">' + chartEsc(cat) + '</span>' : '';
             const yearPill = year ? '<span class="chart-year">' + chartEsc(year) + '</span>' : '';
             const linkBtn = b.infoLink ? '<a class="chart-act" href="' + b.infoLink + '" target="_blank" rel="noopener" title="Detail di Google Books" onclick="event.stopPropagation();"><i data-lucide="external-link" style="width:15px;"></i></a>' : '';
@@ -3264,13 +3282,17 @@ INSTRUKSI:
                     '<div class="chart-info-title">' + chartEsc(b.title) + '</div>' +
                     '<div class="chart-info-author">' + chartEsc(author) + '</div>' +
                     '<div class="chart-pills">' + catPill + yearPill + '</div>' +
-                    reason +
                 '</div>' +
                 '<div class="chart-actions">' +
                     '<button class="chart-act chart-act-primary" title="Tambah ke Library" onclick="event.stopPropagation();window.chartAddToLibrary(\'' + payload + '\')"><i data-lucide="plus" style="width:16px;"></i></button>' +
                     linkBtn + adminBtn +
                 '</div>' +
             '</div>';
+        }
+        function chartBookGenre(b) {
+            if (b.genre) return String(b.genre).trim();
+            if (b.categories && b.categories.length) return String(b.categories[0]).split('/')[0].trim();
+            return '';
         }
         function chartCatColor(name) {
             const palette = [
@@ -3303,8 +3325,9 @@ INSTRUKSI:
         function chartRenderBestseller() {
             const usedWeb = chartState._bsUsedWeb;
             const pub = chartState.publisher;
+            const regionLabel = (chartState.region === 'intl') ? 'Internasional' : 'Indonesia';
             const monthLabel = chartMonthLabel(chartState.month) || 'terkini';
-            const note = '<div class="chart-bestseller-note"><i data-lucide="sparkles" style="width:15px;color:var(--accent);"></i> Best seller ' + chartEsc(monthLabel) + ' (' + chartEsc(pub === 'Semua' ? 'berbagai penerbit' : pub) + ')' + (usedWeb ? ', berdasarkan pencarian web' : ' (mode AI tanpa web)') + '. Tekan muat ulang untuk menyegarkan.</div>';
+            const note = '<div class="chart-bestseller-note"><i data-lucide="sparkles" style="width:15px;color:var(--accent);"></i> Best seller ' + chartEsc(regionLabel) + ' ' + chartEsc(monthLabel) + ' (' + chartEsc(pub === 'Semua' ? 'berbagai penerbit' : pub) + ')' + (usedWeb ? ', berdasarkan pencarian web' : ' (mode AI tanpa web)') + '. Tekan muat ulang untuk menyegarkan.</div>';
             const next = chartState._items.length + 1;
             chartRenderList(chartState._items, { note: note, canLoadMore: true, loadMoreFn: 'window.chartLoadMoreBestseller()', loadMoreLabel: 'Lihat peringkat ' + next + ' - ' + (next + 19), loadMoreId: 'chartLoadMoreBtn' });
         }
@@ -3319,7 +3342,7 @@ INSTRUKSI:
             if (!modal || !body) return;
             const cover = chartHttps((b.imageLinks && (b.imageLinks.thumbnail || b.imageLinks.smallThumbnail)) || b.cover);
             const author = (b.authors && b.authors.join(', ')) || b.author || 'Penulis tidak diketahui';
-            const cat = b.publisher || '';
+            const cat = chartBookGenre(b) || b.publisher || '';
             const year = String(b.publishedDate || '').slice(0, 4);
             const cc = chartCatColor(cat);
             const coverHtml = cover ? '<img src="' + cover + '" alt="">' : '<div class="chart-thumb-fallback"><i data-lucide="book"></i></div>';
@@ -3346,6 +3369,7 @@ INSTRUKSI:
                 '</div>';
             window.openModal('chartDetailModal');
             if (window.lucide) lucide.createIcons();
+            if (!desc) window.chartGenSummary(b.id || '');
         }
         window.chartGenSummary = async function(id) {
             const b = (chartState._byId && chartState._byId[id]) || null;
@@ -3370,8 +3394,9 @@ INSTRUKSI:
             if (!box) return;
             const pub = chartState.publisher;
             const month = chartState.month;
+            const region = chartState.region || 'id';
             const monthLabel = chartMonthLabel(month) || 'terkini';
-            const cacheKey = pub + '|' + month;
+            const cacheKey = pub + '|' + month + '|' + region;
             chartState._mode = 'bestseller';
             if (!loadMore) {
                 const cached = chartState._bsCache[cacheKey];
@@ -3395,10 +3420,15 @@ INSTRUKSI:
             } else {
                 box.innerHTML = '<div class="chart-ai-loading"><div class="chart-ai-spinner"></div><div>AI sedang mencari best seller ' + chartEsc(monthLabel) + ' di web...</div></div>';
             }
-            const scope = (pub === 'Semua') ? 'berbagai penerbit besar Indonesia (Gramedia, Mizan, Bentang, Republika, Elex Media, dll)' : 'penerbit ' + pub;
-            const wsQuery = (pub === 'Semua')
-                ? ('daftar buku best seller terlaris di Indonesia bulan ' + monthLabel + ' Gramedia Mizan Bentang toko buku')
-                : ('buku best seller terlaris penerbit ' + pub + ' ' + monthLabel + ' Indonesia');
+            const isIntl = region === 'intl';
+            const scope = isIntl
+                ? (pub === 'Semua' ? 'penerbit internasional terkemuka di dunia' : 'penerbit ' + pub)
+                : (pub === 'Semua' ? 'berbagai penerbit besar Indonesia (Gramedia, Mizan, Bentang, Republika, Elex Media, dll)' : 'penerbit ' + pub);
+            const wsQuery = isIntl
+                ? ('international bestseller books list ' + monthLabel + ' New York Times global bestsellers')
+                : ((pub === 'Semua')
+                    ? ('daftar buku best seller terlaris di Indonesia bulan ' + monthLabel + ' Gramedia Mizan Bentang toko buku')
+                    : ('buku best seller terlaris penerbit ' + pub + ' ' + monthLabel + ' Indonesia'));
             let webContext = '';
             let usedWeb = false;
             try {
@@ -3413,12 +3443,12 @@ INSTRUKSI:
             } catch (e) { usedWeb = false; }
             const exclude = chartState._items.map(function(b) { return b.title; }).filter(Boolean);
             const excludeTxt = exclude.length ? ('\nJANGAN ulangi judul berikut yang sudah terdaftar: ' + exclude.join('; ') + '.') : '';
-            const sys = 'Kamu adalah kurator buku berpengalaman di Indonesia. Jawab HANYA dengan JSON array valid, tanpa teks pembuka, tanpa penutup, tanpa markdown atau pagar kode. Setiap elemen objek: {"title":"judul nyata","author":"nama penulis","publisher":"penerbit","reason":"alasan singkat satu kalimat kenapa populer"}.';
+            const sys = 'Kamu adalah kurator buku berpengalaman. Jawab HANYA dengan JSON array valid, tanpa teks pembuka, tanpa penutup, tanpa markdown atau pagar kode. Setiap elemen objek: {"title":"judul nyata","author":"nama penulis","publisher":"penerbit","genre":"genre buku misal Novel, Bisnis, Psikologi"}.';
             let user;
             if (usedWeb) {
                 user = 'Bulan target: ' + monthLabel + '. Berikut hasil pencarian web terkait buku best seller:\n\n' + webContext + '\nDari informasi web di atas, susun buku best seller peringkat ' + startRank + ' sampai ' + endRank + ' (tepat 20 buku) untuk ' + scope + ' pada ' + monthLabel + '. Utamakan judul dan penulis nyata dari hasil web. Jika kurang, lengkapi dengan buku populer yang masuk akal.' + excludeTxt + ' Jawab HANYA JSON array.';
             } else {
-                user = 'Berikan buku best seller peringkat ' + startRank + ' sampai ' + endRank + ' (tepat 20 buku) di Indonesia dari ' + scope + ' untuk periode ' + monthLabel + '. Gunakan judul dan penulis yang nyata.' + excludeTxt + ' Jawab HANYA JSON array.';
+                user = 'Berikan buku best seller peringkat ' + startRank + ' sampai ' + endRank + ' (tepat 20 buku) ' + (isIntl ? 'di pasar internasional' : 'di Indonesia') + ' dari ' + scope + ' untuk periode ' + monthLabel + '. Gunakan judul dan penulis yang nyata.' + excludeTxt + ' Jawab HANYA JSON array.';
             }
             let reply = '';
             try {
@@ -3456,7 +3486,8 @@ INSTRUKSI:
                     description: hit.description || '',
                     imageLinks: hit.imageLinks,
                     infoLink: hit.infoLink || '',
-                    reason: it.reason || ''
+                    categories: hit.categories,
+                    genre: it.genre || ((hit.categories && hit.categories[0]) ? String(hit.categories[0]).split('/')[0].trim() : '')
                 };
             }));
             chartState._items = chartState._items.concat(enriched);
@@ -3480,22 +3511,37 @@ INSTRUKSI:
             }
             box.innerHTML = chartSkeleton();
             let books = [];
+            const seen = {};
+            const pushBooks = function(arr, genre) {
+                (arr || []).forEach(function(b) {
+                    if (b && b.title && b.id && !seen[b.id]) {
+                        seen[b.id] = 1;
+                        if (genre && !b.genre) b.genre = genre;
+                        books.push(b);
+                    }
+                });
+            };
             if (chartState.term) {
                 let q = chartState.term;
                 if (chartState.publisher !== 'Semua') q += ' inpublisher:"' + chartState.publisher + '"';
-                books = await chartGbFetchSmart(q, 30);
+                pushBooks(await chartGbFetchSmart(q, 30));
             } else if (chartState.publisher === 'Semua') {
-                const subjects = ['novel', 'pengembangan diri', 'bisnis', 'psikologi', 'sejarah', 'agama islam'];
-                const seen = {};
-                const arrs = await Promise.all(subjects.map(function(s) { return chartGbFetch(s, 6, { lang: true }); }));
-                arrs.flat().forEach(function(b) { if (b && b.title && !seen[b.id]) { seen[b.id] = 1; books.push(b); } });
-                if (!books.length) {
-                    const arrs2 = await Promise.all(subjects.map(function(s) { return chartGbFetch(s, 6, {}); }));
-                    arrs2.flat().forEach(function(b) { if (b && b.title && !seen[b.id]) { seen[b.id] = 1; books.push(b); } });
-                }
+                const subjects = [
+                    { q: 'subject:fiction', g: 'Fiksi' },
+                    { q: 'subject:"self-help"', g: 'Pengembangan Diri' },
+                    { q: 'subject:business', g: 'Bisnis' },
+                    { q: 'subject:psychology', g: 'Psikologi' },
+                    { q: 'subject:history', g: 'Sejarah' },
+                    { q: 'novel indonesia', g: 'Novel' }
+                ];
+                const arrs = await Promise.all(subjects.map(function(s) { return chartGbFetch(s.q, 8, {}); }));
+                arrs.forEach(function(arr, i) { pushBooks(arr, subjects[i].g); });
+                if (!books.length) pushBooks(await chartGbFetch('bestseller', 30, {}));
+                if (!books.length) pushBooks(await chartGbFetch('book', 30, {}));
             } else {
-                books = await chartGbFetchSmart('inpublisher:"' + chartState.publisher + '"', 30);
-                if (!books.length) books = await chartGbFetchSmart(chartState.publisher, 30);
+                pushBooks(await chartGbFetch('inpublisher:"' + chartState.publisher + '"', 30, {}));
+                if (!books.length) pushBooks(await chartGbFetch(chartState.publisher + ' buku', 30, {}));
+                if (!books.length) pushBooks(await chartGbFetch(chartState.publisher, 30, {}));
             }
             books = books.filter(function(b) { return b && b.title; });
             if (chartState.sort === 'newest') books.sort(function(a, b) { return String(b.publishedDate || '').localeCompare(String(a.publishedDate || '')); });
