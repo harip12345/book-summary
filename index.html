@@ -3233,8 +3233,9 @@ INSTRUKSI:
             chartState.month = val;
             chartLoad();
         };
+        let chartLastWebError = '';
         async function chartWebSearch(query, includeDomains) {
-            if (!FOLIO_API_URL) return null;
+            if (!FOLIO_API_URL) { chartLastWebError = 'URL API belum diset'; return null; }
             try {
                 const payload = { query: query, max_results: 12 };
                 if (includeDomains && includeDomains.length) payload.include_domains = includeDomains;
@@ -3243,10 +3244,17 @@ INSTRUKSI:
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-                if (!res.ok) return null;
+                if (!res.ok) {
+                    let reason = 'HTTP ' + res.status;
+                    try { const ej = await res.json(); if (ej && ej.error) reason = ej.error; } catch (e2) {}
+                    chartLastWebError = reason;
+                    return null;
+                }
                 const data = await res.json();
+                if (!data || (!data.answer && !(data.results && data.results.length))) { chartLastWebError = 'pencarian web tidak menemukan hasil'; }
+                else { chartLastWebError = ''; }
                 return data || null;
-            } catch (e) { console.warn('web-search error', e); return null; }
+            } catch (e) { console.warn('web-search error', e); chartLastWebError = 'gagal terhubung ke server pencarian'; return null; }
         }
 
         function chartSkeleton() {
@@ -3326,7 +3334,7 @@ INSTRUKSI:
             const pub = chartState.publisher;
             const regionLabel = (chartState.region === 'intl') ? 'Internasional' : 'Indonesia';
             const monthLabel = chartMonthLabel(chartState.month) || 'terkini';
-            const note = '<div class="chart-bestseller-note"><i data-lucide="sparkles" style="width:15px;color:var(--accent);"></i> Best seller ' + chartEsc(regionLabel) + ' ' + chartEsc(monthLabel) + ' (' + chartEsc(pub === 'Semua' ? 'berbagai penerbit' : pub) + ')' + (usedWeb ? ', berdasarkan pencarian web' : ' (mode AI tanpa web)') + '. Tekan muat ulang untuk menyegarkan.</div>';
+            const note = '<div class="chart-bestseller-note"><i data-lucide="sparkles" style="width:15px;color:var(--accent);"></i> Best seller ' + chartEsc(regionLabel) + ' ' + chartEsc(monthLabel) + ' (' + chartEsc(pub === 'Semua' ? 'berbagai penerbit' : pub) + ')' + (usedWeb ? ', berdasarkan pencarian web sumber resmi' : (' (mode AI tanpa web' + (chartState._bsWebError ? ': ' + chartEsc(chartState._bsWebError) : '') + ')')) + '. Tekan muat ulang untuk menyegarkan.</div>';
             const next = chartState._items.length + 1;
             chartRenderList(chartState._items, { note: note, canLoadMore: true, loadMoreFn: 'window.chartLoadMoreBestseller()', loadMoreLabel: 'Lihat peringkat ' + next + ' - ' + (next + 19), loadMoreId: 'chartLoadMoreBtn' });
         }
@@ -3402,6 +3410,7 @@ INSTRUKSI:
                 if (cached && cached.items && cached.items.length) {
                     chartState._items = cached.items.slice();
                     chartState._bsUsedWeb = cached.usedWeb;
+                    chartState._bsWebError = cached.webError || '';
                     chartRenderBestseller();
                     return;
                 }
@@ -3493,7 +3502,8 @@ INSTRUKSI:
             }));
             chartState._items = chartState._items.concat(enriched);
             chartState._bsUsedWeb = usedWeb;
-            chartState._bsCache[cacheKey] = { items: chartState._items.slice(), usedWeb: usedWeb };
+            chartState._bsWebError = usedWeb ? '' : (chartLastWebError || '');
+            chartState._bsCache[cacheKey] = { items: chartState._items.slice(), usedWeb: usedWeb, webError: usedWeb ? '' : (chartLastWebError || '') };
             chartRenderBestseller();
         }
 
