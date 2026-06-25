@@ -3246,7 +3246,13 @@ INSTRUKSI:
                 });
                 if (!res.ok) {
                     let reason = 'HTTP ' + res.status;
-                    try { const ej = await res.json(); if (ej && ej.error) reason = ej.error; } catch (e2) {}
+                    try {
+                        const txt = await res.text();
+                        let parsed = null;
+                        try { parsed = JSON.parse(txt); } catch (e3) {}
+                        if (parsed && parsed.error) { reason = parsed.error + (parsed.detail ? ' - ' + parsed.detail : ''); }
+                        else if (txt) { reason = 'HTTP ' + res.status + ': ' + txt.slice(0, 100); }
+                    } catch (e2) {}
                     chartLastWebError = reason;
                     return null;
                 }
