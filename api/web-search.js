@@ -60,7 +60,8 @@ export default async function handler(req, res) {
 			search_depth: 'basic',
 			topic: 'general',
 			max_results: maxResults,
-			include_answer: true
+			include_answer: true,
+			include_raw_content: true
 		};
 		if (includeDomains.length) tavilyPayload.include_domains = includeDomains;
 
@@ -86,7 +87,7 @@ export default async function handler(req, res) {
 
 		const data = await tavilyRes.json();
 		const results = (data.results || []).map(function (r) {
-			return { title: r.title || '', url: r.url || '', content: r.content || '', score: r.score };
+			return { title: r.title || '', url: r.url || '', content: r.content || '', raw_content: String(r.raw_content || '').slice(0, 6000), score: r.score };
 		});
 
 		res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
