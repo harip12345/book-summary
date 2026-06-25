@@ -3136,27 +3136,48 @@ INSTRUKSI:
         // ===================================================================
         // CHART BOOK - daftar buku via Google Books API + Pilihan Editor (admin)
         // ===================================================================
-        const CHART_PUBLISHERS = ['Semua', 'Gramedia', 'Mizan', 'Bentang', 'Republika', 'Elex Media', 'Erlangga', 'Noura', 'Bhuana Ilmu Populer', 'GagasMedia'];
-        const CHART_SRC_ID = ['gramedia.com', 'gpu.id', 'mizanstore.com', 'bentangpustaka.com', 'republikapenerbit.com', 'bukukita.com', 'periplus.com', 'goodreads.com'];
-        const CHART_SRC_INTL = ['nytimes.com', 'publishersweekly.com', 'goodreads.com', 'amazon.com', 'waterstones.com', 'usatoday.com'];
-        let chartState = { publisher: 'Semua', sort: 'newest', term: '', month: '', region: 'id', loaded: false, _bsCache: {} };
+        const CHART_SRC_ID = ['gpu.id', 'gramedia.com'];
+        const CHART_SRC_INTL = ['nytimes.com', 'gramedia.com', 'amazon.com'];
+        const CHART_SRC_URLS_ID = 'gpu.id/book/best-seller dan gramedia.com/best-seller/novel-fiksi';
+        const CHART_SRC_URLS_INTL = 'nytimes.com/books/best-sellers, gramedia.com international books, dan amazon.com book best sellers';
+        let chartState = { publisher: 'Semua', sort: 'newest', term: '', month: '', region: 'id', loaded: false, _bsCache: {}, _pubChips: [] };
 
         function chartEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
         function chartHttps(u) { return String(u || '').replace('http://', 'https://'); }
 
+        function chartPublisherList() {
+            const counts = {};
+            (chartState._items || []).forEach(function(b) {
+                const p = String((b && b.publisher) || '').trim();
+                if (!p) return;
+                const k = p.toLowerCase();
+                if (!counts[k]) counts[k] = { name: p, n: 0 };
+                counts[k].n++;
+            });
+            return Object.keys(counts).map(function(k) { return counts[k]; })
+                .sort(function(a, b) { return b.n - a.n; })
+                .slice(0, 12)
+                .map(function(x) { return x.name; });
+        }
+        function chartFilteredItems() {
+            const all = chartState._items || [];
+            const pub = chartState.publisher;
+            if (pub === 'Semua') return all;
+            return all.filter(function(b) { return String((b && b.publisher) || '').trim().toLowerCase() === String(pub).trim().toLowerCase(); });
+        }
         function chartRenderPublisherChips() {
             const row = document.getElementById('chartPublisherRow');
             if (!row) return;
-            row.innerHTML = CHART_PUBLISHERS.map(function(p) {
-                return '<div class="filter-chip ' + (p === chartState.publisher ? 'active' : '') + '" onclick="window.chartSetPublisher(\'' + p + '\', this)">' + p + '</div>';
+            chartState._pubChips = ['Semua'].concat(chartPublisherList());
+            if (chartState._pubChips.length <= 1) { row.innerHTML = ''; return; }
+            row.innerHTML = chartState._pubChips.map(function(p, i) {
+                return '<div class="filter-chip ' + (p === chartState.publisher ? 'active' : '') + '" onclick="window.chartSetPublisher(' + i + ')">' + chartEsc(p) + '</div>';
             }).join('');
         }
-        window.chartSetPublisher = function(p, el) {
-            chartState.publisher = p; chartState.term = '';
-            const inp = document.getElementById('chartSearchInput'); if (inp) inp.value = '';
-            document.querySelectorAll('#chartPublisherRow .filter-chip').forEach(function(c) { c.classList.remove('active'); });
-            if (el) el.classList.add('active');
-            chartLoad();
+        window.chartSetPublisher = function(i) {
+            chartState.publisher = (chartState._pubChips && chartState._pubChips[i]) || 'Semua';
+            if (chartState._mode === 'bestseller') { chartRenderBestseller(); }
+            else { chartRenderPublisherChips(); chartRenderList(chartFilteredItems(), {}); }
         };
         window.chartSetSort = function(s, el) {
             chartState.sort = s;
@@ -3342,7 +3363,8 @@ INSTRUKSI:
             const monthLabel = chartMonthLabel(chartState.month) || 'terkini';
             const note = '<div class="chart-bestseller-note"><i data-lucide="sparkles" style="width:15px;color:var(--accent);"></i> Best seller ' + chartEsc(regionLabel) + ' ' + chartEsc(monthLabel) + ' (' + chartEsc(pub === 'Semua' ? 'berbagai penerbit' : pub) + ')' + (usedWeb ? ', berdasarkan pencarian web sumber resmi' : (' (mode AI tanpa web' + (chartState._bsWebError ? ': ' + chartEsc(chartState._bsWebError) : '') + ')')) + '. Tekan muat ulang untuk menyegarkan.</div>';
             const next = chartState._items.length + 1;
-            chartRenderList(chartState._items, { note: note, canLoadMore: true, loadMoreFn: 'window.chartLoadMoreBestseller()', loadMoreLabel: 'Lihat peringkat ' + next + ' - ' + (next + 19), loadMoreId: 'chartLoadMoreBtn' });
+            chartRenderPublisherChips();
+            chartRenderList(chartFilteredItems(), { note: note, canLoadMore: true, loadMoreFn: 'window.chartLoadMoreBestseller()', loadMoreLabel: 'Lihat peringkat ' + next + ' - ' + (next + 19), loadMoreId: 'chartLoadMoreBtn' });
         }
         window.chartLoadMoreBestseller = function() { chartGenerateBestsellers(true); };
         window.chartOpenBook = function(id) {
@@ -3409,7 +3431,7 @@ INSTRUKSI:
             const month = chartState.month;
             const region = chartState.region || 'id';
             const monthLabel = chartMonthLabel(month) || 'terkini';
-            const cacheKey = pub + '|' + month + '|' + region;
+            const cacheKey = month + '|' + region;
             chartState._mode = 'bestseller';
             if (!loadMore) {
                 const cached = chartState._bsCache[cacheKey];
@@ -3435,14 +3457,9 @@ INSTRUKSI:
                 box.innerHTML = '<div class="chart-ai-loading"><div class="chart-ai-spinner"></div><div>AI sedang mencari best seller ' + chartEsc(monthLabel) + ' di web...</div></div>';
             }
             const isIntl = region === 'intl';
-            const scope = isIntl
-                ? (pub === 'Semua' ? 'penerbit internasional terkemuka di dunia' : 'penerbit ' + pub)
-                : (pub === 'Semua' ? 'berbagai penerbit besar Indonesia (Gramedia, Mizan, Bentang, Republika, Elex Media, dll)' : 'penerbit ' + pub);
             const wsQuery = isIntl
-                ? ('international bestseller books list ' + monthLabel + ' New York Times global bestsellers')
-                : ((pub === 'Semua')
-                    ? ('daftar buku best seller terlaris di Indonesia bulan ' + monthLabel + ' Gramedia Mizan Bentang toko buku')
-                    : ('buku best seller terlaris penerbit ' + pub + ' ' + monthLabel + ' Indonesia'));
+                ? ('international book best sellers list ' + monthLabel + ' from ' + CHART_SRC_URLS_INTL)
+                : ('daftar buku best seller terlaris terbaru di Indonesia bulan ' + monthLabel + ' dari ' + CHART_SRC_URLS_ID);
             const srcDomains = isIntl ? CHART_SRC_INTL : CHART_SRC_ID;
             const srcLabel = srcDomains.join(', ');
             let webContext = '';
@@ -3462,9 +3479,9 @@ INSTRUKSI:
             const sys = 'Kamu adalah kurator buku yang sangat teliti dan akurat. Susun daftar best seller NYATA hanya berdasarkan sumber web resmi yang diberikan. DILARANG mengarang judul atau penulis; jika sebuah judul tidak didukung sumber, jangan masukkan. Pertahankan urutan peringkat sesuai sumber. Jawab HANYA dengan JSON array valid, tanpa teks pembuka, tanpa penutup, tanpa markdown atau pagar kode. Setiap elemen objek: {"title":"judul persis dari sumber","author":"nama penulis","publisher":"penerbit","genre":"genre buku misal Novel, Bisnis, Psikologi","source":"domain sumber"}.';
             let user;
             if (usedWeb) {
-                user = 'Sumber web resmi (' + srcLabel + ') untuk best seller ' + (isIntl ? 'internasional' : 'Indonesia') + ' periode ' + monthLabel + ':\n\n' + webContext + '\nDari sumber resmi di atas, susun daftar best seller peringkat ' + startRank + ' sampai ' + endRank + '. Gunakan HANYA judul dan penulis yang benar-benar muncul di sumber, persis. Pertahankan urutan peringkat sesuai sumber. JANGAN menambah buku yang tidak ada di sumber. Jika buku di sumber kurang dari 20, kembalikan hanya yang ada (boleh kurang).' + excludeTxt + ' Jawab HANYA JSON array.';
+                user = 'Sumber web resmi (' + srcLabel + ') untuk best seller ' + (isIntl ? 'internasional' : 'Indonesia') + ' periode ' + monthLabel + ':\n\n' + webContext + '\nDari sumber resmi di atas, susun daftar best seller peringkat ' + startRank + ' sampai ' + endRank + ', urutkan dari peringkat 1 (paling laris) di posisi teratas sesuai daftar terbaru. Gunakan HANYA judul dan penulis yang benar-benar muncul di sumber, persis. Pertahankan urutan peringkat sesuai sumber. JANGAN menambah buku yang tidak ada di sumber. Jika buku di sumber kurang dari 20, kembalikan hanya yang ada (boleh kurang).' + excludeTxt + ' Jawab HANYA JSON array.';
             } else {
-                user = 'Berikan buku best seller peringkat ' + startRank + ' sampai ' + endRank + ' (maksimal 20 buku) ' + (isIntl ? 'di pasar internasional' : 'di Indonesia') + ' dari ' + scope + ' untuk periode ' + monthLabel + '. Gunakan HANYA judul dan penulis yang benar-benar nyata dan terkenal; jangan mengarang.' + excludeTxt + ' Jawab HANYA JSON array.';
+                user = 'Berikan daftar buku best seller terbaru peringkat ' + startRank + ' sampai ' + endRank + ' (maksimal 20 buku) ' + (isIntl ? 'di pasar internasional' : 'di Indonesia') + ' untuk periode ' + monthLabel + ', urutkan dari peringkat 1 (paling laris) di posisi teratas. Gunakan HANYA judul dan penulis yang benar-benar nyata dan terkenal; jangan mengarang.' + excludeTxt + ' Jawab HANYA JSON array.';
             }
             let reply = '';
             try {
@@ -3539,10 +3556,8 @@ INSTRUKSI:
                 });
             };
             if (chartState.term) {
-                let q = chartState.term;
-                if (chartState.publisher !== 'Semua') q += ' inpublisher:"' + chartState.publisher + '"';
-                pushBooks(await chartGbFetchSmart(q, 30));
-            } else if (chartState.publisher === 'Semua') {
+                pushBooks(await chartGbFetchSmart(chartState.term, 30));
+            } else {
                 const subjects = [
                     { q: 'subject:fiction', g: 'Fiksi' },
                     { q: 'subject:"self-help"', g: 'Pengembangan Diri' },
@@ -3555,21 +3570,18 @@ INSTRUKSI:
                 arrs.forEach(function(arr, i) { pushBooks(arr, subjects[i].g); });
                 if (!books.length) pushBooks(await chartGbFetch('bestseller', 30, {}));
                 if (!books.length) pushBooks(await chartGbFetch('book', 30, {}));
-            } else {
-                pushBooks(await chartGbFetch('inpublisher:"' + chartState.publisher + '"', 30, {}));
-                if (!books.length) pushBooks(await chartGbFetch(chartState.publisher + ' buku', 30, {}));
-                if (!books.length) pushBooks(await chartGbFetch(chartState.publisher, 30, {}));
             }
             books = books.filter(function(b) { return b && b.title; });
             if (chartState.sort === 'newest') books.sort(function(a, b) { return String(b.publishedDate || '').localeCompare(String(a.publishedDate || '')); });
             if (!books.length) {
-                box.innerHTML = '<div class="chart-empty"><i data-lucide="book-open" style="width:30px;opacity:0.5;"></i><div>Tidak ada hasil. Coba penerbit lain, atau cari judul tertentu di kotak pencarian.</div></div>';
+                box.innerHTML = '<div class="chart-empty"><i data-lucide="book-open" style="width:30px;opacity:0.5;"></i><div>Tidak ada hasil. Coba cari judul tertentu di kotak pencarian.</div></div>';
                 if (window.lucide) lucide.createIcons();
                 return;
             }
             chartState._mode = 'browse';
             chartState._items = books;
-            chartRenderList(books, {});
+            chartRenderPublisherChips();
+            chartRenderList(chartFilteredItems(), {});
         }
 
         window.chartAddToLibrary = async function(payload) {
