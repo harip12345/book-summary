@@ -3136,11 +3136,11 @@ INSTRUKSI:
         // ===================================================================
         // CHART BOOK - daftar buku via Google Books API + Pilihan Editor (admin)
         // ===================================================================
-        const CHART_SRC_ID = ['gpu.id', 'gramedia.com'];
+        const CHART_SRC_ID = ['gpu.id'];
         const CHART_SRC_INTL = ['nytimes.com', 'gramedia.com', 'amazon.com'];
-        const CHART_SRC_URLS_ID = 'gpu.id/book/best-seller dan gramedia.com/best-seller/novel-fiksi';
+        const CHART_SRC_URLS_ID = 'gpu.id/book/best-seller';
         const CHART_SRC_URLS_INTL = 'nytimes.com/books/best-sellers, gramedia.com/categories/international-books, dan amazon.com book best sellers';
-        const CHART_SOURCES_ID = [{ label: 'GPU', url: 'gpu.id/book/best-seller' }, { label: 'Novel Best Seller', url: 'gramedia.com/best-seller/novel-fiksi' }];
+        const CHART_SOURCES_ID = [{ label: 'GPU', url: 'gpu.id/book/best-seller' }];
         const CHART_SOURCES_INTL = [{ label: 'New York Times', url: 'nytimes.com/books/best-sellers' }, { label: 'Gramedia Internasional', url: 'gramedia.com/categories/international-books' }, { label: 'Amazon', url: 'amazon.com' }];
         let chartState = { publisher: 'Semua', sort: 'newest', term: '', month: '', region: 'id', loaded: false, _bsCache: {}, _pubChips: [] };
 
@@ -3449,6 +3449,7 @@ INSTRUKSI:
             }
             const startRank = chartState._items.length + 1;
             const endRank = startRank + 19;
+            const page = Math.floor((startRank - 1) / 20) + 1;
             if (loadMore) {
                 const btn = document.getElementById('chartLoadMoreBtn');
                 if (btn) { btn.innerHTML = '<span>Memuat peringkat ' + startRank + ' - ' + endRank + '...</span>'; btn.disabled = true; }
@@ -3457,8 +3458,8 @@ INSTRUKSI:
             }
             const isIntl = region === 'intl';
             const wsQuery = isIntl
-                ? ('international book best sellers list ' + monthLabel + ' from ' + CHART_SRC_URLS_INTL)
-                : ('daftar buku best seller terlaris terbaru di Indonesia bulan ' + monthLabel + ' dari ' + CHART_SRC_URLS_ID);
+                ? ('international book best sellers list ' + monthLabel + ' page ' + page + ' from ' + CHART_SRC_URLS_INTL)
+                : ('daftar buku best seller terlaris Indonesia dari https://gpu.id/book/best-seller?page=' + page);
             const srcDomains = isIntl ? CHART_SRC_INTL : CHART_SRC_ID;
             const srcLabel = srcDomains.join(', ');
             const srcList = isIntl ? CHART_SOURCES_INTL : CHART_SOURCES_ID;
@@ -3489,7 +3490,7 @@ INSTRUKSI:
             const sys = 'Kamu adalah kurator buku yang sangat teliti dan akurat. Susun daftar best seller NYATA hanya berdasarkan sumber web resmi yang diberikan. DILARANG mengarang judul atau penulis; jika sebuah judul tidak didukung sumber, jangan masukkan. Pertahankan urutan PERSIS seperti yang tampil di situs sumber aslinya (peringkat 1 paling laris di posisi teratas). Jawab HANYA dengan JSON array valid, tanpa teks pembuka, tanpa penutup, tanpa markdown atau pagar kode. Setiap elemen objek: {"title":"judul persis dari sumber","author":"nama penulis","publisher":"penerbit","genre":"genre buku misal Novel, Bisnis, Psikologi","source":"label sumber"}. Nilai source WAJIB salah satu dari: ' + srcLabelOptions + ' (sesuai halaman tempat buku tercantum).';
             let user;
             if (usedWeb) {
-                user = 'Sumber web resmi (' + srcLabel + ') untuk best seller ' + (isIntl ? 'internasional' : 'Indonesia') + ' periode ' + monthLabel + ':\n\n' + webContext + '\nDari sumber resmi di atas, susun daftar best seller peringkat ' + startRank + ' sampai ' + endRank + '. Pertahankan urutan PERSIS seperti yang tampil di situs sumber aslinya (peringkat 1 paling laris di posisi teratas). Untuk setiap buku, isi field source dengan label pada penanda [sumber: ...] di entri tempat buku itu muncul (salah satu dari: ' + srcLabelOptions + '). Gunakan HANYA judul dan penulis yang benar-benar muncul di sumber, persis. JANGAN menambah buku yang tidak ada di sumber. Jika buku di sumber kurang dari 20, kembalikan hanya yang ada (boleh kurang).' + excludeTxt + ' Jawab HANYA JSON array.';
+                user = 'Sumber web resmi (' + srcLabel + ') untuk best seller ' + (isIntl ? 'internasional' : 'Indonesia') + ' periode ' + monthLabel + ':\n\n' + webContext + '\nDari sumber resmi di atas, susun daftar best seller peringkat ' + startRank + ' sampai ' + endRank + '. Pertahankan urutan PERSIS seperti yang tampil di situs sumber aslinya (peringkat 1 paling laris di posisi teratas). Untuk setiap buku, isi field source dengan label pada penanda [sumber: ...] di entri tempat buku itu muncul (salah satu dari: ' + srcLabelOptions + '). Gunakan HANYA judul dan penulis yang benar-benar muncul di sumber, persis. Pastikan ejaan/penulisan judul, nama penulis, dan genre PERSIS sesuai sumber. JANGAN menambah buku yang tidak ada di sumber. Jika buku di sumber kurang dari 20, kembalikan hanya yang ada (boleh kurang).' + excludeTxt + ' Jawab HANYA JSON array.';
             } else {
                 user = 'Berikan daftar buku best seller terbaru peringkat ' + startRank + ' sampai ' + endRank + ' (maksimal 20 buku) ' + (isIntl ? 'di pasar internasional' : 'di Indonesia') + ' untuk periode ' + monthLabel + ', urutkan dari peringkat 1 (paling laris) di posisi teratas. Gunakan HANYA judul dan penulis yang benar-benar nyata dan terkenal; jangan mengarang.' + excludeTxt + ' Jawab HANYA JSON array.';
             }
