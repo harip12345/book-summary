@@ -2,7 +2,7 @@
  * Folio AI - /api/generate-book
  *
  * Satu endpoint untuk dua aksi:
- *   action: "outline"  -> generate daftar bab + sinopsis (~400 token)
+ *   action: "outline"  -> generate daftar bab + sinopsis (JSON mode, andal)
  *   action: "chapter"  -> generate isi 1 bab on-demand (panjang & detail)
  *
  * Key Groq tersimpan di Vercel ENV, tidak pernah ke browser.
@@ -56,15 +56,18 @@ function log(level, msg, meta = {}) {
 	else console.log(JSON.stringify(entry));
 }
 
-async function callGroq(messages, maxTokens, model = 'llama-3.3-70b-versatile') {
+// extra: field tambahan untuk body (mis. response_format, temperature)
+async function callGroq(messages, maxTokens, model = 'llama-3.3-70b-versatile', extra = {}) {
 	const GROQ_API_KEY = process.env.GROQ_API_KEY;
+	const buildBody = (m) => JSON.stringify({ model: m, messages, max_tokens: maxTokens, temperature: 0.7, ...extra });
+
 	let res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
 		method: 'POST',
 		headers: {
 			'Content-Type':  'application/json',
 			'Authorization': `Bearer ${GROQ_API_KEY}`,
 		},
-		body: JSON.stringify({ model, messages, max_tokens: maxTokens, temperature: 0.7 }),
+		body: buildBody(model),
 	});
 
 	// Fallback ke model lebih kecil jika overloaded
@@ -72,7 +75,7 @@ async function callGroq(messages, maxTokens, model = 'llama-3.3-70b-versatile') 
 		res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
-			body: JSON.stringify({ model: 'llama-3.1-8b-instant', messages, max_tokens: maxTokens, temperature: 0.7 }),
+			body: buildBody('llama-3.1-8b-instant'),
 		});
 	}
 
@@ -88,6 +91,15 @@ async function callGroq(messages, maxTokens, model = 'llama-3.3-70b-versatile') 
 		usage:   data.usage,
 		model:   data.model,
 	};
+}
+
+// Ekstraksi JSON tahan banting: buang markdown fence lalu ambil dari { pertama sampai } terakhir.
+function safeParseJson(text) {
+	let raw = String(text || '').replace(/```json\n?/gi, '').replace(/```\n?/g, '').trim();
+	const first = raw.indexOf('{');
+	const last  = raw.lastIndexOf('}');
+	if (first !== -1 && last !== -1 && last > first) raw = raw.slice(first, last + 1);
+	try { return JSON.parse(raw); } catch { return null; }
 }
 
 export default async function handler(req, res) {
@@ -137,7 +149,7 @@ export default async function handler(req, res) {
 	if (action === 'outline') {
 		log('info', 'Generate outline', { ip, title, jumlahBab });
 
-		const prompt = `Bertindaklah sebagai ahli analisis literatur profesional. Tugasmu menyusun kerangka (outline) untuk ringkasan komprehensif tingkat tinggi (high-fidelity summary) dari sebuah buku, sehingga pembaca nantinya merasa seperti telah membaca buku aslinya secara utuh.
+		const prompt = `Bertindaklah sebagai ahli analisis literatur profesional. Tugasmu menyusun kerangka (outline) untuk ringkasan komprehensif tingkat tinggi dari sebuah buku, sehingga pembaca nantinya merasa seperti telah membaca buku aslinya secara utuh.
 
 Aturan:
 - Komprehensif: petakan SEMUA bagian/argumen penting buku ke dalam bab-bab. Jangan lewatkan model berpikir, kerangka, atau konsep kunci.
@@ -151,7 +163,7 @@ Buat outline untuk buku berikut:
 - Kategori: ${category || 'Umum'}
 - Jumlah bab: ${jumlahBab || 7}
 
-Balas HANYA dengan JSON berikut (tanpa teks lain, tanpa markdown):
+Balas HANYA dengan objek JSON valid berstruktur persis seperti ini (tanpa teks lain):
 {
   "kesimpulan": "2-3 kalimat tentang inti pesan buku ini (untuk halaman kesimpulan khusus, BUKAN diletakkan di tiap bab)",
   "keyPoints": ["poin 1", "poin 2", "poin 3", "poin 4", "poin 5"],
@@ -164,26 +176,22 @@ Balas HANYA dengan JSON berikut (tanpa teks lain, tanpa markdown):
 
 		try {
 			const result = await callGroq([
-				{ role: 'system', content: 'Kamu selalu balas dalam format JSON valid tanpa teks tambahan.' },
+				{ role: 'system', content: 'Kamu asisten yang SELALU membalas dengan satu objek JSON valid sesuai skema yang diminta, tanpa teks atau markdown tambahan.' },
 				{ role: 'user',   content: prompt },
-			], 900);
+			], 2000, 'llama-3.3-70b-versatile', { response_format: { type: 'json_object' }, temperature: 0.3 });
 
-			// Parse JSON - bersihkan markdown jika ada
-			const clean = result.content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-			let parsed;
-			try { parsed = JSON.parse(clean); }
-			catch { return res.status(502).json({ error: 'Format respons AI tidak valid. Coba lagi.' }); }
-
-			if (!Array.isArray(parsed.bab)) {
-				return res.status(502).json({ error: 'Outline tidak lengkap. Coba lagi.' });
+			const parsed = safeParseJson(result.content);
+			if (!parsed || !Array.isArray(parsed.bab) || parsed.bab.length === 0) {
+				log('error', 'Outline parse/empty', { ip, title, sample: String(result.content || '').slice(0, 200) });
+				return res.status(502).json({ error: 'Format respons AI tidak valid. Coba lagi.' });
 			}
 
 			log('info', 'Outline success', { ip, title, duration_ms: Date.now()-startTime, ...result.usage });
 
 			return res.status(200).json({
 				kesimpulan:  parsed.kesimpulan  || '',
-				keyPoints:   parsed.keyPoints   || [],
-				langkahAksi: parsed.langkahAksi || [],
+				keyPoints:   Array.isArray(parsed.keyPoints)   ? parsed.keyPoints   : [],
+				langkahAksi: Array.isArray(parsed.langkahAksi) ? parsed.langkahAksi : [],
 				bab:         parsed.bab,
 				usage:       result.usage,
 				model:       result.model,
