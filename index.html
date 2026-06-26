@@ -1398,16 +1398,16 @@
         .chart-bestseller-note{font-size:11.5px;color:var(--text-secondary);background:rgba(99,102,241,0.08);border:1px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:14px;display:flex;align-items:center;gap:8px;line-height:1.45;}
         /* ---- Chart Blinkist redesign ---- */
         .chart-list{display:flex;flex-direction:column;gap:12px;}
-        .chart-row{display:flex;align-items:center;gap:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:14px;position:relative;overflow:hidden;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
+        .chart-row{display:flex;align-items:center;gap:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:14px 14px 14px 10px;position:relative;overflow:hidden;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
         .chart-row:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(37,99,235,0.15);border-color:var(--accent-light);}
         .chart-row::after{content:'';position:absolute;inset:0;border-radius:18px;pointer-events:none;background:linear-gradient(120deg,rgba(59,130,246,0.06),rgba(139,92,246,0.06));opacity:0;transition:opacity .2s ease;}
         .chart-row:hover::after{opacity:1;}
         .chart-row.top::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--accent),var(--sage));}
-        .chart-rank{flex:0 0 34px;text-align:center;font-family:var(--font-display);font-weight:700;font-size:21px;font-variant-numeric:tabular-nums;color:var(--text-muted);letter-spacing:-0.5px;}
+        .chart-rank{flex:0 0 24px;text-align:center;font-family:var(--font-display);font-weight:700;font-size:21px;font-variant-numeric:tabular-nums;color:var(--text-muted);letter-spacing:-0.5px;}
         .chart-rank.rank-1{color:#D97706;}
         .chart-rank.rank-2{color:#64748B;}
         .chart-rank.rank-3{color:#B45309;}
-        .chart-thumb{flex:0 0 auto;width:52px;height:74px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,var(--bg-secondary),#EEF2FF);display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(0,0,0,0.14);}
+        .chart-thumb{flex:0 0 auto;width:64px;height:96px;border-radius:4px;overflow:hidden;background:linear-gradient(135deg,var(--bg-secondary),#EEF2FF);display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(0,0,0,0.14);}
         .chart-thumb img{width:100%;height:100%;object-fit:cover;}
         .chart-thumb-fallback{color:var(--accent);opacity:0.55;}
         .chart-info{flex:1;min-width:0;}
@@ -3732,7 +3732,24 @@ INSTRUKSI:
             chartRenderPublisherChips();
             if (window._editorPicks) window.renderEditorPicks(window._editorPicks);
             if (force) chartState._bsCache = {};
-            if (!chartState.loaded || force) { chartState.loaded = true; chartLoad(); }
+            if (!chartState.loaded || force) {
+                chartState.loaded = true;
+                // Default ke tab Best Seller Indonesia setiap kali halaman Chart pertama dibuka.
+                chartState.sort = 'bestseller';
+                chartState.bsRegion = 'id';
+                chartState.bsList = 'fiction';
+                chartState.term = '';
+                chartState._bsItems = []; chartState._bsPage = 0;
+                document.querySelectorAll('.chart-sort-btn').forEach(function(b) { b.classList.toggle('active', b.getAttribute('data-sort') === 'bestseller'); });
+                document.querySelectorAll('#chartBsBar .chart-region-btn[data-bsregion]').forEach(function(b) { b.classList.toggle('active', b.getAttribute('data-bsregion') === 'id'); });
+                const bsBar = document.getElementById('chartBsBar');
+                if (bsBar) bsBar.style.display = 'flex';
+                const lbl = document.getElementById('chartBsListLabel');
+                const tgl = document.getElementById('chartBsListToggle');
+                if (lbl) lbl.style.display = 'none';
+                if (tgl) tgl.style.display = 'none';
+                chartLoad();
+            }
         };
 
 
