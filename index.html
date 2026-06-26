@@ -1457,7 +1457,6 @@
                     <div class="chart-sort-toggle">
                         <button class="chart-sort-btn active" data-sort="newest" onclick="window.chartSetSort('newest', this)">Baru Rilis</button>
                         <button class="chart-sort-btn" data-sort="relevance" onclick="window.chartSetSort('relevance', this)">Populer</button>
-                        <button class="chart-sort-btn" data-sort="bestseller" onclick="window.chartSetSort('bestseller', this)"><i data-lucide="sparkles" style="width:13px;vertical-align:-2px;"></i> Best Seller</button>
                     </div>
                 </div>
                 <div class="chart-month-row" id="chartMonthRow" style="display:none;">
@@ -3182,8 +3181,6 @@ INSTRUKSI:
             chartState.sort = s;
             document.querySelectorAll('.chart-sort-btn').forEach(function(b) { b.classList.remove('active'); });
             if (el) el.classList.add('active');
-            const mr = document.getElementById('chartMonthRow');
-            if (mr) mr.style.display = (s === 'bestseller') ? 'flex' : 'none';
             chartLoad();
         };
         window.chartSetRegion = function(r, el) {
@@ -3205,15 +3202,33 @@ INSTRUKSI:
             if (opts.newest) u += '&orderBy=newest';
             return u;
         }
+        function chartBooksProxyUrl(q, max, opts) {
+            opts = opts || {};
+            let u = '/api/books?q=' + encodeURIComponent(q) + '&max=' + max;
+            if (opts.lang) u += '&lang=1';
+            if (opts.newest) u += '&newest=1';
+            return u;
+        }
+        function chartMapVolume(it) {
+            const v = it.volumeInfo || {};
+            return { id: it.id, title: v.title, authors: v.authors, publisher: v.publisher, publishedDate: v.publishedDate, description: v.description, imageLinks: v.imageLinks, infoLink: v.infoLink, categories: v.categories };
+        }
         async function chartGbFetch(q, max, opts) {
+            opts = opts || {};
+            // 1) Server proxy (avoids browser rate-limit/CORS; supports API key).
             try {
-                const res = await fetch(chartGbUrl(q, max, opts));
-                if (!res.ok) return [];
-                const data = await res.json();
-                return (data.items || []).map(function(it) {
-                    const v = it.volumeInfo || {};
-                    return { id: it.id, title: v.title, authors: v.authors, publisher: v.publisher, publishedDate: v.publishedDate, description: v.description, imageLinks: v.imageLinks, infoLink: v.infoLink, categories: v.categories };
-                });
+                const res = await fetch(chartBooksProxyUrl(q, max, opts));
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && Array.isArray(data.items) && data.items.length) return data.items;
+                }
+            } catch (e) {}
+            // 2) Fallback: direct Google Books API.
+            try {
+                const res2 = await fetch(chartGbUrl(q, max, opts));
+                if (!res2.ok) return [];
+                const data2 = await res2.json();
+                return (data2.items || []).map(chartMapVolume);
             } catch (e) { console.warn('GoogleBooks error', e); return []; }
         }
         async function chartGbFetchSmart(q, max) {
@@ -3547,14 +3562,10 @@ INSTRUKSI:
             const box = document.getElementById('chartResults');
             const title = document.getElementById('chartResultsTitle');
             if (!box) return;
+            const wantNewest = chartState.sort === 'newest';
             if (title) {
                 title.textContent = chartState.term ? ('Hasil pencarian: "' + chartState.term + '"')
-                    : (chartState.sort === 'bestseller' ? 'Best Seller (AI)'
-                    : (chartState.publisher === 'Semua' ? (chartState.sort === 'newest' ? 'Baru Rilis' : 'Buku Populer') : chartState.publisher));
-            }
-            if (chartState.sort === 'bestseller' && !chartState.term) {
-                await chartGenerateBestsellers(false);
-                return;
+                    : (wantNewest ? 'Baru Rilis' : 'Buku Populer');
             }
             box.innerHTML = chartSkeleton();
             let books = [];
@@ -3575,17 +3586,16 @@ INSTRUKSI:
                     { q: 'subject:fiction', g: 'Fiksi' },
                     { q: 'subject:"self-help"', g: 'Pengembangan Diri' },
                     { q: 'subject:business', g: 'Bisnis' },
-                    { q: 'subject:psychology', g: 'Psikologi' },
-                    { q: 'subject:history', g: 'Sejarah' },
                     { q: 'novel indonesia', g: 'Novel' }
                 ];
-                const arrs = await Promise.all(subjects.map(function(s) { return chartGbFetch(s.q, 8, {}); }));
+                const arrs = await Promise.all(subjects.map(function(s) { return chartGbFetch(s.q, 10, { newest: wantNewest }); }));
                 arrs.forEach(function(arr, i) { pushBooks(arr, subjects[i].g); });
-                if (!books.length) pushBooks(await chartGbFetch('bestseller', 30, {}));
+                if (!books.length) pushBooks(await chartGbFetch('buku', 30, { newest: wantNewest }));
                 if (!books.length) pushBooks(await chartGbFetch('book', 30, {}));
+                if (!books.length) pushBooks(await chartGbFetch('novel', 30, {}));
             }
             books = books.filter(function(b) { return b && b.title; });
-            if (chartState.sort === 'newest') books.sort(function(a, b) { return String(b.publishedDate || '').localeCompare(String(a.publishedDate || '')); });
+            if (wantNewest) books.sort(function(a, b) { return String(b.publishedDate || '').localeCompare(String(a.publishedDate || '')); });
             if (!books.length) {
                 box.innerHTML = '<div class="chart-empty"><i data-lucide="book-open" style="width:30px;opacity:0.5;"></i><div>Tidak ada hasil. Coba cari judul tertentu di kotak pencarian.</div></div>';
                 if (window.lucide) lucide.createIcons();
@@ -3645,9 +3655,6 @@ INSTRUKSI:
 
         window.initChartBook = function(force) {
             chartRenderPublisherChips();
-            chartBuildMonths();
-            const mr = document.getElementById('chartMonthRow');
-            if (mr) mr.style.display = (chartState.sort === 'bestseller') ? 'flex' : 'none';
             if (window._editorPicks) window.renderEditorPicks(window._editorPicks);
             if (force) chartState._bsCache = {};
             if (!chartState.loaded || force) { chartState.loaded = true; chartLoad(); }
