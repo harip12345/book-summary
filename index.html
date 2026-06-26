@@ -3377,7 +3377,7 @@ INSTRUKSI:
             return encodeURIComponent(JSON.stringify({
                 id: b.id, title: b.title || '', author: (b.authors && b.authors.join(', ')) || (b.author || ''),
                 publisher: b.publisher || '', category: chartBookGenre(b) || '', cover: cover, description: String(b.description || '').slice(0, 1500), infoLink: b.infoLink || ''
-            }));
+            })).replace(/'/g, '%27');
         }
         function chartRow(b, rank) {
             const cover = chartHttps((b.imageLinks && (b.imageLinks.thumbnail || b.imageLinks.smallThumbnail)) || b.cover);
