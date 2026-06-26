@@ -1457,15 +1457,19 @@
                     <div class="chart-sort-toggle">
                         <button class="chart-sort-btn active" data-sort="newest" onclick="window.chartSetSort('newest', this)">Baru Rilis</button>
                         <button class="chart-sort-btn" data-sort="relevance" onclick="window.chartSetSort('relevance', this)">Populer</button>
+                        <button class="chart-sort-btn" data-sort="bestseller" onclick="window.chartSetSort('bestseller', this)">Best Seller</button>
                     </div>
                 </div>
-                <div class="chart-month-row" id="chartMonthRow" style="display:none;">
-                    <span class="chart-month-label"><i data-lucide="calendar" style="width:14px;"></i> Bulan</span>
-                    <select class="chart-month-select" id="chartMonthSelect" onchange="window.chartSetMonth && window.chartSetMonth(this.value)"></select>
-                    <span class="chart-month-label" style="margin-left:8px;"><i data-lucide="globe" style="width:14px;"></i> Wilayah</span>
+                <div class="chart-month-row" id="chartBsBar" style="display:none;">
+                    <span class="chart-month-label"><i data-lucide="globe" style="width:14px;"></i> Wilayah</span>
                     <div class="chart-region-toggle">
-                        <button class="chart-region-btn active" data-region="id" onclick="window.chartSetRegion('id', this)">Indonesia</button>
-                        <button class="chart-region-btn" data-region="intl" onclick="window.chartSetRegion('intl', this)">Internasional</button>
+                        <button class="chart-region-btn active" data-bsregion="id" onclick="window.chartSetBsRegion('id', this)">Indonesia</button>
+                        <button class="chart-region-btn" data-bsregion="intl" onclick="window.chartSetBsRegion('intl', this)">Internasional</button>
+                    </div>
+                    <span class="chart-month-label" id="chartBsListLabel" style="margin-left:8px;display:none;"><i data-lucide="layers" style="width:14px;"></i> Kategori</span>
+                    <div class="chart-region-toggle" id="chartBsListToggle" style="display:none;">
+                        <button class="chart-region-btn active" data-bslist="fiction" onclick="window.chartSetBsList('fiction', this)">Fiksi</button>
+                        <button class="chart-region-btn" data-bslist="nonfiction" onclick="window.chartSetBsList('nonfiction', this)">Nonfiksi</button>
                     </div>
                 </div>
                 <div class="lib-filter-row" id="chartPublisherRow"></div>
@@ -3141,7 +3145,7 @@ INSTRUKSI:
         const CHART_SRC_URLS_INTL = 'nytimes.com/books/best-sellers, gramedia.com/categories/international-books, dan amazon.com book best sellers';
         const CHART_SOURCES_ID = [{ label: 'GPU', url: 'gpu.id/book/best-seller' }];
         const CHART_SOURCES_INTL = [{ label: 'New York Times', url: 'nytimes.com/books/best-sellers' }, { label: 'Gramedia Internasional', url: 'gramedia.com/categories/international-books' }, { label: 'Amazon', url: 'amazon.com' }];
-        let chartState = { publisher: 'Semua', sort: 'newest', term: '', month: '', region: 'id', loaded: false, _bsCache: {}, _pubChips: [] };
+        let chartState = { publisher: 'Semua', sort: 'newest', term: '', month: '', region: 'id', bsRegion: 'id', bsList: 'fiction', _bsItems: [], _bsPage: 0, loaded: false, _bsCache: {}, _pubChips: [] };
 
         function chartEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
         function chartHttps(u) { return String(u || '').replace('http://', 'https://'); }
@@ -3181,8 +3185,72 @@ INSTRUKSI:
             chartState.sort = s;
             document.querySelectorAll('.chart-sort-btn').forEach(function(b) { b.classList.remove('active'); });
             if (el) el.classList.add('active');
+            const bsBar = document.getElementById('chartBsBar');
+            if (bsBar) bsBar.style.display = (s === 'bestseller') ? 'flex' : 'none';
             chartLoad();
         };
+        window.chartSetBsRegion = function(r, el) {
+            chartState.bsRegion = r;
+            document.querySelectorAll('#chartBsBar .chart-region-btn[data-bsregion]').forEach(function(b) { b.classList.remove('active'); });
+            if (el) el.classList.add('active');
+            const lbl = document.getElementById('chartBsListLabel');
+            const tgl = document.getElementById('chartBsListToggle');
+            const intl = (r === 'intl');
+            if (lbl) lbl.style.display = intl ? 'inline-flex' : 'none';
+            if (tgl) tgl.style.display = intl ? 'flex' : 'none';
+            chartState._bsItems = []; chartState._bsPage = 0;
+            chartLoadBestseller(false);
+        };
+        window.chartSetBsList = function(l, el) {
+            chartState.bsList = l;
+            document.querySelectorAll('#chartBsListToggle .chart-region-btn[data-bslist]').forEach(function(b) { b.classList.remove('active'); });
+            if (el) el.classList.add('active');
+            chartState._bsItems = []; chartState._bsPage = 0;
+            chartLoadBestseller(false);
+        };
+        window.chartLoadMoreBestseller = function() { chartLoadBestseller(true); };
+        async function chartLoadBestseller(loadMore) {
+            const box = document.getElementById('chartResults');
+            const title = document.getElementById('chartResultsTitle');
+            if (!box) return;
+            const region = chartState.bsRegion || 'id';
+            if (title) title.textContent = (region === 'intl')
+                ? ('Best Seller Internasional - ' + (chartState.bsList === 'nonfiction' ? 'Nonfiksi' : 'Fiksi') + ' (NYT)')
+                : 'Best Seller Indonesia (GPU)';
+            const pubRow = document.getElementById('chartPublisherRow');
+            if (pubRow) pubRow.innerHTML = '';
+            if (!loadMore) { chartState._bsItems = []; chartState._bsPage = 0; box.innerHTML = chartSkeleton(); }
+            let newItems = []; let errMsg = '';
+            try {
+                let resp;
+                if (region === 'intl') {
+                    resp = await fetch('/api/bestseller-nyt?list=' + encodeURIComponent(chartState.bsList || 'fiction'));
+                } else {
+                    const page = (chartState._bsPage || 0) + 1;
+                    resp = await fetch('/api/bestseller-id?page=' + page);
+                    if (resp.ok) chartState._bsPage = page;
+                }
+                const data = await resp.json().catch(function() { return {}; });
+                if (resp.ok) { newItems = (data && data.items) || []; if (data && data.error) errMsg = data.error; }
+                else { errMsg = (data && data.error) || ('HTTP ' + resp.status); }
+            } catch (e) { errMsg = 'gagal terhubung ke server'; }
+            const seen = {};
+            (chartState._bsItems || []).forEach(function(b) { if (b && b.id) seen[b.id] = 1; });
+            newItems.forEach(function(b) { if (b && b.id && !seen[b.id]) { seen[b.id] = 1; chartState._bsItems.push(b); } });
+            const items = chartState._bsItems || [];
+            if (!items.length) {
+                box.innerHTML = '<div class="chart-empty"><i data-lucide="award" style="width:30px;opacity:0.5;"></i><div>Daftar best seller belum tersedia' + (errMsg ? ' (' + chartEsc(errMsg) + ')' : '') + '. Pastikan endpoint sudah ter-deploy' + (region === 'intl' ? ' dan NYT_API_KEY sudah diset.' : '.') + '</div></div>';
+                if (window.lucide) lucide.createIcons();
+                return;
+            }
+            chartState._mode = 'bestseller';
+            chartState._items = items;
+            const srcLabel = (region === 'intl') ? 'New York Times' : 'Gramedia Pustaka Utama (gpu.id)';
+            const note = '<div class="chart-bestseller-note"><i data-lucide="award" style="width:15px;color:var(--accent);"></i> Peringkat resmi dari ' + chartEsc(srcLabel) + '. Diambil langsung dari sumber, bukan hasil AI.</div>';
+            const canLoadMore = (region === 'id') && newItems.length >= 20;
+            const next = items.length + 1;
+            chartRenderList(items, { note: note, canLoadMore: canLoadMore, loadMoreFn: 'window.chartLoadMoreBestseller()', loadMoreLabel: 'Lihat peringkat ' + next + ' - ' + (next + 19), loadMoreId: 'chartLoadMoreBtn' });
+        }
         window.chartSetRegion = function(r, el) {
             chartState.region = r;
             document.querySelectorAll('#chartRegionRow .chart-region-btn').forEach(function(b) { b.classList.remove('active'); });
@@ -3380,7 +3448,7 @@ INSTRUKSI:
             chartRenderPublisherChips();
             chartRenderList(chartFilteredItems(), { note: note, canLoadMore: true, loadMoreFn: 'window.chartLoadMoreBestseller()', loadMoreLabel: 'Lihat peringkat ' + next + ' - ' + (next + 19), loadMoreId: 'chartLoadMoreBtn' });
         }
-        window.chartLoadMoreBestseller = function() { chartGenerateBestsellers(true); };
+        /* chartLoadMoreBestseller redefined above to use chartLoadBestseller */
         window.chartOpenBook = function(id) {
             const b = (chartState._byId && chartState._byId[id]) || null;
             if (b) chartShowDetail(b);
@@ -3562,6 +3630,7 @@ INSTRUKSI:
             const box = document.getElementById('chartResults');
             const title = document.getElementById('chartResultsTitle');
             if (!box) return;
+            if (chartState.sort === 'bestseller' && !chartState.term) { await chartLoadBestseller(false); return; }
             const wantNewest = chartState.sort === 'newest';
             if (title) {
                 title.textContent = chartState.term ? ('Hasil pencarian: "' + chartState.term + '"')
