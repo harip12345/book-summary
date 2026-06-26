@@ -1470,6 +1470,8 @@
                     <div class="chart-region-toggle" id="chartBsListToggle" style="display:none;">
                         <button class="chart-region-btn active" data-bslist="fiction" onclick="window.chartSetBsList('fiction', this)">Fiksi</button>
                         <button class="chart-region-btn" data-bslist="nonfiction" onclick="window.chartSetBsList('nonfiction', this)">Nonfiksi</button>
+                        <button class="chart-region-btn" data-bslist="advice" onclick="window.chartSetBsList('advice', this)">Advice &amp; How-To</button>
+                        <button class="chart-region-btn" data-bslist="children" onclick="window.chartSetBsList('children', this)">Anak (Middle Grade)</button>
                     </div>
                 </div>
                 <div class="lib-filter-row" id="chartPublisherRow"></div>
@@ -3215,7 +3217,7 @@ INSTRUKSI:
             if (!box) return;
             const region = chartState.bsRegion || 'id';
             if (title) title.textContent = (region === 'intl')
-                ? ('Best Seller Internasional - ' + (chartState.bsList === 'nonfiction' ? 'Nonfiksi' : 'Fiksi') + ' (NYT)')
+                ? ('Best Seller Internasional - ' + ({ fiction: 'Fiksi', nonfiction: 'Nonfiksi', advice: 'Advice & How-To', children: 'Anak (Middle Grade)' }[chartState.bsList] || 'Fiksi') + ' (NYT)')
                 : 'Best Seller Indonesia (GPU)';
             const pubRow = document.getElementById('chartPublisherRow');
             if (pubRow) pubRow.innerHTML = '';
