@@ -134,7 +134,15 @@ export default async function handler(req, res) {
     if (action === 'outline') {
         log('info', 'Generate outline', { ip, title, jumlahBab });
 
-        const prompt = `Kamu adalah asisten pembuat ringkasan buku profesional dalam Bahasa Indonesia.
+        const prompt = `Bertindaklah sebagai ahli analisis literatur profesional. Saya ingin kamu membuat ringkasan komprehensif tingkat tinggi (high-fidelity summary) dari setiap buku yang digenerate. 
+
+Tujuan utama prompt ini adalah menghasilkan ringkasan yang sedetail mungkin, sehingga pembaca merasa seperti telah membaca buku aslinya secara utuh.
+
+Aturan penulisan:
+- Komprehensif: Jangan lewatkan sub-bab atau argumen pendukung penting. Jika ada grafik, formula, atau model berpikir yang disebutkan dalam buku, jelaskan dengan detail.
+- Akurat: Isi ringkasan harus sepenuhnya setia pada teks asli (factually accurate to the book). Jangan melakukan generalisasi yang berlebihan.
+- Pembahasan Mendalam: Tuliskan narasi buku ini dalam format yang panjang dan mendalam (long-form detailed summary), bukan sekadar poin-poin singkat 2 baris. Jelaskan *mengapa* penulis menarik kesimpulan tersebut.
+- Gaya Bahasa: Gunakan Bahasa Indonesia yang profesional, mengalir, dan mudah dipahami, namun tetap mempertahankan bobot intelektual buku aslinya.
 
 Buat outline untuk buku berikut:
 - Judul: "${title}"
