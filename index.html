@@ -3376,7 +3376,7 @@ INSTRUKSI:
         function chartPayload(b, cover) {
             return encodeURIComponent(JSON.stringify({
                 id: b.id, title: b.title || '', author: (b.authors && b.authors.join(', ')) || (b.author || ''),
-                publisher: b.publisher || '', cover: cover, description: String(b.description || '').slice(0, 1500), infoLink: b.infoLink || ''
+                publisher: b.publisher || '', category: chartBookGenre(b) || '', cover: cover, description: String(b.description || '').slice(0, 1500), infoLink: b.infoLink || ''
             }));
         }
         function chartRow(b, rank) {
@@ -3678,17 +3678,21 @@ INSTRUKSI:
             chartRenderList(chartFilteredItems(), {});
         }
 
-        window.chartAddToLibrary = async function(payload) {
+        window.chartAddToLibrary = function(payload) {
             let d; try { d = JSON.parse(decodeURIComponent(payload)); } catch (e) { return; }
-            if (!window.firebaseAddExternalBook) { if (window.showToast) window.showToast('Fitur belum siap, coba sesaat lagi.', 'alert-triangle'); return; }
-            const bookData = {
-                title: d.title || 'Tanpa Judul', author: d.author || '', category: d.publisher || 'Umum',
-                kesimpulan: d.description || '', keyPoints: '', langkahAksi: '',
-                coverUrl: d.cover || '', cover: '', tag: 'Dari Chart',
-                progress: 0, isFavorite: false, chapters: [], highlights: [], chapterNotes: {}, savedQuotes: [],
-                sourceLink: d.infoLink || ''
-            };
-            await window.firebaseAddExternalBook(bookData);
+            // Alur baru: buka form Tambah Buku Baru -> tab Generate AI, dengan data chart terisi otomatis.
+            if (typeof window.openModal !== 'function') return;
+            if (typeof window.closeModal === 'function') window.closeModal('chartDetailModal');
+            window.openModal('addBookModal');
+            if (typeof window.switchAddBookTab === 'function') window.switchAddBookTab('ai');
+            if (typeof window.aiResetToStep1 === 'function') window.aiResetToStep1();
+            const setVal = function(id, v) { const el = document.getElementById(id); if (el) el.value = v || ''; };
+            setVal('aiJudul', d.title);
+            setVal('aiPenulis', d.author);
+            setVal('aiKategori', d.category || '');
+            setVal('aiCoverUrl', d.cover);
+            if (window.showToast) window.showToast('Data buku dari chart sudah terisi. Klik "Generate Outline Buku" untuk lanjut.', 'sparkles');
+            if (window.lucide) lucide.createIcons();
         };
         window.chartMakeEditorPick = async function(payload) {
             let d; try { d = JSON.parse(decodeURIComponent(payload)); } catch (e) { return; }
