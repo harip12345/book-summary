@@ -1,7 +1,7 @@
 // Folio - New York Times Best Sellers proxy (Vercel Serverless Function).
 // Official NYT Books API. No AI, no guessing: ranks come straight from NYT.
 //
-// GET /api/bestseller-nyt?list=fiction|nonfiction
+// GET /api/bestseller-nyt?list=fiction|nonfiction|advice|children
 //   -> { list, listName, publishedDate, items: [ { rank, title, authors, ... } ] }
 //
 // Required environment variable: NYT_API_KEY (free at developer.nytimes.com)
@@ -10,7 +10,9 @@ const NYT_BASE = 'https://api.nytimes.com/svc/books/v3/lists/current/';
 
 const LIST_MAP = {
 	fiction: 'combined-print-and-e-book-fiction',
-	nonfiction: 'combined-print-and-e-book-nonfiction'
+	nonfiction: 'combined-print-and-e-book-nonfiction',
+	advice: 'advice-how-to-and-miscellaneous',
+	children: 'childrens-middle-grade-hardcover'
 };
 
 export default async function handler(req, res) {
