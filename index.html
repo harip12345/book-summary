@@ -4317,9 +4317,7 @@ INSTRUKSI:
             };
 
             if (window.firebaseSaveManualBook) {
-                window.firebaseSaveManualBook(bookData).then ? 
-                    window.firebaseSaveManualBook(bookData) : 
-                    window.firebaseSaveManualBook(bookData);
+                window.firebaseSaveManualBook(bookData);
                 // Reset state
                 aiGenBook  = { title:'', author:'', category:'', coverUrl:'', chapters:[] };
                 aiTokensUsed = 0;
