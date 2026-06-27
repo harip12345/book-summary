@@ -12,6 +12,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Folio">
 
+    <meta name="theme-color" content="#3B82F6">
+    <link rel="manifest" href="/manifest.webmanifest">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -152,6 +154,26 @@
         .modal-close:hover { background: #D45353; color: #fff; border-color: #D45353; transform: rotate(90deg); }
         .modal-title { font-family: var(--font-display); font-size: 20px; color: var(--text-primary); margin-bottom: 4px; }
         .modal-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+        .quiz-tabs { display:flex; gap:6px; background:var(--bg-secondary); padding:4px; border-radius:10px; margin-bottom:16px; }
+        .quiz-tab { flex:1; padding:9px 6px; border:none; background:transparent; color:var(--text-secondary); border-radius:7px; font-family:var(--font-ui); font-size:13px; font-weight:600; cursor:pointer; transition:0.25s; }
+        .quiz-tab.active { background:var(--accent); color:#fff; }
+        .quiz-q { margin-bottom:20px; }
+        .quiz-q-num { font-size:12px; font-weight:700; color:var(--accent); margin-bottom:6px; }
+        .quiz-q-text { font-size:15px; font-weight:600; color:var(--text-primary); margin-bottom:12px; line-height:1.5; }
+        .quiz-opt { display:block; width:100%; text-align:left; padding:11px 14px; margin-bottom:8px; border:1.5px solid var(--border); border-radius:10px; background:var(--bg-card); color:var(--text-primary); font-family:var(--font-ui); font-size:14px; cursor:pointer; transition:0.2s; }
+        .quiz-opt:hover { border-color:var(--accent); }
+        .quiz-opt.correct { border-color:#16a34a; background:rgba(22,163,74,0.12); color:#16a34a; font-weight:600; }
+        .quiz-opt.wrong { border-color:#dc2626; background:rgba(220,38,38,0.10); color:#dc2626; }
+        .quiz-opt.disabled { pointer-events:none; opacity:0.8; }
+        .quiz-explain { font-size:13px; color:var(--text-secondary); margin-top:6px; padding-left:4px; line-height:1.5; display:none; }
+        .quiz-score { text-align:center; font-size:15px; font-weight:700; color:var(--text-primary); padding:16px; background:var(--bg-secondary); border-radius:12px; margin-bottom:16px; }
+        .flash-hint { font-size:11px; color:var(--text-muted); text-align:center; margin-bottom:14px; }
+        .flash-card { perspective:1000px; height:160px; margin-bottom:14px; cursor:pointer; }
+        .flash-inner { position:relative; width:100%; height:100%; transition:transform 0.5s; transform-style:preserve-3d; }
+        .flash-card.flipped .flash-inner { transform:rotateY(180deg); }
+        .flash-face { position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:14px; padding:18px; display:flex; align-items:center; justify-content:center; text-align:center; border:1.5px solid var(--border); }
+        .flash-front { background:var(--accent); color:#fff; font-size:16px; font-weight:700; }
+        .flash-back { background:var(--bg-card); color:var(--text-primary); font-size:14px; line-height:1.55; transform:rotateY(180deg); overflow-y:auto; }
 
         .fav-list-item { padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
         .fav-list-item:hover { border-color: var(--accent); background: var(--accent-pale); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
@@ -816,6 +838,23 @@
             <div id="chartDetailBody"></div>
         </div>
     </div>
+    <div class="modal-overlay" id="quizModal">
+        <div class="modal-content" style="max-height: 88vh; overflow-y: auto; width: 92%; max-width: 540px;">
+            <button class="modal-close" onclick="closeModal('quizModal')"><i data-lucide="x"></i></button>
+            <div class="modal-title" style="color:var(--text-primary);">Uji Pemahaman</div>
+            <div class="modal-subtitle" id="quizSubtitle">Kuis &amp; flashcard otomatis dari isi buku.</div>
+            <div class="quiz-tabs">
+                <button class="quiz-tab active" id="quizTabKuis" onclick="switchQuizTab('kuis')">Kuis</button>
+                <button class="quiz-tab" id="quizTabFlash" onclick="switchQuizTab('flash')">Flashcard</button>
+            </div>
+            <div id="quizBody"></div>
+            <div id="flashBody" style="display:none;"></div>
+            <div id="quizActions" style="display:none; margin-top:18px;">
+                <button class="btn-primary" onclick="regenerateQuiz()"><i data-lucide="refresh-cw" style="width:16px;"></i> Buat ulang kuis</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="editProfileModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('editProfileModal')"><i data-lucide="x"></i></button>
@@ -1572,6 +1611,9 @@
         </div>
         <div class="reader-menu" id="readerMenu">
             <button class="reader-menu-item" onclick="toggleFavorite(); closeReaderMenu();"><span id="btnFavorite" style="display:inline-flex; align-items:center;"><i data-lucide="heart" style="width:18px;"></i></span> <span>Favorit</span></button>
+            <button class="reader-menu-item" onclick="openQuizModal(); closeReaderMenu();"><i data-lucide="graduation-cap" style="width:18px;"></i> <span>Kuis &amp; Flashcard</span></button>
+            <button class="reader-menu-item" onclick="regenerateChapter('rewrite'); closeReaderMenu();"><i data-lucide="refresh-cw" style="width:18px;"></i> <span>Tulis ulang bab ini</span></button>
+            <button class="reader-menu-item" onclick="regenerateChapter('expand'); closeReaderMenu();"><i data-lucide="maximize-2" style="width:18px;"></i> <span>Perdalam bab ini</span></button>
             <button class="reader-menu-item" onclick="goToExplicitBookmark(); closeReaderMenu();"><i data-lucide="map-pin" style="width:18px;"></i> <span>Ke posisi ditandai</span></button>
             <button class="reader-menu-item" id="btnEditBook" onclick="openEditBookModal(); closeReaderMenu();" style="display:none;"><i data-lucide="edit" style="width:18px;"></i> <span>Edit buku</span></button>
             <button class="reader-menu-item" id="btnDeleteBook" onclick="deleteActiveBook(); closeReaderMenu();" style="display:none; color:#D45353;"><i data-lucide="trash-2" style="width:18px;"></i> <span>Hapus buku</span></button>
@@ -4149,6 +4191,145 @@ INSTRUKSI:
             return data;
         }
 
+        // ===================== REGENERATE / PERDALAM BAB =====================
+        window.regenerateChapter = async function(mode) {
+            if (!activeBook || !(activeBook.chapters && activeBook.chapters.length)) { window.showToast('Tidak ada bab untuk diproses.', 'alert-triangle'); return; }
+            const idx = activeChapterIdx;
+            const ch  = activeBook.chapters[idx];
+            const isExpand = mode === 'expand';
+            const verb = isExpand ? 'Memperdalam' : 'Menulis ulang';
+            if (!confirm(verb + ' bab "' + (ch.title || ('Bab ' + (idx+1))) + '"? Isi bab saat ini akan diganti.')) return;
+            window.showToast(verb + ' bab... (10-30 detik)', 'sparkles');
+            try {
+                aiTokensUsed = 0;
+                const payload = {
+                    title: activeBook.title,
+                    author: activeBook.author || '',
+                    chapterTitle: ch.title || ('Bab ' + (idx+1)),
+                    chapterSinopsis: ch.sinopsis || ch.title || '',
+                    chapterIdx: idx,
+                };
+                if (isExpand) payload.existingContent = ch.content || '';
+                const data = await aiCallServer(isExpand ? 'expand' : 'chapter', payload);
+                if (!data || !data.content) throw new Error('Konten kosong dari server.');
+                activeBook.chapters[idx].content   = data.content;
+                activeBook.chapters[idx].generated = true;
+                if (_chaptersCache[activeBook.id]) _chaptersCache[activeBook.id].chapters = activeBook.chapters;
+                if (window.firebaseUpdateFullBook) await window.firebaseUpdateFullBook(activeBook.id, { chapters: activeBook.chapters });
+                renderChapter();
+                window.showToast('Bab berhasil diperbarui', 'check-circle');
+            } catch(e) {
+                window.showToast(e.message || 'Gagal memproses bab.', 'alert-triangle');
+            }
+        };
+
+        // ===================== KUIS & FLASHCARD =====================
+        let _quizCurrent = null;
+        function quizEsc(s) {
+            return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+        function buildBookContext() {
+            if (!activeBook) return '';
+            const parts = [];
+            if (activeBook.kesimpulan) parts.push('Kesimpulan: ' + activeBook.kesimpulan);
+            if (activeBook.keyPoints)  parts.push('Poin penting: ' + activeBook.keyPoints);
+            if (activeBook.chapters && activeBook.chapters.length) {
+                parts.push('Daftar bab: ' + activeBook.chapters.map(function(c, i){ return (i+1) + '. ' + (c.title || ''); }).join('; '));
+                const first = (activeBook.chapters[0] && activeBook.chapters[0].content) || '';
+                if (first) parts.push('Cuplikan isi: ' + first.slice(0, 1200));
+            }
+            return parts.join('\n');
+        }
+        window.flipCard = function(el) { if (el) el.classList.toggle('flipped'); };
+        window.switchQuizTab = function(tab) {
+            const isKuis = tab === 'kuis';
+            document.getElementById('quizTabKuis').classList.toggle('active', isKuis);
+            document.getElementById('quizTabFlash').classList.toggle('active', !isKuis);
+            document.getElementById('quizBody').style.display  = isKuis ? 'block' : 'none';
+            document.getElementById('flashBody').style.display = isKuis ? 'none' : 'block';
+        };
+        window.openQuizModal = async function() {
+            if (!activeBook) return;
+            window.openModal('quizModal');
+            document.getElementById('quizSubtitle').textContent = activeBook.title;
+            document.getElementById('quizActions').style.display = 'none';
+            document.getElementById('flashBody').innerHTML = '';
+            switchQuizTab('kuis');
+            if (activeBook.quizData && Array.isArray(activeBook.quizData.quiz) && activeBook.quizData.quiz.length) {
+                renderQuiz(activeBook.quizData);
+                return;
+            }
+            document.getElementById('quizBody').innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-secondary);"><i data-lucide="loader" style="width:24px;animation:spin 1s linear infinite;"></i><div style="margin-top:10px;">Membuat kuis dari isi buku...</div></div>';
+            lucide.createIcons();
+            try {
+                aiTokensUsed = 0;
+                const data = await aiCallServer('quiz', {
+                    title: activeBook.title,
+                    author: activeBook.author || '',
+                    category: activeBook.category || '',
+                    context: buildBookContext(),
+                });
+                if (!data || !Array.isArray(data.quiz) || !data.quiz.length) throw new Error('Kuis tidak valid.');
+                activeBook.quizData = data;
+                if (window.firebaseUpdateFullBook) window.firebaseUpdateFullBook(activeBook.id, { quizData: data });
+                renderQuiz(data);
+            } catch(e) {
+                document.getElementById('quizBody').innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-secondary);">' + quizEsc(e.message || 'Gagal membuat kuis.') + '<br><br><button class="btn-primary" style="width:auto;padding:10px 18px;" onclick="regenerateQuiz()">Coba lagi</button></div>';
+                lucide.createIcons();
+            }
+        };
+        window.regenerateQuiz = function() {
+            if (activeBook) activeBook.quizData = null;
+            openQuizModal();
+        };
+        function renderQuiz(data) {
+            _quizCurrent = data;
+            let html = '<div class="quiz-score" id="quizScoreBox" style="display:none;"></div>';
+            (data.quiz || []).forEach(function(q, qi) {
+                html += '<div class="quiz-q" data-qi="' + qi + '">';
+                html += '<div class="quiz-q-num">Soal ' + (qi+1) + ' dari ' + data.quiz.length + '</div>';
+                html += '<div class="quiz-q-text">' + quizEsc(q.pertanyaan) + '</div>';
+                (q.opsi || []).forEach(function(opt, oi) {
+                    html += '<button class="quiz-opt" onclick="answerQuiz(' + qi + ',' + oi + ')">' + quizEsc(opt) + '</button>';
+                });
+                html += '<div class="quiz-explain">' + quizEsc(q.penjelasan) + '</div>';
+                html += '</div>';
+            });
+            document.getElementById('quizBody').innerHTML = html;
+            let fhtml = '<div class="flash-hint">Ketuk kartu untuk membaliknya</div>';
+            (data.flashcards || []).forEach(function(f) {
+                fhtml += '<div class="flash-card" onclick="flipCard(this)"><div class="flash-inner">' +
+                    '<div class="flash-face flash-front">' + quizEsc(f.depan) + '</div>' +
+                    '<div class="flash-face flash-back">' + quizEsc(f.belakang) + '</div>' +
+                    '</div></div>';
+            });
+            document.getElementById('flashBody').innerHTML = (data.flashcards && data.flashcards.length) ? fhtml : '<div class="flash-hint">Tidak ada flashcard.</div>';
+            document.getElementById('quizActions').style.display = 'block';
+            window._quizScore = { answered: 0, correct: 0, total: (data.quiz || []).length };
+            lucide.createIcons();
+        }
+        window.answerQuiz = function(qi, oi) {
+            const q = _quizCurrent && _quizCurrent.quiz && _quizCurrent.quiz[qi];
+            if (!q) return;
+            const qEl = document.querySelector('.quiz-q[data-qi="' + qi + '"]');
+            if (!qEl || qEl.dataset.done) return;
+            qEl.dataset.done = '1';
+            const correct = q.jawaban;
+            qEl.querySelectorAll('.quiz-opt').forEach(function(b, i) {
+                b.classList.add('disabled');
+                if (i === correct) b.classList.add('correct');
+                if (i === oi && oi !== correct) b.classList.add('wrong');
+            });
+            const exp = qEl.querySelector('.quiz-explain');
+            if (exp) exp.style.display = 'block';
+            window._quizScore.answered++;
+            if (oi === correct) window._quizScore.correct++;
+            if (window._quizScore.answered >= window._quizScore.total) {
+                const box = document.getElementById('quizScoreBox');
+                if (box) { box.style.display = 'block'; box.textContent = 'Skor kamu: ' + window._quizScore.correct + ' / ' + window._quizScore.total; }
+            }
+        };
+
         // ── STEP 1: Generate outline ──
         window.aiGenerateOutline = async function() {
             const title    = document.getElementById('aiJudul')?.value.trim();
@@ -4361,7 +4542,7 @@ INSTRUKSI:
     <script type="module">
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, OAuthProvider, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc, updateDoc, setDoc, getDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
         // =====================================================================
         // FIX #2: Firebase config — key tetap harus ada di sini karena ini
@@ -4401,6 +4582,8 @@ INSTRUKSI:
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        // Offline persistence: data buku tersimpan di IndexedDB agar bisa dibaca tanpa internet
+        try { enableIndexedDbPersistence(db).catch(function(){}); } catch(e) {}
         const auth = getAuth(app);
         const googleProvider = new GoogleAuthProvider();
         googleProvider.setCustomParameters({ prompt: 'select_account' });
@@ -4771,6 +4954,13 @@ INSTRUKSI:
             try { await deleteDoc(doc(db,"buku_bacaan",bookId)); if(window.showToast) window.showToast("Buku berhasil dihapus dari server!", "🗑️"); }
             catch (error) { if(window.showToast) window.showToast("Terjadi kesalahan saat menghapus.", "❌"); }
         };
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/sw.js').catch(function (err) { console.warn('SW gagal:', err); });
+            });
+        }
     </script>
 </body>
 </html>
