@@ -257,5 +257,111 @@ Tulis HANYA isi bab dalam bentuk paragraf.`;
 		}
 	}
 
-	return res.status(400).json({ error: `Action tidak dikenal: "${action}". Gunakan "outline" atau "chapter".` });
+	// ---------------------------------------------
+	// ACTION: expand - perdalam/perpanjang isi bab yang sudah ada
+	// ---------------------------------------------
+	if (action === 'expand') {
+		if (!chapterTitle) return res.status(400).json({ error: 'Field "chapterTitle" wajib diisi.' });
+		const existingContent = (body && body.existingContent) || '';
+		log('info', 'Expand chapter', { ip, title, chapterIdx, chapterTitle });
+
+		const prompt = `Kamu adalah penulis ringkasan buku profesional berbahasa Indonesia. Di bawah ada isi bab yang sudah ada. Tugasmu MEMPERDALAM dan MEMPERPANJANG isi tersebut tanpa mengubah makna atau menghapus informasi yang sudah ada.
+
+DATA BAB:
+- Buku: "${title}" oleh ${author || 'penulis'}
+- Nama Bab: "${chapterTitle}"
+
+ISI BAB SAAT INI:
+"""
+${(existingContent || chapterSinopsis || '').slice(0, 6000)}
+"""
+
+INSTRUKSI (WAJIB):
+- Pertahankan semua poin dan urutan gagasan yang sudah ada, lalu kembangkan menjadi lebih panjang dan detail (target minimal 10 paragraf / sekitar 1000-1300 kata).
+- Tambahkan penjelasan "mengapa" dan "bagaimana", contoh, analogi, atau elaborasi konsep yang relevan dengan buku. Jangan mengarang fakta, data, atau kutipan yang tidak ada di buku.
+- Tulis sebagai NARATOR PIHAK KETIGA. JANGAN memakai frasa "menurut penulis", "penulis berpendapat", "saya", atau menulis seolah kamu penulis bukunya.
+- Paragraf mengalir dipisahkan baris kosong. JANGAN pakai list, bullet, penomoran, atau heading.
+- JANGAN menulis kesimpulan, rangkuman, atau penutup di akhir bab. Kesimpulan disimpan di halaman khusus.
+- JANGAN menambah kalimat pengantar meta. Langsung tulis isi bab versi yang sudah diperdalam.
+
+Tulis HANYA isi bab final (versi yang lebih panjang) dalam bentuk paragraf.`;
+
+		try {
+			const result = await callGroq([
+				{ role: 'system', content: 'Kamu penulis ringkasan buku profesional berbahasa Indonesia. Perdalam isi bab menjadi lebih panjang dan detail sebagai narator pihak ketiga, tanpa list/heading, tanpa kesimpulan di akhir bab.' },
+				{ role: 'user',   content: prompt },
+			], 3500, 'llama-3.3-70b-versatile');
+
+			log('info', 'Expand success', { ip, title, chapterIdx, duration_ms: Date.now()-startTime, ...result.usage });
+
+			return res.status(200).json({
+				content:    result.content.trim(),
+				chapterIdx: chapterIdx,
+				usage:      result.usage,
+				model:      result.model,
+			});
+		} catch(e) {
+			log('error', 'Expand failed', { ip, error: e.message || e });
+			return res.status(e.status || 500).json({ error: e.message || 'Terjadi kesalahan.' });
+		}
+	}
+
+	// ---------------------------------------------
+	// ACTION: quiz - kuis pilihan ganda + flashcard
+	// ---------------------------------------------
+	if (action === 'quiz') {
+		const context = (body && body.context) || '';
+		log('info', 'Generate quiz', { ip, title });
+
+		const prompt = `Bertindaklah sebagai pembuat materi belajar. Berdasarkan buku berikut, buat materi untuk menguji dan memperkuat pemahaman pembaca.
+
+DATA BUKU:
+- Judul: "${title}"
+- Penulis: ${author || 'Tidak diketahui'}
+- Kategori: ${category || 'Umum'}
+${context ? 'Ringkasan/poin isi buku:\n' + String(context).slice(0, 4000) : ''}
+
+Buat:
+1) 5 soal PILIHAN GANDA tentang gagasan inti buku. Tiap soal punya 4 opsi, tepat satu jawaban benar, plus penjelasan singkat 1 kalimat.
+2) 5 FLASHCARD konsep/istilah penting. "depan" = istilah atau pertanyaan singkat, "belakang" = penjelasan padat.
+
+Gunakan Bahasa Indonesia. Soal harus menguji pemahaman, bukan sekadar hafalan judul.
+
+Balas HANYA dengan objek JSON valid persis struktur ini (indeks "jawaban" 0-3):
+{
+  "quiz": [
+    {"pertanyaan": "...", "opsi": ["...", "...", "...", "..."], "jawaban": 0, "penjelasan": "..."}
+  ],
+  "flashcards": [
+    {"depan": "...", "belakang": "..."}
+  ]
+}`;
+
+		try {
+			const result = await callGroq([
+				{ role: 'system', content: 'Kamu asisten yang SELALU membalas dengan satu objek JSON valid sesuai skema yang diminta, tanpa teks atau markdown tambahan.' },
+				{ role: 'user',   content: prompt },
+			], 2500, 'llama-3.3-70b-versatile', { response_format: { type: 'json_object' }, temperature: 0.4 });
+
+			const parsed = safeParseJson(result.content);
+			if (!parsed || !Array.isArray(parsed.quiz) || parsed.quiz.length === 0) {
+				log('error', 'Quiz parse/empty', { ip, title, sample: String(result.content || '').slice(0, 200) });
+				return res.status(502).json({ error: 'Format respons AI tidak valid. Coba lagi.' });
+			}
+
+			log('info', 'Quiz success', { ip, title, duration_ms: Date.now()-startTime, ...result.usage });
+
+			return res.status(200).json({
+				quiz:       parsed.quiz,
+				flashcards: Array.isArray(parsed.flashcards) ? parsed.flashcards : [],
+				usage:      result.usage,
+				model:      result.model,
+			});
+		} catch(e) {
+			log('error', 'Quiz failed', { ip, error: e.message || e });
+			return res.status(e.status || 500).json({ error: e.message || 'Terjadi kesalahan.' });
+		}
+	}
+
+	return res.status(400).json({ error: `Action tidak dikenal: "${action}". Gunakan "outline", "chapter", "expand", atau "quiz".` });
 }
