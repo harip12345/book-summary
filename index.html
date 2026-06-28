@@ -721,6 +721,13 @@
         body.reader-immersive .fab-ai { transform: translateY(120%); opacity: 0; pointer-events: none; }
         /* lift AI FAB above the audio bar while narration is active */
         body.tts-bar-open .fab-ai { bottom: calc(184px + env(safe-area-inset-bottom)); }
+        /* Tombol Fokus membaca - melayang tepat di atas tombol chat AI */
+        .fab-focus { position: fixed; right: 20px; bottom: calc(166px + env(safe-area-inset-bottom)); width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--accent); display: none; align-items:center; justify-content:center; cursor:pointer; z-index: 95; box-shadow: 0 8px 22px rgba(0,0,0,0.18); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, bottom 0.4s cubic-bezier(0.34,1.56,0.64,1), background 0.25s ease, color 0.25s ease; }
+        .fab-focus svg { width: 22px; height: 22px; stroke-width: 2.2px; }
+        .fab-focus:hover { transform: translateY(-3px) scale(1.06); box-shadow: 0 12px 28px rgba(0,0,0,0.25); }
+        .fab-focus:active { transform: scale(0.9); }
+        .fab-focus.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        body.tts-bar-open .fab-focus { bottom: calc(254px + env(safe-area-inset-bottom)); }
         /* ===================== END WEB SPEECH TTS ===================== */
         /* ===== Home: streak + statistik mingguan ===== */
         .home-streak { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#3B82F6,#8B5CF6); border-radius:var(--radius-xl); padding:16px 18px; margin-bottom:16px; color:#fff; box-shadow:0 10px 30px rgba(59,130,246,0.28); }
@@ -1590,6 +1597,7 @@
     <!-- FAB Tambah Buku (admin) -->
     <button id="btnFabAdd" class="fab-add" onclick="openModal('addBookModal')" title="Tambah Buku" style="display:none;"><i data-lucide="plus"></i></button>
     <button id="btnFabAI" class="fab-ai" onclick="openAIChat()" title="Tanya AI tentang buku ini"><i data-lucide="bot"></i></button>
+    <button id="btnFabFocus" class="fab-focus" onclick="toggleReadingFocus()" title="Fokus membaca"><i data-lucide="maximize"></i></button>
 
     <!-- SCREEN READER -->
     <div class="screen" id="screen-reader">
@@ -2200,6 +2208,12 @@
             if (fabAdd) fabAdd.style.display = ((name === 'library' || name === 'collection') && window.isCurrentUserAdmin) ? 'flex' : 'none';
             const fabAI = document.getElementById('btnFabAI');
             if (fabAI) fabAI.style.display = (name === 'reader') ? 'flex' : 'none';
+            const fabFocus = document.getElementById('btnFabFocus');
+            if (fabFocus) fabFocus.style.display = (name === 'reader') ? 'flex' : 'none';
+            if (name !== 'reader') {
+                document.body.classList.remove('reader-immersive');
+                if (fabFocus) { fabFocus.classList.remove('active'); fabFocus.title = 'Fokus membaca'; fabFocus.innerHTML = '<i data-lucide="maximize"></i>'; }
+            }
             if (name === 'reader' || name === 'insights') { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); }
             if (name === 'library' || name === 'collection') { renderBooks(currentBooksToDisplay); }
             if (name === 'chart' && window.initChartBook) window.initChartBook();
@@ -2436,7 +2450,17 @@
         window.toggleReaderMenu = function(e) { if (e && e.stopPropagation) e.stopPropagation(); const m = document.getElementById('readerMenu'); if (m) m.classList.toggle('open'); };
         window.closeReaderMenu = function() { const m = document.getElementById('readerMenu'); if (m) m.classList.remove('open'); };
         document.addEventListener('click', function(e) { const m = document.getElementById('readerMenu'); if (m && m.classList.contains('open') && !e.target.closest('#readerMenu') && !e.target.closest('[onclick*="toggleReaderMenu"]')) m.classList.remove('open'); });
-        (function() { const rsc = document.getElementById('readerScrollContainer'); if (rsc) rsc.addEventListener('click', function(e) { const rb = document.getElementById('readerBody'); if (rb && rb.classList.contains('interactive-mode-active')) return; if (e.target.closest('p, button, a, textarea, input, .reader-note-block, .reader-menu')) return; if (window.getSelection && String(window.getSelection()).length > 0) return; document.body.classList.toggle('reader-immersive'); }); })();
+        // Mode fokus membaca kini diaktifkan lewat tombol khusus (toggleReadingFocus), bukan klik tengah layar.
+        window.toggleReadingFocus = function() {
+            const on = document.body.classList.toggle('reader-immersive');
+            const btn = document.getElementById('btnFabFocus');
+            if (btn) {
+                btn.classList.toggle('active', on);
+                btn.title = on ? 'Keluar mode fokus' : 'Fokus membaca';
+                btn.innerHTML = '<i data-lucide="' + (on ? 'minimize' : 'maximize') + '"></i>';
+                if (window.lucide) lucide.createIcons();
+            }
+        };
         window.toggleFavorite = function() {
             if(!activeBook) return;
             activeBook.isFavorite = !activeBook.isFavorite;
