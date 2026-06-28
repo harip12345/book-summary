@@ -1243,6 +1243,7 @@
                             </button>
                             <button class="social-btn" onclick="socialLogin('Apple')"><i data-lucide="apple" style="width:16px;"></i> Apple</button>
                         </div>
+                        <button id="btnOfflineEnter" onclick="enterOffline()" style="display:none; width:100%; margin-top:14px; padding:13px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:var(--text-light); border-radius:14px; font-family:var(--font-ui); font-size:13px; font-weight:600; cursor:pointer; align-items:center; justify-content:center; gap:8px;"><i data-lucide="wifi-off" style="width:15px;"></i> Lanjut tanpa login (mode offline)</button>
                     </div>
                     <div class="onboarding-slide" data-slide="2">
                         <div style="margin-bottom:12px;">
@@ -2060,9 +2061,12 @@
             updateProfileDisplay();
             updateReadingGoalDisplay();
             ttsInit(); // Web Speech TTS
-            if (window.APP_STATE.onboardingComplete) { if (window.routerInitialNavigate) window.routerInitialNavigate(); else switchMainTab('library'); }
+            const _hasCacheSession = localStorage.getItem('folio-user-logged-in') === 'true';
+            const _enterDirect = window.APP_STATE.onboardingComplete || (!navigator.onLine && _hasCacheSession);
+            if (_enterDirect) { if (window.routerInitialNavigate) window.routerInitialNavigate(); else switchMainTab('library'); }
             else { showScreen('onboarding'); resetOnboardingSlides(); }
-            if (window.APP_STATE.onboardingComplete) initReader();
+            if (window.updateOfflineEntryBtn) updateOfflineEntryBtn();
+            if (_enterDirect) initReader();
             startReadingTimer();
             window.addChapterField('chapterList');
         }
@@ -2245,6 +2249,18 @@
         }
         window.resetOnboardingSlides = function() { goToSlide(0); }
         window.skipToLibrary = function() { window.showToast('Langsung ke Library...', 'book-open'); setTimeout(() => switchMainTab('library'), 500); }
+        window.updateOfflineEntryBtn = function() {
+            const btn = document.getElementById('btnOfflineEnter');
+            if (!btn) return;
+            const hasCache = localStorage.getItem('folio-user-logged-in') === 'true';
+            btn.style.display = hasCache ? 'flex' : 'none';
+        };
+        window.enterOffline = function() {
+            APP_STATE.onboardingComplete = true;
+            localStorage.setItem('folio-onboarding-complete', 'true');
+            window.showToast('Masuk mode offline. Menampilkan data tersimpan.', 'book-open');
+            setTimeout(() => switchMainTab('library'), 500);
+        };
         window.finishOnboarding = function() {
             APP_STATE.onboardingComplete = true;
             localStorage.setItem('folio-onboarding-complete', 'true');
