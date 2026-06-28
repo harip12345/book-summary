@@ -1989,6 +1989,16 @@
                 const h = Math.max(6, Math.round(w.min/maxMin*70));
                 return `<div class="hs-bar-col"><div class="hs-bar ${w.isToday?'today':''}" style="height:${h}px" title="${w.min} mnt"></div><span class="hs-bar-lbl">${w.label}</span></div>`;
             }).join('');
+            const quotes = [
+                { q: 'Sebuah buku adalah mimpi yang kamu genggam di tangan.', a: 'Neil Gaiman' },
+                { q: 'Membaca itu bagi pikiran seperti olahraga bagi tubuh.', a: 'Joseph Addison' },
+                { q: 'Hari ini seorang pembaca, esok seorang pemimpin.', a: 'Margaret Fuller' },
+                { q: 'Semakin banyak kamu membaca, semakin banyak yang kamu tahu.', a: 'Dr. Seuss' },
+                { q: 'Buku adalah teman yang paling tenang dan setia.', a: 'Charles W. Eliot' },
+                { q: 'Membaca memberi kita tempat untuk pergi saat kita harus tinggal.', a: 'Mason Cooley' },
+                { q: 'Satu jam membaca bisa mengubah seluruh harimu.', a: 'Folio' }
+            ];
+            const qi = quotes[(new Date().getDay()) % quotes.length];
             const home = document.getElementById('homeStatsContainer');
             if (home) {
                 home.innerHTML = `
@@ -2000,20 +2010,15 @@
                   <div class="hs-goal-track"><div class="hs-goal-fill" style="width:${goalPct}%"></div></div>
                 </div>
                 <div class="hs-streak-pct">${goalPct}%</div>
+              </div>
+              <div class="insight-card">
+                <div class="insight-head"><i data-lucide="sparkles"></i> Insight Harian</div>
+                <div class="insight-quote">"${qi.q}"</div>
+                <div class="insight-author">\u2014 ${qi.a}</div>
               </div>`;
             }
             const prof = document.getElementById('profileStatsContainer');
             if (prof) {
-                const quotes = [
-                    { q: 'Sebuah buku adalah mimpi yang kamu genggam di tangan.', a: 'Neil Gaiman' },
-                    { q: 'Membaca itu bagi pikiran seperti olahraga bagi tubuh.', a: 'Joseph Addison' },
-                    { q: 'Hari ini seorang pembaca, esok seorang pemimpin.', a: 'Margaret Fuller' },
-                    { q: 'Semakin banyak kamu membaca, semakin banyak yang kamu tahu.', a: 'Dr. Seuss' },
-                    { q: 'Buku adalah teman yang paling tenang dan setia.', a: 'Charles W. Eliot' },
-                    { q: 'Membaca memberi kita tempat untuk pergi saat kita harus tinggal.', a: 'Mason Cooley' },
-                    { q: 'Satu jam membaca bisa mengubah seluruh harimu.', a: 'Folio' }
-                ];
-                const qi = quotes[(new Date().getDay()) % quotes.length];
                 prof.innerHTML = `
               <div class="home-stats-card">
                 <div class="hs-card-title"><i data-lucide="bar-chart-3"></i> Statistik Mingguan</div>
@@ -2024,11 +2029,6 @@
                 </div>
                 <div class="hs-chart-title">Menit membaca 7 hari terakhir</div>
                 <div class="hs-chart">${bars}</div>
-              </div>
-              <div class="insight-card">
-                <div class="insight-head"><i data-lucide="sparkles"></i> Insight Harian</div>
-                <div class="insight-quote">"${qi.q}"</div>
-                <div class="insight-author">\u2014 ${qi.a}</div>
               </div>`;
             }
             if (window.lucide) lucide.createIcons();
