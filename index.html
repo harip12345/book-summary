@@ -2444,12 +2444,40 @@
             rsc.addEventListener('click', function(e) {
                 const rb = document.getElementById('readerBody');
                 if (rb && rb.classList.contains('interactive-mode-active')) return;
-                // Abaikan ketukan pada elemen interaktif (tombol, link, input, catatan, menu)
                 if (e.target.closest('button, a, textarea, input, select, .reader-note-block, .reader-menu')) return;
-                // Jangan toggle saat pengguna sedang menyeleksi teks
                 if (window.getSelection && String(window.getSelection()).length > 0) return;
                 document.body.classList.toggle('reader-immersive');
             });
+        })();
+
+        // Swipe horizontal untuk ganti bab - sengaja TIDAK sensitif & tidak mengganggu scroll vertikal.
+        (function() {
+            const rsc = document.getElementById('readerScrollContainer');
+            if (!rsc) return;
+            let sx = 0, sy = 0, st = 0, tracking = false;
+            const H_MIN = 90;   // jarak horizontal minimum (px) agar dianggap swipe
+            const V_MAX = 45;   // toleransi gerak vertikal (px) - kalau lebih, anggap scroll
+            const RATIO = 2.2;  // horizontal harus jauh lebih besar dari vertikal
+            const T_MAX = 600;  // durasi maksimum gesture (ms)
+            rsc.addEventListener('touchstart', function(e) {
+                if (e.touches.length !== 1) { tracking = false; return; }
+                const rb = document.getElementById('readerBody');
+                if (rb && rb.classList.contains('interactive-mode-active')) { tracking = false; return; }
+                sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); tracking = true;
+            }, { passive: true });
+            rsc.addEventListener('touchend', function(e) {
+                if (!tracking) return;
+                tracking = false;
+                if (window.getSelection && String(window.getSelection()).length > 0) return;
+                const t = e.changedTouches[0];
+                const dx = t.clientX - sx, dy = t.clientY - sy, dt = Date.now() - st;
+                if (dt > T_MAX) return;                              // gesture terlalu lambat
+                if (Math.abs(dx) < H_MIN) return;                    // geser horizontal kurang jauh
+                if (Math.abs(dy) > V_MAX) return;                    // ada gerak vertikal (kemungkinan scroll)
+                if (Math.abs(dx) < Math.abs(dy) * RATIO) return;     // arah tidak cukup horizontal
+                if (e.target && e.target.closest && e.target.closest('button, a, textarea, input, select, .reader-note-block, .reader-menu')) return;
+                window.navigateChapter(dx < 0 ? 'next' : 'prev');
+            }, { passive: true });
         })();
         window.toggleFavorite = function() {
             if(!activeBook) return;
