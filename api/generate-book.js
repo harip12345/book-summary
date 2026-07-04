@@ -363,5 +363,73 @@ Balas HANYA dengan objek JSON valid persis struktur ini (indeks "jawaban" 0-3):
 		}
 	}
 
-	return res.status(400).json({ error: `Action tidak dikenal: "${action}". Gunakan "outline", "chapter", "expand", atau "quiz".` });
+	// ---------------------------------------------
+	// ACTION: skill - generate roadmap penguasaan skill (buku + latihan + langkah)
+	// ---------------------------------------------
+	if (action === 'skill') {
+		const skillName = title;
+		log('info', 'Generate skill', { ip, skillName });
+
+		const prompt = `Bertindaklah sebagai mentor pembelajaran dan kurator buku. Buat sebuah "jalur penguasaan" (mastery roadmap) untuk seseorang yang ingin benar-benar menguasai skill berikut.
+
+Skill: "${skillName}"
+
+Susun roadmap bertahap dengan 3 tahap: "Fondasi", "Menengah", "Lanjut". Untuk tiap tahap sarankan buku NYATA yang benar-benar ada dan kredibel/populer untuk skill ini (judul dan penulis akurat, jangan mengarang buku). Total 6 buku (2 per tahap). Tiap buku beri 1 pertanyaan refleksi singkat yang relevan.
+
+Balas HANYA dengan objek JSON valid persis struktur ini (semua teks Bahasa Indonesia, kecuali judul & penulis buku):
+{
+  "tagline": "kalimat singkat memotivasi (maksimal 8 kata)",
+  "why": "1-2 kalimat kenapa skill ini penting dikuasai",
+  "outcomes": ["hasil 1", "hasil 2", "hasil 3"],
+  "objectives": { "Fondasi": "tujuan tahap fondasi", "Menengah": "tujuan tahap menengah", "Lanjut": "tujuan tahap lanjut" },
+  "practice": { "Fondasi": "1 latihan praktik nyata", "Menengah": "1 latihan praktik nyata", "Lanjut": "1 latihan praktik nyata" },
+  "capstone": "1 proyek puncak yang menggabungkan semua yang dipelajari",
+  "mastery": { "habit": "1 kebiasaan jangka panjang", "teach": "1 cara mengajarkan ke orang lain", "impact": "1 cara mengukur dampak nyata" },
+  "review": "1 anjuran tinjau berkala",
+  "action": "1 aksi kecil mingguan",
+  "books": [
+    {"stage":"Fondasi","title":"Judul Buku","author":"Penulis","reflect":"pertanyaan refleksi"},
+    {"stage":"Fondasi","title":"...","author":"...","reflect":"..."},
+    {"stage":"Menengah","title":"...","author":"...","reflect":"..."},
+    {"stage":"Menengah","title":"...","author":"...","reflect":"..."},
+    {"stage":"Lanjut","title":"...","author":"...","reflect":"..."},
+    {"stage":"Lanjut","title":"...","author":"...","reflect":"..."}
+  ]
+}`;
+
+		try {
+			const result = await callGroq([
+				{ role: 'system', content: 'Kamu asisten yang SELALU membalas dengan satu objek JSON valid sesuai skema yang diminta, tanpa teks atau markdown tambahan. Sarankan hanya buku nyata yang benar-benar ada.' },
+				{ role: 'user',   content: prompt },
+			], 2200, 'llama-3.3-70b-versatile', { response_format: { type: 'json_object' }, temperature: 0.5 });
+
+			const parsed = safeParseJson(result.content);
+			if (!parsed || !Array.isArray(parsed.books) || parsed.books.length === 0) {
+				log('error', 'Skill parse/empty', { ip, skillName, sample: String(result.content || '').slice(0, 200) });
+				return res.status(502).json({ error: 'Format respons AI tidak valid. Coba lagi.' });
+			}
+
+			log('info', 'Skill success', { ip, skillName, duration_ms: Date.now()-startTime, ...result.usage });
+
+			return res.status(200).json({
+				tagline:    parsed.tagline    || '',
+				why:        parsed.why        || '',
+				outcomes:   Array.isArray(parsed.outcomes) ? parsed.outcomes : [],
+				objectives: (parsed.objectives && typeof parsed.objectives === 'object') ? parsed.objectives : {},
+				practice:   (parsed.practice   && typeof parsed.practice   === 'object') ? parsed.practice   : {},
+				capstone:   parsed.capstone   || '',
+				mastery:    (parsed.mastery    && typeof parsed.mastery    === 'object') ? parsed.mastery    : {},
+				review:     parsed.review     || '',
+				action:     parsed.action     || '',
+				books:      parsed.books,
+				usage:      result.usage,
+				model:      result.model,
+			});
+		} catch(e) {
+			log('error', 'Skill failed', { ip, error: e.message || e });
+			return res.status(e.status || 500).json({ error: e.message || 'Terjadi kesalahan.' });
+		}
+	}
+
+	return res.status(400).json({ error: `Action tidak dikenal: "${action}". Gunakan "outline", "chapter", "expand", "quiz", atau "skill".` });
 }
