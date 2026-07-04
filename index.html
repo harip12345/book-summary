@@ -3354,7 +3354,9 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
         // Ganti FOLIO_API_URL dengan URL Vercel kamu setelah deploy
         // Contoh: 'https://folio-ai-api.vercel.app'
         // =====================================================================
-        const FOLIO_API_URL = "https://book-summary-alpha.vercel.app/";
+        // Pakai origin yang sama dengan tempat app di-deploy (folder /api ikut ter-deploy).
+        // Ini menghindari CORS (same-origin) sekaligus bug double-slash// pada preflight.
+        const FOLIO_API_URL = window.location.origin;
 
         let aiChatHistory = [];
         let aiIsLoading   = false;
