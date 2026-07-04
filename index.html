@@ -2321,6 +2321,8 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
             if (headerAvatar) headerAvatar.textContent = initial;
             const headerAvatarCollection = document.getElementById('headerAvatarCollection');
             if (headerAvatarCollection) headerAvatarCollection.textContent = initial;
+            const headerAvatarDev = document.getElementById('headerAvatarDev');
+            if (headerAvatarDev) headerAvatarDev.textContent = initial;
             const tabAvatar = document.getElementById('profileTabAvatar');
             if(tabAvatar) tabAvatar.innerHTML = `${initial} <div style="position:absolute; bottom:0; right:0; background:var(--bg-card); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:14px; box-shadow:var(--shadow-sm); cursor:pointer; color: var(--text-primary);" onclick="openEditProfile()"><i data-lucide="pencil" style="width:14px;height:14px;"></i></div>`;
             const tabName = document.getElementById('profileTabName');
@@ -3108,8 +3110,10 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
         const DEV_PALETTE = [['#6366F1','#8B5CF6'],['#0EA5E9','#3B82F6'],['#F59E0B','#EF4444'],['#10B981','#059669'],['#EC4899','#DB2777'],['#8B5CF6','#EC4899'],['#F97316','#EA580C'],['#14B8A6','#0EA5E9']];
         let devView = { mode:'list', id:null };
         let devEditDraft = null;
-        function devCustom(){ try{ return JSON.parse(localStorage.getItem('folio-dev-custom')||'[]'); }catch(e){ return []; } }
-        function devSaveCustom(arr){ localStorage.setItem('folio-dev-custom', JSON.stringify(arr||[])); }
+        let devCustomCache = null;
+        function devCustom(){ if(devCustomCache) return devCustomCache; try{ devCustomCache = JSON.parse(localStorage.getItem('folio-dev-custom')||'[]'); }catch(e){ devCustomCache = []; } if(!Array.isArray(devCustomCache)) devCustomCache=[]; return devCustomCache; }
+        function devSaveCustom(arr){ devCustomCache = Array.isArray(arr)?arr:[]; try{ localStorage.setItem('folio-dev-custom', JSON.stringify(devCustomCache)); }catch(e){} if(window.firebaseSaveDevSkills) window.firebaseSaveDevSkills(devCustomCache); }
+        window.devSetCustomCache = function(arr){ devCustomCache = Array.isArray(arr)?arr:[]; try{ localStorage.setItem('folio-dev-custom', JSON.stringify(devCustomCache)); }catch(e){} try{ var ds=document.getElementById('screen-development'); if(ds && ds.classList.contains('active') && (typeof devView==='undefined'||!devView||devView.mode!=='edit') && window.renderDevelopment) window.renderDevelopment(); if(window.renderDevFocusCard) window.renderDevFocusCard(); }catch(e){} };
         function devAllTracks(){ return DEV_TRACKS.concat(devCustom()); }
         function devFindTrack(id){ return devAllTracks().find(function(x){ return x.id===id; }) || null; }
         function devUpdateCustom(track){ const arr=devCustom(); const i=arr.findIndex(function(x){ return x.id===track.id; }); if(i>=0){ arr[i]=track; devSaveCustom(arr); } }
@@ -5200,6 +5204,19 @@ INSTRUKSI:
                     isOnline: true, lastActive: serverTimestamp()
                 }, { merge: true }).catch(e => console.warn("Status online:", e));
 
+                // Sinkronisasi skill custom lintas device (agar tidak perlu generate ulang)
+                if (window._devSkillsUnsub) { try { window._devSkillsUnsub(); } catch(e){} }
+                window._devSkillsUnsub = onSnapshot(doc(db, "users", user.uid), (snap) => {
+                    const d = (snap && snap.data && snap.data()) || {};
+                    if (Array.isArray(d.devCustomSkills)) {
+                        if (window.devSetCustomCache) window.devSetCustomCache(d.devCustomSkills);
+                    } else {
+                        let local = [];
+                        try { local = JSON.parse(localStorage.getItem('folio-dev-custom') || '[]'); } catch(e){}
+                        if (local && local.length && window.firebaseSaveDevSkills) window.firebaseSaveDevSkills(local);
+                    }
+                }, (err) => console.warn("Sync skill:", err));
+
                 if (document.getElementById('screen-onboarding').classList.contains('active') && window.APP_STATE.currentSlide === 1) {
                     window.goToSlide(2);
                 }
@@ -5326,6 +5343,7 @@ INSTRUKSI:
         window.firebaseUpdateChapterNotes= async (bookId, n)  => { try { await updateDoc(doc(db,"buku_bacaan",bookId), {chapterNotes:n}); } catch(e){console.error(e);} }
         window.firebaseUpdatePin         = async (bookId, p)  => { try { await updateDoc(doc(db,"buku_bacaan",bookId), {savedPin:p}); } catch(e){console.error(e);} }
         window.firebaseUpdateFullBook    = async (bookId, d)  => { try { await updateDoc(doc(db,"buku_bacaan",bookId), d); } catch(e){console.error(e); throw e;} }
+        window.firebaseSaveDevSkills     = async (skills)      => { try { if(auth.currentUser) await setDoc(doc(db,"users",auth.currentUser.uid), { devCustomSkills: Array.isArray(skills)?skills:[] }, { merge:true }); } catch(e){ console.error('Simpan skill:', e); } }
 
         window.firebaseSaveManualBook = async (bookData) => {
             try {
