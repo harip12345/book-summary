@@ -723,7 +723,7 @@
         body.tts-bar-open .fab-ai { bottom: calc(184px + env(safe-area-inset-bottom)); }
         /* ===================== END WEB SPEECH TTS ===================== */
         /* ===== Home: streak + statistik mingguan ===== */
-        .home-streak { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#3B82F6,#8B5CF6); border-radius:var(--radius-xl); padding:16px 18px; margin-bottom:16px; color:#fff; box-shadow:0 10px 30px rgba(59,130,246,0.28); }
+        .home-streak { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#F59E0B,#F97316); border-radius:var(--radius-xl); padding:16px 18px; margin-bottom:16px; color:#fff; box-shadow:0 10px 30px rgba(245,158,11,0.3); }
         .hs-flame { width:42px; height:42px; flex-shrink:0; border-radius:50%; background:rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; }
         .hs-flame svg { width:22px; height:22px; color:#FDE68A; }
         .hs-streak-info { flex:1; min-width:0; }
@@ -775,7 +775,7 @@
         /* ===== Kartu Insight Harian + judul kartu statistik ===== */
         .hs-card-title { display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:16px; }
         .hs-card-title svg { width:18px; height:18px; color:var(--accent); }
-        .insight-card { background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; border-radius:var(--radius-xl); padding:20px; box-shadow:0 10px 30px rgba(59,130,246,0.28); text-align:left; }
+        .insight-card { background:linear-gradient(135deg,#06B6D4,#0EA5E9); color:#fff; border-radius:var(--radius-xl); padding:20px; box-shadow:0 10px 30px rgba(6,182,212,0.3); text-align:left; }
         .insight-head { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; opacity:0.9; margin-bottom:12px; }
         .insight-head svg { width:16px; height:16px; color:#FDE68A; }
         .insight-quote { font-family:var(--font-display); font-style:italic; font-size:18px; line-height:1.5; }
@@ -794,6 +794,200 @@
         .feat-read-btn:hover { transform: translateY(-2px); }
         .icon-btn { transition: transform 0.2s ease, background 0.2s ease; }
         .icon-btn:hover { transform: translateY(-2px); }
+        /* ===== Development (skill tracks) ===== */
+        #homeDevFocus { margin-top:14px; }
+        .dev-hero { background:linear-gradient(135deg,#6366F1,#8B5CF6); color:#fff; border-radius:var(--radius-xl); padding:20px; margin-bottom:20px; box-shadow:0 12px 32px rgba(99,102,241,0.3); }
+        .dev-hero-eyebrow { display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:0.08em; opacity:0.92; }
+        .dev-hero-eyebrow svg { width:14px; height:14px; }
+        .dev-hero-title { font-family:var(--font-display); font-weight:800; font-size:20px; line-height:1.25; margin:8px 0 4px; }
+        .dev-hero-sub { font-size:13px; opacity:0.9; line-height:1.5; }
+        .dev-hero-stats { display:flex; gap:10px; margin-top:16px; }
+        .dev-hs { flex:1; background:rgba(255,255,255,0.16); border-radius:14px; padding:10px 6px; text-align:center; }
+        .dev-hs-num { font-family:var(--font-display); font-weight:800; font-size:20px; }
+        .dev-hs-label { font-size:10.5px; opacity:0.9; margin-top:2px; }
+        .dev-hero-detail { display:flex; align-items:center; gap:16px; }
+        .dev-hero-d-left { flex:1; min-width:0; }
+        .dev-hero-detail .dev-why { color:rgba(255,255,255,0.95); margin:6px 0 10px; }
+        .dev-hero-detail .dev-chip-row { margin-bottom:0; }
+        .dev-hero-detail .dev-chip { background:rgba(255,255,255,0.2); color:#fff; }
+        .dev-ring { width:84px; height:84px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+        .dev-ring-in { width:62px; height:62px; border-radius:50%; background:rgba(15,23,42,0.18); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; }
+        .dev-ring-pct { font-family:var(--font-display); font-weight:800; font-size:18px; line-height:1; }
+        .dev-ring-sub { font-size:10px; opacity:0.85; margin-top:2px; }
+        .dev-track-card { display:flex; align-items:center; gap:14px; padding:14px; border-radius:18px; background:rgba(255,255,255,0.6); border:1px solid rgba(15,23,42,0.06); margin-bottom:12px; cursor:pointer; transition:transform .25s, box-shadow .25s; }
+        .dev-track-card:hover { transform:translateY(-3px); box-shadow:0 12px 28px rgba(15,23,42,0.12); }
+        .dev-track-card:active { transform:scale(0.97); }
+        body.theme-dark .dev-track-card { background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.09); }
+        .dev-track-card.active { border-color:var(--accent); box-shadow:0 8px 22px rgba(99,102,241,0.18); }
+        .dev-track-ic { width:50px; height:50px; border-radius:15px; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-display); font-weight:800; font-size:21px; box-shadow:0 6px 16px rgba(99,102,241,0.3); }
+        .dev-track-info { flex:1; min-width:0; }
+        .dev-track-name { font-family:var(--font-display); font-weight:700; font-size:16px; color:var(--text-primary); display:flex; align-items:center; gap:8px; }
+        .dev-track-tagline { font-size:12.5px; color:var(--text-muted); margin:2px 0 7px; }
+        .dev-focus-tag { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#fff; background:var(--accent); padding:2px 8px; border-radius:100px; }
+        .dev-track-meta { font-size:12px; color:var(--text-muted); margin:0 0 8px; }
+        .dev-mini-track { height:6px; border-radius:3px; background:rgba(15,23,42,0.1); overflow:hidden; }
+        body.theme-dark .dev-mini-track { background:rgba(255,255,255,0.12); }
+        .dev-mini-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,#6366F1,#8B5CF6); transition:width .8s ease; }
+        .dev-chev { width:20px; height:20px; color:var(--text-light-muted); flex-shrink:0; }
+        .dev-detail-head { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+        .dev-back { width:38px; height:38px; border-radius:50%; border:none; background:rgba(15,23,42,0.06); color:var(--text-primary); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+        body.theme-dark .dev-back { background:rgba(255,255,255,0.08); }
+        .dev-back svg { width:18px; height:18px; }
+        .dev-detail-title { font-family:var(--font-display); font-weight:800; font-size:22px; color:var(--text-primary); }
+        .dev-why-label { font-size:11px; font-weight:700; letter-spacing:0.08em; color:var(--accent); margin-bottom:6px; }
+        .dev-why { font-size:14px; line-height:1.6; color:var(--text-primary); }
+        .dev-chip-row { display:flex; flex-wrap:wrap; gap:8px; }
+        .dev-chip { font-size:12px; font-weight:600; color:var(--text-muted); background:rgba(15,23,42,0.05); padding:6px 12px; border-radius:100px; }
+        body.theme-dark .dev-chip { background:rgba(255,255,255,0.07); color:#E2E8F0; }
+        .dev-next-card { display:flex; align-items:center; gap:12px; padding:14px; border-radius:16px; background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.25); margin-bottom:22px; cursor:pointer; transition:transform .2s; }
+        .dev-next-card:active { transform:scale(0.98); }
+        body.theme-dark .dev-next-card { background:rgba(99,102,241,0.18); border-color:rgba(99,102,241,0.4); }
+        .dev-next-card.done { background:rgba(16,185,129,0.12); border-color:rgba(16,185,129,0.3); cursor:default; }
+        .dev-next-card.miss { background:rgba(15,23,42,0.04); border:1px dashed rgba(15,23,42,0.2); }
+        body.theme-dark .dev-next-card.miss { background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.2); }
+        .dev-next-ic { width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg,#6366F1,#8B5CF6); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .dev-next-card.done .dev-next-ic { background:#10B981; }
+        .dev-next-card.miss .dev-next-ic { background:var(--text-light-muted); }
+        .dev-next-ic svg { width:18px; height:18px; }
+        .dev-next-info { flex:1; min-width:0; }
+        .dev-next-label { font-size:10.5px; font-weight:700; letter-spacing:0.06em; color:var(--text-muted); }
+        .dev-next-title { font-size:14.5px; font-weight:700; color:var(--text-primary); margin-top:2px; }
+        .dev-stage { display:flex; align-items:center; gap:8px; margin:18px 0 10px; }
+        .dev-stage-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+        .dev-stage-name { font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-primary); }
+        .dev-stage-count { font-size:11px; font-weight:700; color:var(--text-muted); margin-left:auto; background:rgba(15,23,42,0.05); padding:2px 9px; border-radius:100px; }
+        body.theme-dark .dev-stage-count { background:rgba(255,255,255,0.08); }
+        .dev-book-row { display:flex; align-items:center; gap:12px; padding:10px; border-radius:14px; background:rgba(255,255,255,0.6); border:1px solid rgba(15,23,42,0.06); margin-bottom:10px; cursor:pointer; transition:transform .2s; }
+        .dev-book-row:hover { transform:translateY(-2px); }
+        body.theme-dark .dev-book-row { background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.08); }
+        .dev-book-row.missing { opacity:0.6; }
+        .dev-book-cover { width:42px; height:58px; border-radius:6px; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-display); font-weight:800; font-size:18px; background-size:cover; background-position:center; }
+        .dev-book-info { flex:1; min-width:0; }
+        .dev-book-title { font-size:14px; font-weight:700; color:var(--text-primary); }
+        .dev-book-author { font-size:12px; color:var(--text-muted); margin-top:2px; }
+        .dev-status { font-size:11px; font-weight:700; padding:5px 10px; border-radius:100px; flex-shrink:0; white-space:nowrap; }
+        .dev-status.done { background:#10B981; color:#fff; }
+        .dev-status.prog { background:var(--accent); color:#fff; }
+        .dev-status.todo { background:rgba(15,23,42,0.08); color:var(--text-muted); }
+        body.theme-dark .dev-status.todo { background:rgba(255,255,255,0.1); color:#94A3B8; }
+        .dev-status.missing { background:transparent; border:1px dashed rgba(15,23,42,0.2); color:var(--text-light-muted); }
+        body.theme-dark .dev-status.missing { border-color:rgba(255,255,255,0.2); }
+        .dev-action-card { display:flex; gap:12px; align-items:center; padding:14px; border-radius:14px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); margin:20px 0 14px; transition:background .25s; }
+        .dev-action-card.done { background:rgba(16,185,129,0.18); }
+        .dev-act-check { width:26px; height:26px; border-radius:8px; border:2px solid #10B981; background:transparent; flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; padding:0; transition:background .2s; }
+        .dev-act-check.on { background:#10B981; }
+        .dev-act-check svg { width:15px; height:15px; }
+        .dev-action-body { flex:1; min-width:0; }
+        .dev-action-title { font-size:13px; font-weight:700; color:var(--text-primary); }
+        .dev-action-text { font-size:12.5px; color:var(--text-muted); line-height:1.5; margin-top:2px; }
+        .dev-action-streak { display:flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#F59E0B; margin-top:7px; }
+        .dev-action-streak svg { width:13px; height:13px; }
+        .dev-focus-btn { width:100%; padding:15px; border:none; border-radius:14px; background:linear-gradient(135deg,#6366F1,#8B5CF6); color:#fff; font-family:var(--font-display); font-weight:800; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:transform .2s; margin-bottom:10px; }
+        .dev-focus-btn:active { transform:scale(0.97); }
+        .dev-focus-btn.is-focus { background:rgba(16,185,129,0.15); color:#10B981; border:1px solid rgba(16,185,129,0.4); }
+        .dev-focus-btn svg { width:16px; height:16px; }
+        .dev-home-card { border-radius:var(--radius-xl); padding:18px; color:#fff; margin-bottom:18px; box-shadow:0 10px 30px rgba(99,102,241,0.28); cursor:pointer; transition:transform .25s; }
+        .dev-home-card:active { transform:scale(0.98); }
+        .dev-home-top { display:flex; align-items:center; justify-content:space-between; }
+        .dev-home-eyebrow { display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:0.06em; opacity:0.92; }
+        .dev-home-eyebrow svg { width:14px; height:14px; }
+        .dev-home-pct { font-weight:800; font-size:16px; }
+        .dev-home-name { font-family:var(--font-display); font-weight:800; font-size:19px; margin:8px 0 2px; }
+        .dev-home-meta { font-size:12.5px; opacity:0.9; margin-bottom:10px; }
+        .dev-home-track { height:7px; border-radius:4px; background:rgba(255,255,255,0.28); overflow:hidden; }
+        .dev-home-fill { height:100%; border-radius:4px; background:#fff; transition:width .8s ease; }
+        .dev-home-empty { display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:16px; background:rgba(15,23,42,0.04); border:1px dashed rgba(15,23,42,0.15); margin-bottom:18px; cursor:pointer; }
+        body.theme-dark .dev-home-empty { background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.15); }
+        .dev-home-empty-ic { width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg,#6366F1,#8B5CF6); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .dev-home-empty-ic svg { width:20px; height:20px; }
+        .dev-home-empty-title { font-size:14px; font-weight:700; color:var(--text-primary); }
+        .dev-home-empty-sub { font-size:12px; color:var(--text-muted); margin-top:2px; }
+        .dev-intro { font-size:13.5px; color:var(--text-muted); line-height:1.6; margin:4px 0 18px; }
+        /* ===== Development: mastery path steps ===== */
+        .dev-objective { display:flex; gap:10px; align-items:flex-start; padding:11px 13px; border-radius:12px; background:rgba(99,102,241,0.08); margin:0 0 12px; font-size:13px; color:var(--text-primary); line-height:1.5; }
+        body.theme-dark .dev-objective { background:rgba(99,102,241,0.16); }
+        .dev-objective svg { width:16px; height:16px; color:var(--accent); flex-shrink:0; margin-top:2px; }
+        .dev-objective b { font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:2px; }
+        .dev-mini-check { width:22px; height:22px; border-radius:7px; border:2px solid #10B981; background:transparent; flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; padding:0; transition:background .2s; }
+        .dev-mini-check.on { background:#10B981; }
+        .dev-mini-check svg { width:13px; height:13px; }
+        .dev-reflect { display:flex; gap:10px; align-items:flex-start; padding:0 12px 12px 14px; margin:-4px 0 10px; }
+        .dev-reflect-q { font-size:12.5px; color:var(--text-muted); font-style:italic; line-height:1.5; display:flex; gap:6px; align-items:flex-start; }
+        .dev-reflect-q svg { width:13px; height:13px; color:#8B5CF6; flex-shrink:0; margin-top:3px; }
+        .dev-reflect.done .dev-reflect-q { color:var(--text-light-muted); text-decoration:line-through; }
+        .dev-step-card { display:flex; gap:12px; align-items:flex-start; padding:13px; border-radius:14px; background:rgba(15,23,42,0.03); border:1px solid rgba(15,23,42,0.06); margin-bottom:10px; }
+        body.theme-dark .dev-step-card { background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.08); }
+        .dev-step-card.done { background:rgba(16,185,129,0.1); border-color:rgba(16,185,129,0.25); }
+        .dev-step-body { flex:1; min-width:0; }
+        .dev-step-title { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:700; color:var(--text-primary); }
+        .dev-step-title svg { width:15px; height:15px; color:var(--accent); }
+        .dev-step-text { font-size:12.5px; color:var(--text-muted); line-height:1.55; margin-top:3px; }
+        .dev-checkpoint { padding:12px 14px; border-radius:12px; background:rgba(15,23,42,0.03); border:1px dashed rgba(15,23,42,0.18); margin:0 0 18px; }
+        body.theme-dark .dev-checkpoint { background:rgba(255,255,255,0.03); border-color:rgba(255,255,255,0.18); }
+        .dev-checkpoint.pass { background:rgba(16,185,129,0.1); border-style:solid; border-color:rgba(16,185,129,0.3); }
+        .dev-cp-head { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:800; letter-spacing:0.03em; color:var(--text-primary); margin-bottom:8px; }
+        .dev-cp-head svg { width:14px; height:14px; }
+        .dev-checkpoint.pass .dev-cp-head { color:#10B981; }
+        .dev-cp-item { font-size:12.5px; color:var(--text-muted); margin:3px 0; }
+        .dev-cp-item.ok { color:#10B981; font-weight:600; }
+        .dev-pass { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#fff; background:#10B981; padding:2px 8px; border-radius:100px; margin-left:8px; }
+        .dev-capstone { display:flex; gap:12px; align-items:flex-start; padding:14px; border-radius:14px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); margin-bottom:12px; }
+        .dev-capstone.done { background:rgba(16,185,129,0.12); border-color:rgba(16,185,129,0.3); }
+        .dev-capstone .dev-step-title svg { color:#F59E0B; }
+        .dev-mahir { padding:16px; border-radius:16px; background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.08)); border:1px solid rgba(139,92,246,0.2); margin:18px 0; }
+        body.theme-dark .dev-mahir { background:linear-gradient(135deg,rgba(99,102,241,0.16),rgba(139,92,246,0.16)); }
+        .dev-mahir-head { display:flex; align-items:center; gap:6px; font-family:var(--font-display); font-weight:800; font-size:14px; letter-spacing:0.05em; color:var(--text-primary); }
+        .dev-mahir-head svg { width:17px; height:17px; color:#8B5CF6; }
+        .dev-mahir-sub { font-size:12px; color:var(--text-muted); margin:4px 0 12px; }
+        .dev-review { display:flex; gap:12px; align-items:flex-end; padding:14px; border-radius:14px; background:rgba(15,23,42,0.03); border:1px solid rgba(15,23,42,0.06); margin-bottom:18px; }
+        body.theme-dark .dev-review { background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.08); }
+        .dev-review-meta { font-size:11.5px; color:var(--accent); font-weight:600; margin-top:6px; }
+        .dev-review-btn { flex-shrink:0; border:1px solid var(--accent); background:transparent; color:var(--accent); font-size:12px; font-weight:700; padding:8px 12px; border-radius:10px; cursor:pointer; white-space:nowrap; }
+/* ===== Custom skill + AI generate (Fase 2) ===== */
+.dev-list-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:22px 0 10px; }
+.dev-list-head .lib-section-title { margin:0 !important; }
+.dev-add-skill { display:inline-flex; align-items:center; gap:5px; border:none; background:linear-gradient(135deg,var(--accent),var(--sage)); color:#fff; font-size:12.5px; font-weight:700; padding:8px 13px; border-radius:100px; cursor:pointer; box-shadow:0 4px 12px rgba(99,102,241,0.28); white-space:nowrap; }
+.dev-add-skill svg { width:15px; height:15px; }
+.dev-custom-tag { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--accent); background:var(--accent-pale); padding:2px 7px; border-radius:100px; margin-left:6px; vertical-align:middle; }
+body.theme-dark .dev-custom-tag { background:rgba(99,102,241,0.22); }
+.dev-edit-bar { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.dev-edit-bar button { display:inline-flex; align-items:center; gap:5px; border:1px solid rgba(15,23,42,0.12); background:#fff; color:var(--text-primary); font-size:12.5px; font-weight:600; padding:8px 12px; border-radius:10px; cursor:pointer; }
+body.theme-dark .dev-edit-bar button { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.12); }
+.dev-edit-bar button svg { width:14px; height:14px; }
+.dev-edit-bar button.danger { color:#EF4444; border-color:rgba(239,68,68,0.3); }
+.dev-genbook { display:inline-flex; align-items:center; gap:4px; border:none; background:linear-gradient(135deg,var(--accent),var(--sage)); color:#fff; font-size:11px; font-weight:700; padding:6px 10px; border-radius:8px; cursor:pointer; white-space:nowrap; flex-shrink:0; }
+.dev-genbook svg { width:12px; height:12px; }
+.dev-loading { text-align:center; padding:50px 20px; color:var(--text-muted); }
+.dev-loading .dev-spin { width:30px; height:30px; color:var(--accent); animation:spin 1s linear infinite; }
+.dev-loading-sub { font-size:12.5px; color:var(--text-light-muted); margin-top:6px; }
+.dev-empty-gen { text-align:center; padding:36px 22px; border:1px dashed rgba(99,102,241,0.3); border-radius:16px; background:rgba(99,102,241,0.05); }
+.dev-empty-gen > svg { width:32px; height:32px; color:var(--accent); }
+.dev-empty-gen-title { font-family:var(--font-display); font-weight:800; font-size:16px; color:var(--text-primary); margin:10px 0 4px; }
+.dev-empty-gen-sub { font-size:13px; color:var(--text-muted); margin-bottom:16px; line-height:1.5; }
+.dev-edit-form { padding-bottom:24px; }
+.dev-field { margin-bottom:12px; }
+.dev-field label { display:block; font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:5px; }
+.dev-input { width:100%; box-sizing:border-box; border:1px solid rgba(15,23,42,0.14); border-radius:10px; padding:10px 12px; font-size:13.5px; font-family:inherit; color:var(--text-primary); background:#fff; resize:vertical; }
+body.theme-dark .dev-input { background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.14); }
+.dev-input:focus { outline:none; border-color:var(--accent); }
+.dev-edit-sub { font-family:var(--font-display); font-weight:800; font-size:14px; color:var(--text-primary); margin:20px 0 10px; }
+.edit-book-row { border:1px solid rgba(15,23,42,0.1); border-radius:12px; padding:10px; margin-bottom:10px; display:flex; flex-direction:column; gap:7px; background:rgba(15,23,42,0.02); }
+body.theme-dark .edit-book-row { background:rgba(255,255,255,0.03); border-color:rgba(255,255,255,0.1); }
+.ebr-top { display:flex; gap:8px; align-items:center; }
+.ebr-top .eb-title { flex:1; }
+.ebr-del { flex-shrink:0; width:34px; height:34px; border:none; background:rgba(239,68,68,0.1); color:#EF4444; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.ebr-del svg { width:15px; height:15px; }
+.dev-add-book-btn { display:inline-flex; align-items:center; gap:6px; border:1px dashed var(--accent); background:transparent; color:var(--accent); font-size:13px; font-weight:700; padding:9px 14px; border-radius:10px; cursor:pointer; width:100%; justify-content:center; }
+.dev-add-book-btn svg { width:15px; height:15px; }
+.dev-stage-edit { border-left:3px solid var(--accent-pale); padding-left:12px; margin-bottom:14px; }
+body.theme-dark .dev-stage-edit { border-left-color:rgba(99,102,241,0.4); }
+.dev-stage-edit-name { font-size:12.5px; font-weight:800; color:var(--accent); margin-bottom:8px; }
+.dev-edit-actions { display:flex; gap:10px; margin-top:20px; }
+.dev-save-btn { flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; border:none; background:linear-gradient(135deg,var(--accent),var(--sage)); color:#fff; font-size:14px; font-weight:700; padding:13px; border-radius:12px; cursor:pointer; }
+.dev-save-btn svg { width:16px; height:16px; }
+.dev-cancel-btn { flex-shrink:0; border:1px solid rgba(15,23,42,0.14); background:transparent; color:var(--text-muted); font-size:14px; font-weight:600; padding:13px 20px; border-radius:12px; cursor:pointer; }
+body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
+
     </style>
 </head>
 <body>
@@ -1335,6 +1529,7 @@
             </div>
             <div class="lib-body">
                 <div id="homeStatsContainer"></div>
+                <div id="homeDevFocus"></div>
                 <div class="lib-section-title">Lanjutkan Membaca</div>
                 <div id="featuredBookContainer"></div>
                 <div class="lib-section-title">Rekomendasi Terkini</div>
@@ -1525,6 +1720,22 @@
         </div>
     </div>
 
+    <!-- SCREEN DEVELOPMENT -->
+    <div class="screen" id="screen-development">
+        <div class="library-shell">
+            <div class="lib-topbar">
+                <div class="lib-header">
+                    <div class="lib-wordmark">Develop<span>ment</span></div>
+                    <div class="lib-actions">
+                        <div class="icon-btn" onclick="switchMainTab('library')" title="Home"><i data-lucide="home"></i></div>
+                        <div class="avatar-btn" onclick="switchMainTab('profile')" id="headerAvatarDev">A</div>
+                    </div>
+                </div>
+            </div>
+            <div class="lib-body" id="devBody"></div>
+        </div>
+    </div>
+
     <!-- SCREEN PROFILE -->
     <div class="screen" id="screen-profile">
         <div class="library-shell">
@@ -1584,6 +1795,7 @@
     <nav class="app-bottom-nav hidden" id="appBottomNav">
         <button class="nav-item active" data-tab="library" onclick="switchMainTab('library')"><i class="nav-icon" data-lucide="home"></i><span class="nav-label">Home</span></button>
         <button class="nav-item" data-tab="collection" onclick="switchMainTab('collection')"><i class="nav-icon" data-lucide="library"></i><span class="nav-label">Library</span></button>
+        <button class="nav-item" data-tab="development" onclick="devGoTab()"><i class="nav-icon" data-lucide="rocket"></i><span class="nav-label">Develop</span></button>
         <button class="nav-item" data-tab="chart" onclick="switchMainTab('chart')"><i class="nav-icon" data-lucide="trending-up"></i><span class="nav-label">Chart</span></button>
         <button class="nav-item" data-tab="profile" onclick="switchMainTab('profile')"><i class="nav-icon" data-lucide="user"></i><span class="nav-label">Profil</span></button>
     </nav>
@@ -2192,7 +2404,7 @@
             if (target) target.classList.add('active');
             document.body.className = '';
             const bottomNav = document.getElementById('appBottomNav');
-            const mainTabs = ['library', 'collection', 'chart', 'profile'];
+            const mainTabs = ['library', 'collection', 'development', 'chart', 'profile'];
             if(mainTabs.includes(name)) {
                 bottomNav.classList.remove('hidden');
                 document.body.classList.add('app-mode');
@@ -2208,6 +2420,7 @@
             if (name === 'reader' || name === 'insights') { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); }
             if (name === 'library' || name === 'collection') { renderBooks(currentBooksToDisplay); }
             if (name === 'chart' && window.initChartBook) window.initChartBook();
+            if (name === 'development' && window.renderDevelopment) window.renderDevelopment();
             if ((name === 'library' || name === 'profile') && window.renderHomeStats) { renderHomeStats(); }
             if (name === 'profile') { updateReadingGoalDisplay(); }
         }
@@ -2835,6 +3048,294 @@
             if (e.key==='Escape') { closeDrawer(); window.closeModal('profileModal'); window.closeModal('addBookModal'); window.closeModal('editProfileModal'); window.closeModal('preferencesModal'); window.closeModal('favoritesModal'); window.closeModal('adminModal'); window.closeModal('editBookModal'); closeSettings(); window.closeModal('ttsSettingsModal'); window.closeModal('chartDetailModal'); }
         });
 
+        // ===================================================================
+        // DEVELOPMENT - skill mastery tracks (Fase 2: custom skill + AI generate)
+        // ===================================================================
+        const DEV_TRACKS = [
+          { id:'berpikir-kritis', name:'Berpikir Kritis', letter:'B', c1:'#6366F1', c2:'#8B5CF6',
+            tagline:'Ambil keputusan lebih jernih & bebas bias',
+            why:'Biar tidak gampang termakan bias dan bisa mengambil keputusan dengan lebih jernih.',
+            outcomes:['Mengenali bias','Kerangka keputusan','Berpikir objektif'],
+            objectives:{ Fondasi:'Mengenali cara kerja pikiran (berpikir cepat vs lambat) dan bias umum yang sering menjebak.', Menengah:'Punya koleksi mental model untuk membedah masalah dari banyak sudut.', Lanjut:'Mengambil keputusan di bawah ketidakpastian dengan berpikir berbasis probabilitas.' },
+            practice:{ Fondasi:'Selama 1 minggu, catat 3 keputusan harian dan tandai bias apa yang mungkin memengaruhinya.', Menengah:'Pilih 1 masalah nyata, lalu analisis dengan minimal 3 mental model berbeda.', Lanjut:'Tulis 1 keputusan penting sebagai "taruhan": estimasi probabilitas hasil dan apa yang dipertaruhkan.' },
+            capstone:'Ambil 1 keputusan besar (karier/keuangan/proyek) dan dokumentasikan: bias yang diwaspadai, mental model yang dipakai, dan estimasi probabilitasnya.',
+            mastery:{ habit:'Biasakan bertanya "Bukti apa yang akan mengubah pikiranku?" tiap berargumen.', teach:'Ajarkan 1 bias dan 1 mental model ke teman sesederhana mungkin (teknik Feynman).', impact:'Tinjau 5 keputusan lama: mana yang hasilnya berubah kalau pakai cara berpikir baru?' },
+            review:'Tinjau ulang catatan bias dan mental model-mu tiap 2 minggu.',
+            action:'Catat 1 keputusan penting tiap minggu beserta kerangka berpikir yang kamu pakai.',
+            books:[
+              { stage:'Fondasi', title:'Thinking, Fast and Slow', author:'Daniel Kahneman', reflect:'Kapan terakhir kamu mengandalkan reaksi cepat padahal butuh berpikir lambat?' },
+              { stage:'Fondasi', title:'The Art of Thinking Clearly', author:'Rolf Dobelli', reflect:'Dari banyak bias di buku ini, 3 mana yang paling sering kamu lakukan?' },
+              { stage:'Menengah', title:'Super Thinking', author:'Gabriel Weinberg', reflect:'Mental model mana yang langsung bisa kamu pakai minggu ini?' },
+              { stage:'Lanjut', title:'Thinking in Bets', author:'Annie Duke', reflect:'Keputusan baik bisa berhasil buruk. Adakah contohnya pada dirimu?' }
+            ] },
+          { id:'produktivitas', name:'Produktivitas & Fokus', letter:'P', c1:'#0EA5E9', c2:'#3B82F6',
+            tagline:'Kerja lebih ringan, hasil lebih besar',
+            why:'Kelola energi dan perhatianmu supaya kerja lebih ringan tapi hasilnya lebih besar.',
+            outcomes:['Bangun kebiasaan','Fokus mendalam','Kelola prioritas'],
+            objectives:{ Fondasi:'Memahami cara membentuk kebiasaan dan melindungi waktu untuk kerja fokus.', Menengah:'Punya sistem menangkap, mengatur, dan menyelesaikan tugas tanpa kewalahan.', Lanjut:'Berani memangkas yang remeh dan fokus pada sedikit hal yang benar-benar penting.' },
+            practice:{ Fondasi:'Rancang 1 "habit stack" kecil dan jadwalkan 1 blok kerja fokus 60-90 menit tiap hari selama seminggu.', Menengah:'Bangun sistem sederhana: 1 inbox untuk menangkap semua tugas plus review mingguan.', Lanjut:'Buat daftar aktivitasmu, lalu hapus atau delegasikan 20% yang paling tidak penting.' },
+            capstone:'Jalani 1 minggu penuh dengan sistem produktivitasmu sendiri (kebiasaan, kerja fokus, penataan tugas, esensialisme) lalu evaluasi hasilnya.',
+            mastery:{ habit:'Mulai tiap hari dengan menetapkan 1 tugas terpenting.', teach:'Bantu 1 orang menyusun sistem produktivitas sederhananya.', impact:'Bandingkan hasil kerja minggu ini dengan sebelum mulai track ini.' },
+            review:'Lakukan review tiap akhir pekan: apa yang jalan dan apa yang perlu disetel.',
+            action:'Pilih 1 kebiasaan kecil dan lakukan konsisten tiap hari selama seminggu ini.',
+            books:[
+              { stage:'Fondasi', title:'Atomic Habits', author:'James Clear', reflect:'Kebiasaan kecil apa yang, kalau konsisten, paling mengubah hidupmu?' },
+              { stage:'Fondasi', title:'Deep Work', author:'Cal Newport', reflect:'Apa gangguan terbesar yang mencuri fokusmu, dan bagaimana memblokirnya?' },
+              { stage:'Menengah', title:'Getting Things Done', author:'David Allen', reflect:'Hal apa yang selama ini menggantung di kepalamu dan belum tercatat?' },
+              { stage:'Lanjut', title:'Essentialism', author:'Greg McKeown', reflect:'Satu hal apa yang sebaiknya kamu hentikan minggu ini?' }
+            ] },
+          { id:'kepemimpinan', name:'Kepemimpinan', letter:'K', c1:'#F59E0B', c2:'#EF4444',
+            tagline:'Pimpin diri & tim dengan empati dan visi',
+            why:'Pimpin diri dan tim dengan empati, kepercayaan, dan visi yang jelas.',
+            outcomes:['Bangun kepercayaan','Komunikasi','Visi tim'],
+            objectives:{ Fondasi:'Memimpin dengan keberanian, kerentanan, dan menciptakan rasa aman bagi tim.', Menengah:'Memahami tahap pertumbuhan kepemimpinan dan cara menaikkan pengaruh.', Lanjut:'Membangun sesuatu yang hebat dan bertahan lama lewat disiplin dan orang yang tepat.' },
+            practice:{ Fondasi:'Minta 1 umpan balik jujur tentang gaya kepemimpinanmu dan terima tanpa membela diri.', Menengah:'Petakan posisimu di "5 Levels" untuk 1 hubungan kerja, lalu rencanakan 1 langkah naik level.', Lanjut:'Identifikasi "orang yang tepat" di timmu dan beri 1 tanggung jawab yang menumbuhkan.' },
+            capstone:'Pimpin 1 inisiatif kecil dari awal sampai selesai sambil menerapkan prinsip kepercayaan, pengaruh, dan disiplin.',
+            mastery:{ habit:'Akhiri tiap minggu dengan 1 apresiasi spesifik untuk anggota tim.', teach:'Mentori 1 orang: bagikan 1 prinsip kepemimpinan yang paling berdampak buatmu.', impact:'Tanyakan ke tim: apa yang berubah dari caramu memimpin sebulan terakhir?' },
+            review:'Tinjau catatan umpan balik dan komitmen kepemimpinanmu tiap 2 minggu.',
+            action:'Minta 1 umpan balik jujur dari rekan tentang gaya kepemimpinanmu.',
+            books:[
+              { stage:'Fondasi', title:'Dare to Lead', author:'Brene Brown', reflect:'Kapan terakhir kamu memilih nyaman daripada berani saat memimpin?' },
+              { stage:'Fondasi', title:'Leaders Eat Last', author:'Simon Sinek', reflect:'Apa 1 cara membuat timmu merasa lebih aman?' },
+              { stage:'Menengah', title:'The 5 Levels of Leadership', author:'John C. Maxwell', reflect:'Orang mengikutimu karena jabatan atau karena dirimu? Kenapa?' },
+              { stage:'Lanjut', title:'Good to Great', author:'Jim Collins', reflect:'Apa 1 disiplin yang harus kamu pertahankan meski sulit?' }
+            ] }
+        ];
+        const DEV_STAGES = ['Fondasi','Menengah','Lanjut'];
+        const DEV_PALETTE = [['#6366F1','#8B5CF6'],['#0EA5E9','#3B82F6'],['#F59E0B','#EF4444'],['#10B981','#059669'],['#EC4899','#DB2777'],['#8B5CF6','#EC4899'],['#F97316','#EA580C'],['#14B8A6','#0EA5E9']];
+        let devView = { mode:'list', id:null };
+        let devEditDraft = null;
+        function devCustom(){ try{ return JSON.parse(localStorage.getItem('folio-dev-custom')||'[]'); }catch(e){ return []; } }
+        function devSaveCustom(arr){ localStorage.setItem('folio-dev-custom', JSON.stringify(arr||[])); }
+        function devAllTracks(){ return DEV_TRACKS.concat(devCustom()); }
+        function devFindTrack(id){ return devAllTracks().find(function(x){ return x.id===id; }) || null; }
+        function devUpdateCustom(track){ const arr=devCustom(); const i=arr.findIndex(function(x){ return x.id===track.id; }); if(i>=0){ arr[i]=track; devSaveCustom(arr); } }
+        function devNorm(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); }
+        function devFindBook(title){
+          const tn = devNorm(title);
+          const arr = currentBooksToDisplay || [];
+          let m = arr.find(function(b){ return devNorm(b.title) === tn; });
+          if(!m) m = arr.find(function(b){ const bn = devNorm(b.title); return bn && (bn.indexOf(tn) >= 0 || tn.indexOf(bn) >= 0); });
+          return m || null;
+        }
+        function devTrackStats(t){
+          let done=0, reading=0, inLib=0;
+          (t.books||[]).forEach(function(bk){ const b=devFindBook(bk.title); if(b){ inLib++; if((b.progress||0)>=100) done++; else if((b.progress||0)>0) reading++; } });
+          const total=(t.books||[]).length;
+          return { done:done, reading:reading, inLib:inLib, total:total, pct: total?Math.round(done/total*100):0 };
+        }
+        function devStageStats(t,stg){ let done=0,total=0; (t.books||[]).filter(function(b){return b.stage===stg;}).forEach(function(bk){ total++; const b=devFindBook(bk.title); if(b&&(b.progress||0)>=100) done++; }); return { done:done, total:total }; }
+        function devOverallStats(){ let books=0,done=0,reading=0; const all=devAllTracks(); all.forEach(function(t){ const s=devTrackStats(t); books+=s.total; done+=s.done; reading+=s.reading; }); return { tracks:all.length, books:books, done:done, reading:reading, pct: books?Math.round(done/books*100):0 }; }
+        function devNextBook(t){
+          let reading=null, todo=null;
+          DEV_STAGES.forEach(function(stg){ (t.books||[]).filter(function(b){return b.stage===stg;}).forEach(function(bk){ const b=devFindBook(bk.title); if(b){ const p=b.progress||0; if(p>0&&p<100){ if(!reading) reading={bk:bk,b:b}; } else if(p<=0){ if(!todo) todo={bk:bk,b:b}; } } }); });
+          return reading || todo || null;
+        }
+        function devFlag(key){ return localStorage.getItem(key)==='1'; }
+        function devWeekKey(){ const d=new Date(); const oj=new Date(d.getFullYear(),0,1); const wk=Math.ceil((((d-oj)/86400000)+oj.getDay()+1)/7); return d.getFullYear()+'-W'+wk; }
+        function devActionDone(id){ return localStorage.getItem('folio-dev-act-'+id)===devWeekKey(); }
+        function devActionCount(id){ return parseInt(localStorage.getItem('folio-dev-act-n-'+id)||'0',10); }
+        function devEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+        function devAttr(s){ return devEsc(s).replace(/"/g,'&quot;'); }
+        function devField(label, inner){ return `<div class="dev-field"><label>${devEsc(label)}</label>${inner}</div>`; }
+        function devCheckBtn(id,key,done){ return `<button class="dev-mini-check${done?' on':''}" onclick="event.stopPropagation(); devTog('${id}','${key}')">${done?'<i data-lucide="check"></i>':''}</button>`; }
+        function devRenderList(){
+          const body=document.getElementById('devBody'); if(!body) return;
+          const focusId=localStorage.getItem('folio-dev-focus');
+          const ov=devOverallStats();
+          let html='';
+          html+=`<div class="dev-hero"><div class="dev-hero-eyebrow"><i data-lucide="rocket"></i> PERJALANAN SKILL</div><div class="dev-hero-title">Bangun dirimu, satu buku setiap waktu</div><div class="dev-hero-sub">Pilih skill, ikuti jalur penguasaannya: pelajari, praktik, refleksi, sampai benar-benar kuasai.</div><div class="dev-hero-stats"><div class="dev-hs"><div class="dev-hs-num">${ov.tracks}</div><div class="dev-hs-label">Track</div></div><div class="dev-hs"><div class="dev-hs-num">${ov.done}</div><div class="dev-hs-label">Selesai</div></div><div class="dev-hs"><div class="dev-hs-num">${ov.reading}</div><div class="dev-hs-label">Dibaca</div></div><div class="dev-hs"><div class="dev-hs-num">${ov.pct}%</div><div class="dev-hs-label">Progres</div></div></div></div>`;
+          html+=`<div class="dev-list-head"><div class="lib-section-title">Pilih Fokus Skill</div><button class="dev-add-skill" onclick="devCreateSkill()"><i data-lucide="plus"></i> Skill Baru</button></div>`;
+          devAllTracks().forEach(function(t){
+            const st=devTrackStats(t);
+            const active=focusId===t.id;
+            const metaReading = st.reading ? ` &middot; ${st.reading} dibaca` : '';
+            html+=`<div class="dev-track-card${active?' active':''}" onclick="devOpenTrack('${t.id}')"><div class="dev-track-ic" style="background:linear-gradient(135deg,${t.c1},${t.c2})">${devEsc(t.letter||'?')}</div><div class="dev-track-info"><div class="dev-track-name">${devEsc(t.name)}${t.custom?' <span class="dev-custom-tag">Custom</span>':''}${active?' <span class="dev-focus-tag">Fokus</span>':''}</div><div class="dev-track-tagline">${devEsc(t.tagline||'')}</div><div class="dev-track-meta">${(t.books||[]).length} buku &middot; ${st.done}/${st.total} selesai${metaReading}</div><div class="dev-mini-track"><div class="dev-mini-fill" style="width:${st.pct}%"></div></div></div><i data-lucide="chevron-right" class="dev-chev"></i></div>`;
+          });
+          body.innerHTML=html;
+          if(window.lucide) lucide.createIcons();
+        }
+        function devRenderDetail(id){
+          const body=document.getElementById('devBody'); if(!body) return;
+          const t=devFindTrack(id);
+          if(!t){ devRenderList(); return; }
+          if(t.custom && (!t.books || !t.books.length)){
+            let h=`<div class="dev-detail-head"><button class="dev-back" onclick="devShowList()"><i data-lucide="arrow-left"></i></button><div class="dev-detail-title">${devEsc(t.name)}</div></div>`;
+            h+=`<div class="dev-edit-bar"><button onclick="devEditSkill('${t.id}')"><i data-lucide="pencil"></i> Edit manual</button><button class="danger" onclick="devDeleteSkill('${t.id}')"><i data-lucide="trash-2"></i> Hapus</button></div>`;
+            h+=`<div class="dev-empty-gen"><i data-lucide="sparkles"></i><div class="dev-empty-gen-title">Roadmap belum dibuat</div><div class="dev-empty-gen-sub">Buat langkah penguasaan skill ini dengan AI (buku, latihan, refleksi), lalu edit sesukamu.</div><button class="dev-save-btn" style="width:auto;margin:0 auto;" onclick="devGenerateSkill('${t.id}')"><i data-lucide="sparkles"></i> Generate Roadmap</button></div>`;
+            body.innerHTML=h; if(window.lucide) lucide.createIcons(); return;
+          }
+          const st=devTrackStats(t);
+          const isFocus=localStorage.getItem('folio-dev-focus')===t.id;
+          const pctDeg=Math.round(st.pct*3.6);
+          let roadmap='';
+          DEV_STAGES.forEach(function(stg){
+            const inStage=(t.books||[]).filter(function(b){ return b.stage===stg; });
+            if(!inStage.length) return;
+            const ss=devStageStats(t,stg);
+            const pracKey='folio-dev-prac-'+t.id+'-'+stg;
+            const pracDone=devFlag(pracKey);
+            const pass=(ss.done===ss.total) && pracDone;
+            roadmap+=`<div class="dev-stage"><span class="dev-stage-dot" style="background:${t.c1}"></span><span class="dev-stage-name">${stg}</span>${pass?'<span class="dev-pass">Lulus</span>':''}<span class="dev-stage-count">${ss.done}/${ss.total}</span></div>`;
+            if(t.objectives && t.objectives[stg]) roadmap+=`<div class="dev-objective"><i data-lucide="flag"></i><div><b>Tujuan tahap</b>${devEsc(t.objectives[stg])}</div></div>`;
+            inStage.forEach(function(bk){
+              const idx=(t.books||[]).indexOf(bk);
+              const b=devFindBook(bk.title);
+              let status,cls;
+              if(b && (b.progress||0)>=100){ status='Selesai'; cls='done'; }
+              else if(b && (b.progress||0)>0){ status=b.progress+'%'; cls='prog'; }
+              else if(b){ status='Belum'; cls='todo'; }
+              else { status='Belum di library'; cls='missing'; }
+              const click = b ? `onclick="openReader('${b.id}')"` : '';
+              let coverBg, coverInner='';
+              if(b && b.coverUrl){ coverBg=`background-image:url('${b.coverUrl}');background-size:cover;background-position:center;`; }
+              else { coverBg=`background:linear-gradient(135deg,${t.c1},${t.c2});`; coverInner=devEsc((bk.title||'?').charAt(0)); }
+              const statusHtml = b ? `<span class="dev-status ${cls}">${status}</span>` : `<button class="dev-genbook" onclick="event.stopPropagation(); devGenBook('${t.id}',${idx})"><i data-lucide="sparkles"></i> Generate</button>`;
+              roadmap+=`<div class="dev-book-row ${cls}" ${click}><div class="dev-book-cover" style="${coverBg}">${coverInner}</div><div class="dev-book-info"><div class="dev-book-title">${devEsc(bk.title)}</div><div class="dev-book-author">${devEsc(bk.author||'')}</div></div>${statusHtml}</div>`;
+              if(bk.reflect){ const refKey='folio-dev-ref-'+t.id+'-'+idx; const refDone=devFlag(refKey); roadmap+=`<div class="dev-reflect${refDone?' done':''}">${devCheckBtn(t.id,refKey,refDone)}<div class="dev-reflect-q"><i data-lucide="sparkles"></i> ${devEsc(bk.reflect)}</div></div>`; }
+            });
+            if(t.practice && t.practice[stg]){ roadmap+=`<div class="dev-step-card${pracDone?' done':''}">${devCheckBtn(t.id,pracKey,pracDone)}<div class="dev-step-body"><div class="dev-step-title"><i data-lucide="dumbbell"></i> Praktik</div><div class="dev-step-text">${devEsc(t.practice[stg])}</div></div></div>`; }
+            roadmap+=`<div class="dev-checkpoint${pass?' pass':''}"><div class="dev-cp-head"><i data-lucide="${pass?'unlock':'lock'}"></i> Checkpoint ${pass?'lulus':'belum lulus'}</div><div class="dev-cp-item ${ss.done===ss.total?'ok':''}">${ss.done===ss.total?'&#10003;':'&#9675;'} Selesai ${ss.done}/${ss.total} buku tahap ini</div><div class="dev-cp-item ${pracDone?'ok':''}">${pracDone?'&#10003;':'&#9675;'} Selesai praktik tahap</div></div>`;
+          });
+          const chips=(t.outcomes||[]).map(function(o){ return `<span class="dev-chip">${devEsc(o)}</span>`; }).join('');
+          const nx=devNextBook(t);
+          let nextHtml='';
+          if(st.inLib===0){ nextHtml=`<div class="dev-next-card miss" onclick="devToastMissing()"><div class="dev-next-ic"><i data-lucide="search"></i></div><div class="dev-next-info"><div class="dev-next-label">MULAI</div><div class="dev-next-title">Tambahkan buku track ini (klik Generate di buku)</div></div><i data-lucide="chevron-right" class="dev-chev"></i></div>`; }
+          else if(nx){ nextHtml=`<div class="dev-next-card" onclick="openReader('${nx.b.id}')"><div class="dev-next-ic"><i data-lucide="play"></i></div><div class="dev-next-info"><div class="dev-next-label">LANJUTKAN MEMBACA</div><div class="dev-next-title">${devEsc(nx.bk.title)}</div></div><i data-lucide="chevron-right" class="dev-chev"></i></div>`; }
+          else { nextHtml=`<div class="dev-next-card done"><div class="dev-next-ic"><i data-lucide="check"></i></div><div class="dev-next-info"><div class="dev-next-label">SELESAI</div><div class="dev-next-title">Semua buku di library sudah tuntas!</div></div></div>`; }
+          const capKey='folio-dev-cap-'+t.id; const capDone=devFlag(capKey);
+          let capHtml='';
+          if(t.capstone){ capHtml=`<div class="dev-stage"><span class="dev-stage-dot" style="background:${t.c2}"></span><span class="dev-stage-name">Proyek Puncak</span></div><div class="dev-capstone${capDone?' done':''}">${devCheckBtn(t.id,capKey,capDone)}<div class="dev-step-body"><div class="dev-step-title"><i data-lucide="trophy"></i> Capstone</div><div class="dev-step-text">${devEsc(t.capstone)}</div></div></div>`; }
+          let mahirHtml='';
+          if(t.mastery && (t.mastery.habit||t.mastery.teach||t.mastery.impact)){ const mItems=[['habit','repeat','Kebiasaan jangka panjang',t.mastery.habit],['teach','users','Ajarkan (Feynman)',t.mastery.teach],['impact','bar-chart-3','Ukur dampak',t.mastery.impact]]; let mInner=''; mItems.forEach(function(it){ if(!it[3]) return; const k='folio-dev-m-'+t.id+'-'+it[0]; const d=devFlag(k); mInner+=`<div class="dev-step-card${d?' done':''}">${devCheckBtn(t.id,k,d)}<div class="dev-step-body"><div class="dev-step-title"><i data-lucide="${it[1]}"></i> ${it[2]}</div><div class="dev-step-text">${devEsc(it[3])}</div></div></div>`; }); mahirHtml=`<div class="dev-mahir"><div class="dev-mahir-head"><i data-lucide="award"></i> TAHAP MAHIR</div><div class="dev-mahir-sub">Ini yang membedakan "tahu" dengan "menguasai".</div>${mInner}</div>`; }
+          let revHtml='';
+          if(t.review){ const revDate=localStorage.getItem('folio-dev-rev-'+t.id); let revAgo='Belum pernah ditinjau'; if(revDate){ const days=Math.floor((Date.now()-new Date(revDate).getTime())/86400000); revAgo = days<=0?'Ditinjau hari ini':('Ditinjau '+days+' hari lalu'); } revHtml=`<div class="dev-review"><div class="dev-step-body"><div class="dev-step-title"><i data-lucide="rotate-ccw"></i> Tinjau Berkala</div><div class="dev-step-text">${devEsc(t.review)}</div><div class="dev-review-meta">${revAgo}</div></div><button class="dev-review-btn" onclick="devMarkReview('${t.id}')">Tandai ditinjau</button></div>`; }
+          const actDone=devActionDone(t.id); const actN=devActionCount(t.id);
+          const streakHtml = actN ? `<div class="dev-action-streak"><i data-lucide="flame"></i> ${actN} minggu beraksi</div>` : '';
+          let html='';
+          html+=`<div class="dev-detail-head"><button class="dev-back" onclick="devShowList()"><i data-lucide="arrow-left"></i></button><div class="dev-detail-title">${devEsc(t.name)}</div></div>`;
+          html+=`<div class="dev-hero dev-hero-detail" style="background:linear-gradient(135deg,${t.c1},${t.c2})"><div class="dev-hero-d-left"><div class="dev-hero-eyebrow">${devEsc(t.tagline||'')}</div><div class="dev-why">${devEsc(t.why||'')}</div><div class="dev-chip-row">${chips}</div></div><div class="dev-ring" style="background:conic-gradient(#fff ${pctDeg}deg, rgba(255,255,255,0.25) ${pctDeg}deg)"><div class="dev-ring-in"><div class="dev-ring-pct">${st.pct}%</div><div class="dev-ring-sub">${st.done}/${st.total}</div></div></div></div>`;
+          if(t.custom){ html+=`<div class="dev-edit-bar"><button onclick="devEditSkill('${t.id}')"><i data-lucide="pencil"></i> Edit</button><button onclick="devGenerateSkill('${t.id}')"><i data-lucide="sparkles"></i> Regenerate</button><button class="danger" onclick="devDeleteSkill('${t.id}')"><i data-lucide="trash-2"></i> Hapus</button></div>`; }
+          html+=nextHtml;
+          html+=`<div class="lib-section-title">Jalur Penguasaan</div>`;
+          html+=roadmap;
+          html+=capHtml;
+          html+=mahirHtml;
+          html+=revHtml;
+          if(t.action){ html+=`<div class="dev-action-card${actDone?' done':''}"><button class="dev-act-check${actDone?' on':''}" onclick="event.stopPropagation(); devToggleAction('${t.id}')">${actDone?'<i data-lucide="check"></i>':''}</button><div class="dev-action-body"><div class="dev-action-title">Aksi minggu ini</div><div class="dev-action-text">${devEsc(t.action)}</div>${streakHtml}</div></div>`; }
+          html+=`<button class="dev-focus-btn${isFocus?' is-focus':''}" onclick="devSetFocus('${t.id}')">${isFocus?'<i data-lucide="check"></i> Sudah Jadi Fokus Aktif':'<i data-lucide="target"></i> Jadikan Fokus Skill'}</button>`;
+          body.innerHTML=html;
+          if(window.lucide) lucide.createIcons();
+        }
+        function devRenderEdit(){
+          const body=document.getElementById('devBody'); if(!body||!devEditDraft) return;
+          const t=devEditDraft;
+          let h='';
+          h+=`<div class="dev-detail-head"><button class="dev-back" onclick="devEditCancel()"><i data-lucide="arrow-left"></i></button><div class="dev-detail-title">Edit Skill</div></div>`;
+          h+=`<div class="dev-edit-form">`;
+          h+=devField('Nama skill', `<input id="edit-name" class="dev-input" value="${devAttr(t.name)}">`);
+          h+=devField('Tagline singkat', `<input id="edit-tagline" class="dev-input" value="${devAttr(t.tagline)}">`);
+          h+=devField('Kenapa skill ini penting', `<textarea id="edit-why" class="dev-input" rows="2">${devEsc(t.why)}</textarea>`);
+          h+=devField('Hasil yang didapat (pisahkan dengan koma)', `<input id="edit-outcomes" class="dev-input" value="${devAttr((t.outcomes||[]).join(', '))}">`);
+          h+=`<div class="dev-edit-sub">Buku &amp; Tahap</div>`;
+          (t.books||[]).forEach(function(bk,i){
+            h+=`<div class="edit-book-row" data-i="${i}"><div class="ebr-top"><input class="eb-title dev-input" placeholder="Judul buku" value="${devAttr(bk.title)}"><button class="ebr-del" onclick="devEditDelBook(${i})"><i data-lucide="x"></i></button></div><input class="eb-author dev-input" placeholder="Penulis" value="${devAttr(bk.author)}"><select class="eb-stage dev-input">${DEV_STAGES.map(function(s){ return '<option'+(s===bk.stage?' selected':'')+'>'+s+'</option>'; }).join('')}</select><input class="eb-reflect dev-input" placeholder="Pertanyaan refleksi" value="${devAttr(bk.reflect)}"></div>`;
+          });
+          h+=`<button class="dev-add-book-btn" onclick="devEditAddBook()"><i data-lucide="plus"></i> Tambah buku</button>`;
+          h+=`<div class="dev-edit-sub">Tujuan &amp; Praktik per Tahap</div>`;
+          DEV_STAGES.forEach(function(s){
+            h+=`<div class="dev-stage-edit"><div class="dev-stage-edit-name">${s}</div>`+devField('Tujuan', `<input id="edit-obj-${s}" class="dev-input" value="${devAttr((t.objectives||{})[s]||'')}">`)+devField('Praktik', `<textarea id="edit-prac-${s}" class="dev-input" rows="2">${devEsc((t.practice||{})[s]||'')}</textarea>`)+`</div>`;
+          });
+          h+=`<div class="dev-edit-sub">Puncak, Mahir &amp; Tinjauan</div>`;
+          h+=devField('Proyek Puncak (Capstone)', `<textarea id="edit-capstone" class="dev-input" rows="2">${devEsc(t.capstone)}</textarea>`);
+          h+=devField('Mahir - Kebiasaan jangka panjang', `<input id="edit-m-habit" class="dev-input" value="${devAttr((t.mastery||{}).habit||'')}">`);
+          h+=devField('Mahir - Ajarkan ke orang lain', `<input id="edit-m-teach" class="dev-input" value="${devAttr((t.mastery||{}).teach||'')}">`);
+          h+=devField('Mahir - Ukur dampak', `<input id="edit-m-impact" class="dev-input" value="${devAttr((t.mastery||{}).impact||'')}">`);
+          h+=devField('Tinjau berkala', `<input id="edit-review" class="dev-input" value="${devAttr(t.review)}">`);
+          h+=devField('Aksi mingguan', `<input id="edit-action" class="dev-input" value="${devAttr(t.action)}">`);
+          h+=`<div class="dev-edit-actions"><button class="dev-save-btn" onclick="devEditSave()"><i data-lucide="check"></i> Simpan</button><button class="dev-cancel-btn" onclick="devEditCancel()">Batal</button></div>`;
+          h+=`</div>`;
+          body.innerHTML=h;
+          if(window.lucide) lucide.createIcons();
+        }
+        window.devEditSync=function(){
+          if(!devEditDraft) return;
+          const g=function(id){ const el=document.getElementById(id); return el?el.value:''; };
+          const nm=g('edit-name').trim(); if(nm){ devEditDraft.name=nm; devEditDraft.letter=nm.charAt(0).toUpperCase(); }
+          devEditDraft.tagline=g('edit-tagline');
+          devEditDraft.why=g('edit-why');
+          devEditDraft.action=g('edit-action');
+          devEditDraft.capstone=g('edit-capstone');
+          devEditDraft.review=g('edit-review');
+          devEditDraft.outcomes=g('edit-outcomes').split(',').map(function(s){return s.trim();}).filter(Boolean).slice(0,4);
+          devEditDraft.mastery={ habit:g('edit-m-habit'), teach:g('edit-m-teach'), impact:g('edit-m-impact') };
+          const obj={},prac={}; DEV_STAGES.forEach(function(s){ obj[s]=g('edit-obj-'+s); prac[s]=g('edit-prac-'+s); }); devEditDraft.objectives=obj; devEditDraft.practice=prac;
+          const books=[]; document.querySelectorAll('#devBody .edit-book-row').forEach(function(row){ const ti=row.querySelector('.eb-title'), au=row.querySelector('.eb-author'), sg=row.querySelector('.eb-stage'), rf=row.querySelector('.eb-reflect'); const title=ti?ti.value.trim():''; if(!title) return; const stage=sg?sg.value:'Fondasi'; books.push({ stage:(DEV_STAGES.indexOf(stage)>=0?stage:'Fondasi'), title:title, author:au?au.value.trim():'', reflect:rf?rf.value:'' }); }); devEditDraft.books=books;
+        };
+        window.devEditAddBook=function(){ devEditSync(); if(devEditDraft){ if(!devEditDraft.books) devEditDraft.books=[]; devEditDraft.books.push({stage:'Fondasi',title:'',author:'',reflect:''}); } devRenderEdit(); };
+        window.devEditDelBook=function(i){ devEditSync(); if(devEditDraft && devEditDraft.books) devEditDraft.books.splice(i,1); devRenderEdit(); };
+        window.devEditSave=function(){ devEditSync(); if(!devEditDraft) return; const id=devEditDraft.id; devUpdateCustom(devEditDraft); if(window.showToast) window.showToast('Skill disimpan.','check'); devEditDraft=null; devView={mode:'detail',id:id}; devRenderDetail(id); window.scrollTo({top:0,behavior:'smooth'}); if(window.renderDevFocusCard) window.renderDevFocusCard(); };
+        window.devEditCancel=function(){ const id=devEditDraft?devEditDraft.id:null; devEditDraft=null; if(id){ devView={mode:'detail',id:id}; devRenderDetail(id); } else { devShowList(); } };
+        window.devEditSkill=function(id){ const t=devFindTrack(id); if(!t||!t.custom) return; devEditDraft=JSON.parse(JSON.stringify(t)); if(!devEditDraft.mastery) devEditDraft.mastery={habit:'',teach:'',impact:''}; if(!devEditDraft.books) devEditDraft.books=[]; devView={mode:'edit',id:id}; devRenderEdit(); window.scrollTo({top:0,behavior:'smooth'}); };
+        window.devCreateSkill=function(){
+          const name=(prompt('Nama skill baru yang ingin kamu kuasai:','')||'').trim();
+          if(!name) return;
+          const cs=devCustom();
+          const pal=DEV_PALETTE[cs.length % DEV_PALETTE.length];
+          const track={ id:'custom-'+Date.now(), custom:true, name:name, letter:name.charAt(0).toUpperCase(), c1:pal[0], c2:pal[1], tagline:'Skill buatanmu', why:'', outcomes:[], objectives:{}, practice:{}, capstone:'', mastery:{habit:'',teach:'',impact:''}, review:'', action:'', books:[] };
+          cs.push(track); devSaveCustom(cs);
+          devView={mode:'detail',id:track.id};
+          if(activeScreenName!=='development'){ window.switchMainTab('development'); } else { window.renderDevelopment(); }
+          window.scrollTo({top:0,behavior:'smooth'});
+          devGenerateSkill(track.id, true);
+        };
+        window.devGenerateSkill=async function(id, isNew){
+          const t=devFindTrack(id); if(!t||!t.custom) return;
+          if(!isNew && !confirm('Buat ulang roadmap dengan AI? Isi langkah saat ini akan diganti.')) return;
+          const body=document.getElementById('devBody');
+          if(body && devView.id===id){ body.innerHTML=`<div class="dev-detail-head"><button class="dev-back" onclick="devShowList()"><i data-lucide="arrow-left"></i></button><div class="dev-detail-title">${devEsc(t.name)}</div></div><div class="dev-loading"><i data-lucide="loader" class="dev-spin"></i><div>Membuat roadmap penguasaan dengan AI...</div><div class="dev-loading-sub">Menyusun buku, latihan, dan langkah. Sekitar 10-30 detik.</div></div>`; if(window.lucide) lucide.createIcons(); }
+          try {
+            const data = await aiCallServer('skill', { title: t.name });
+            const arr=devCustom(); const i=arr.findIndex(function(x){ return x.id===id; }); if(i<0) return; const tk=arr[i];
+            tk.tagline = data.tagline || tk.tagline || 'Skill buatanmu';
+            tk.why = data.why || '';
+            tk.outcomes = Array.isArray(data.outcomes)? data.outcomes.slice(0,4) : [];
+            tk.objectives = (data.objectives && typeof data.objectives==='object')? data.objectives : {};
+            tk.practice = (data.practice && typeof data.practice==='object')? data.practice : {};
+            tk.capstone = data.capstone || '';
+            tk.mastery = (data.mastery && typeof data.mastery==='object')? { habit:data.mastery.habit||'', teach:data.mastery.teach||'', impact:data.mastery.impact||'' } : {habit:'',teach:'',impact:''};
+            tk.review = data.review || '';
+            tk.action = data.action || '';
+            tk.books = Array.isArray(data.books)? data.books.map(function(b){ return { stage:(DEV_STAGES.indexOf(b.stage)>=0?b.stage:'Fondasi'), title:String(b.title||'').trim(), author:String(b.author||'').trim(), reflect:String(b.reflect||'').trim() }; }).filter(function(b){ return b.title; }) : [];
+            devSaveCustom(arr);
+            if(window.showToast) window.showToast('Roadmap skill berhasil dibuat! Bisa kamu edit manual.','check');
+            if(devView.id===id){ devView={mode:'detail',id:id}; devRenderDetail(id); }
+            if(window.renderDevFocusCard) window.renderDevFocusCard();
+          } catch(e){ if(window.showToast) window.showToast(e.message||'Gagal membuat roadmap. Coba lagi.','alert-triangle'); if(devView.id===id) devRenderDetail(id); }
+        };
+        window.devDeleteSkill=function(id){ if(!confirm('Hapus skill ini beserta progresnya?')) return; const arr=devCustom().filter(function(x){ return x.id!==id; }); devSaveCustom(arr); if(localStorage.getItem('folio-dev-focus')===id) localStorage.removeItem('folio-dev-focus'); if(window.showToast) window.showToast('Skill dihapus.','trash-2'); devShowList(); if(window.renderDevFocusCard) window.renderDevFocusCard(); };
+        window.devGenBook=function(id, idx){ const t=devFindTrack(id); if(!t) return; const bk=(t.books||[])[idx]; if(!bk) return; if(typeof window.chartAddToLibrary!=='function'){ if(window.showToast) window.showToast('Fitur tambah buku belum siap.','alert-triangle'); return; } const payload=encodeURIComponent(JSON.stringify({ title:bk.title||'', author:bk.author||'', category:t.name||'', cover:'' })).replace(/'/g,'%27'); window.chartAddToLibrary(payload); };
+        window.renderDevelopment=function(){ if(devView.mode==='edit' && devEditDraft) devRenderEdit(); else if(devView.mode==='detail' && devView.id) devRenderDetail(devView.id); else devRenderList(); };
+        window.devOpenTrack=function(id){ devView={ mode:'detail', id:id }; if(activeScreenName!=='development'){ window.switchMainTab('development'); } else { window.renderDevelopment(); window.scrollTo({top:0,behavior:'smooth'}); } };
+        window.devShowList=function(){ devView={ mode:'list', id:null }; devEditDraft=null; window.renderDevelopment(); window.scrollTo({top:0,behavior:'smooth'}); };
+        window.devGoTab=function(){ devView={ mode:'list', id:null }; window.switchMainTab('development'); };
+        window.devTog=function(id, key){ if(devFlag(key)) localStorage.removeItem(key); else localStorage.setItem(key,'1'); devRenderDetail(id); };
+        window.devMarkReview=function(id){ localStorage.setItem('folio-dev-rev-'+id, new Date().toISOString().slice(0,10)); if(window.showToast) window.showToast('Ditandai sudah ditinjau hari ini.','rotate-ccw'); devRenderDetail(id); };
+        window.devSetFocus=function(id){ localStorage.setItem('folio-dev-focus', id); const t=devFindTrack(id); if(window.showToast) window.showToast('Fokus skill: '+(t?t.name:'')+' aktif!','target'); window.renderDevelopment(); if(window.renderDevFocusCard) window.renderDevFocusCard(); };
+        window.devToggleAction=function(id){ const k='folio-dev-act-'+id; const nk='folio-dev-act-n-'+id; if(devActionDone(id)){ localStorage.removeItem(k); } else { localStorage.setItem(k, devWeekKey()); const n=parseInt(localStorage.getItem(nk)||'0',10)+1; localStorage.setItem(nk, String(n)); if(window.showToast) window.showToast('Mantap! Aksi minggu ini selesai.','check'); } devRenderDetail(id); };
+        window.devToastMissing=function(){ if(window.showToast) window.showToast('Buku ini belum ada di library. Klik tombol Generate pada buku untuk menambahkannya.','search'); };
+        window.renderDevFocusCard=function(){
+          const el=document.getElementById('homeDevFocus'); if(!el) return;
+          const focusId=localStorage.getItem('folio-dev-focus');
+          const t=focusId?devFindTrack(focusId):null;
+          if(!t){ el.innerHTML=`<div class="dev-home-empty" onclick="devGoTab()"><div class="dev-home-empty-ic"><i data-lucide="rocket"></i></div><div><div class="dev-home-empty-title">Mulai bangun skill</div><div class="dev-home-empty-sub">Pilih fokus skill &amp; buku pendukungnya</div></div><i data-lucide="chevron-right" style="margin-left:auto;opacity:0.5;width:20px;"></i></div>`; if(window.lucide) lucide.createIcons(); return; }
+          const st=devTrackStats(t);
+          const nx=devNextBook(t);
+          const nextLine = nx ? `Lanjut: ${devEsc(nx.bk.title)}` : (st.inLib? 'Semua buku tuntas!' : 'Tambahkan bukunya lewat tombol Generate');
+          el.innerHTML=`<div class="dev-home-card" style="background:linear-gradient(135deg,${t.c1},${t.c2})" onclick="devOpenTrack('${t.id}')"><div class="dev-home-top"><span class="dev-home-eyebrow"><i data-lucide="target"></i> SEDANG DIBANGUN</span><span class="dev-home-pct">${st.pct}%</span></div><div class="dev-home-name">${devEsc(t.name)}</div><div class="dev-home-meta">${st.done} dari ${st.total} buku selesai &middot; ${nextLine}</div><div class="dev-home-track"><div class="dev-home-fill" style="width:${st.pct}%"></div></div></div>`;
+          if(window.lucide) lucide.createIcons();
+        };
+        (function(){ const _origRHS=window.renderHomeStats; window.renderHomeStats=function(){ if(_origRHS) _origRHS.apply(this, arguments); try{ if(window.renderDevFocusCard) window.renderDevFocusCard(); }catch(e){} }; })();
         window.goToSlide=goToSlide; window.showScreen=showScreen; window.updateProfileDisplay=updateProfileDisplay;
         window.openDrawer=openDrawer; window.closeDrawer=closeDrawer; window.toggleGenre=toggleGenre;
         window.selectGoal=selectGoal; window.openReader=openReader; window.goBackFromReader=goBackFromReader;
@@ -3164,8 +3665,8 @@ INSTRUKSI:
         // Format: #/<kategori>/<idBuku> (mis. #/Test/12345); juga #/home #/library #/profile
         // ===================================================================
         let routerBooksReady = false;
-        const ROUTER_TAB_BY_SCREEN = { library: 'home', collection: 'library', chart: 'chart', profile: 'profile' };
-        const ROUTER_SCREEN_BY_TAB = { home: 'library', library: 'collection', chart: 'chart', profile: 'profile' };
+        const ROUTER_TAB_BY_SCREEN = { library: 'home', collection: 'library', development: 'development', chart: 'chart', profile: 'profile' };
+        const ROUTER_SCREEN_BY_TAB = { home: 'library', library: 'collection', development: 'development', chart: 'chart', profile: 'profile' };
 
         function routerSlug(s) {
             const v = String(s == null ? 'buku' : s).trim().replace(/\s+/g, '-');
