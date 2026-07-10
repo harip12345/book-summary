@@ -402,8 +402,60 @@
         .td-white { background: #FFF; border: 2px solid #DDD; }
         .td-sepia { background: #F4ECD8; border: 2px solid #DDD; }
         .td-dark { background: #0F1729; border: 2px solid #555; }
-        .btn-regen { width: 100%; padding: 10px; margin-top: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-sm); cursor: pointer; font-family: var(--font-ui); font-size: 12px; transition: var(--transition); color: #EEF2FF; display:flex; align-items:center; justify-content:center; gap:8px; }
-        .btn-regen:hover { background: rgba(59,130,246,0.2); border-color: var(--accent); }
+
+        /* === Font family selector === */
+        .font-family-group { display: flex; flex-wrap: wrap; gap: 4px; background: rgba(0,0,0,0.04); border-radius: var(--radius-md); padding: 4px; max-width: 220px; }
+        body.theme-dark .font-family-group { background: rgba(255,255,255,0.06); }
+        .font-family-option { font-size: 11px; padding: 5px 8px; border-radius: var(--radius-sm); border: none; background: transparent; cursor: pointer; font-weight: 500; transition: var(--transition); color: inherit; white-space: nowrap; }
+        .font-family-option.active { background: var(--accent); color: #fff; }
+        /* === Reading mode toggle === */
+        .reading-mode-group { display: flex; gap: 4px; background: rgba(0,0,0,0.04); border-radius: var(--radius-md); padding: 3px; }
+        body.theme-dark .reading-mode-group { background: rgba(255,255,255,0.06); }
+        .reading-mode-btn { font-size: 11px; font-weight: 600; padding: 6px 10px; border-radius: var(--radius-sm); border: none; background: transparent; cursor: pointer; transition: var(--transition); color: inherit; text-transform: uppercase; letter-spacing: 0.03em; }
+        .reading-mode-btn.active { background: var(--accent); color: #fff; }
+        /* Focus mode – hide UI, center text, wider margins */
+        body.reader-focus .reader-topbar { display: none !important; }
+        body.reader-focus .reader-bottom-bar { display: none !important; }
+        body.reader-focus .reader-chapter-title { text-align: center; margin-top: 20px; }
+        body.reader-focus .reader-container { max-width: 720px; margin: 0 auto; padding: 40px 32px; }
+        body.reader-focus .reader-body { text-align: left; word-spacing: 0.04em; }
+        body.reader-focus .fab-ai { display: none !important; }
+        /* Night mode enhancements */
+        body.reader-night .reader-body { color: #E2E8F0; }
+        body.reader-night .reader-chapter-title { color: #F1F5F9; }
+        /* === Star Rating === */
+        .star-rating { display: inline-flex; gap: 2px; align-items: center; }
+        .star-rating .star { cursor: pointer; font-size: 20px; color: #D1D5DB; transition: transform 0.15s ease, color 0.15s ease; user-select: none; }
+        .star-rating .star.active { color: #F59E0B; }
+        .star-rating .star:hover { transform: scale(1.2); }
+        body.theme-dark .star-rating .star { color: #4B5563; }
+        body.theme-dark .star-rating .star.active { color: #FBBF24; }
+        .book-card-rating { display: flex; align-items: center; gap: 4px; margin-top: 4px; font-size: 11px; color: var(--text-muted); }
+        .book-card-rating .stars-display { display: inline-flex; gap: 1px; }
+        .book-card-rating .stars-display .star-icon { font-size: 11px; color: #F59E0B; }
+        body.theme-dark .book-card-rating .stars-display .star-icon { color: #FBBF24; }
+        .book-card-rating .avg-label { font-size: 10px; }
+        /* === Review section === */
+        .review-section { margin-top: 24px; padding: 16px; border-radius: var(--radius-md); background: var(--bg-secondary); border: 1px solid var(--border); }
+        .review-section-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; font-family: var(--font-ui); }
+        .review-empty { text-align: center; padding: 20px; font-size: 13px; color: var(--text-muted); border: 1px dashed var(--border); border-radius: var(--radius-sm); }
+        .review-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; max-height: 300px; overflow-y: auto; }
+        .review-item { padding: 12px; border-radius: var(--radius-sm); background: var(--bg-card); border: 1px solid var(--border); }
+        .review-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 12px; }
+        .review-item-rating { display: inline-flex; gap: 1px; }
+        .review-item-rating .star-icon { font-size: 13px; color: #F59E0B; }
+        .review-item-author { font-weight: 600; color: var(--text-secondary); }
+        .review-item-date { font-size: 10px; color: var(--text-muted); }
+        .review-item-text { font-size: 13px; line-height: 1.5; color: var(--text-primary); }
+        .review-form { display: flex; flex-direction: column; gap: 8px; }
+        .review-form textarea { width: 100%; min-height: 70px; padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-family: var(--font-body); font-size: 13px; resize: vertical; background: var(--bg-card); color: inherit; outline: none; transition: var(--transition); }
+        .review-form textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
+        .review-form-actions { display: flex; align-items: center; gap: 10px; }
+        .review-submit-btn { padding: 7px 18px; border-radius: var(--radius-full); border: none; background: var(--accent); color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--transition); }
+        .review-submit-btn:hover { opacity: 0.85; }
+        .review-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .submit-rating-text { font-size: 11px; color: var(--text-muted); }
+        /* === Weekly Recommendations === */
         .screen { display: none; min-height: 100dvh; }
         .screen.active { display: block; }
         .auth-section { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 20px; margin-top: 16px; border: 1px solid rgba(255,255,255,0.08); }
@@ -1860,6 +1912,12 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
             </div>
         </div>
 
+        <!-- REVIEW SECTION (hidden by default, toggled from book cards) -->
+        <div class="review-section" id="readerReviewSection" style="display:none; margin: 0 16px 80px;">
+            <div class="review-section-title">Rating & Review Pembaca</div>
+            <div id="readerReviewContent"></div>
+        </div>
+
         <!-- TTS floating bar -->
         <div class="tts-bar" id="ttsBar">
             <div class="tts-waveform" aria-hidden="true">
@@ -1977,6 +2035,8 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
 
         <div class="settings-popover" id="settingsPopover">
             <div class="settings-row"><span class="settings-label">Ukuran Font</span><div class="font-size-group"><button class="font-size-option" onclick="setFontSize('small',this)" style="font-size:13px;">A</button><button class="font-size-option active" onclick="setFontSize('medium',this)" style="font-size:16px;">A</button><button class="font-size-option" onclick="setFontSize('large',this)" style="font-size:20px;">A</button></div></div>
+            <div class="settings-row"><span class="settings-label">Jenis Font</span><div class="font-family-group"><button class="font-family-option active" onclick="setFontFamily('sans',this)">Sans</button><button class="font-family-option" onclick="setFontFamily('serif',this)">Serif</button><button class="font-family-option" onclick="setFontFamily('mono',this)">Mono</button><button class="font-family-option" onclick="setFontFamily('dyslexic',this)">Disleksia</button></div></div>
+            <div class="settings-row"><span class="settings-label">Mode Baca</span><div class="reading-mode-group"><button class="reading-mode-btn active" onclick="setReadingMode('normal',this)">Normal</button><button class="reading-mode-btn" onclick="setReadingMode('focus',this)">Fokus</button><button class="reading-mode-btn" onclick="setReadingMode('night',this)">Malam</button></div></div>
             <div class="settings-row"><span class="settings-label">Tema</span><div class="theme-dots"><div class="theme-dot td-parchment active" onclick="setTheme('parchment',this)"></div><div class="theme-dot td-white" onclick="setTheme('white',this)"></div><div class="theme-dot td-sepia" onclick="setTheme('sepia',this)"></div><div class="theme-dot td-dark" onclick="setTheme('dark',this)"></div></div></div>
             <button class="btn-regen" onclick="closeSettings()" style="color:inherit;background:rgba(0,0,0,0.03);border:1px solid var(--border);">Tutup</button>
         </div>
@@ -2048,6 +2108,8 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
             readingGoal: parseInt(localStorage.getItem('folio-reading-goal') || '15'),
             onboardingComplete: localStorage.getItem('folio-onboarding-complete') === 'true',
             readerFontSize: localStorage.getItem('folio-reader-fontSize') || 'medium',
+            readerFontFamily: localStorage.getItem('folio-reader-fontFamily') || 'sans',
+            readingMode: localStorage.getItem('folio-reader-readingMode') || 'normal',
             readerTheme: localStorage.getItem('folio-reader-theme') || 'parchment',
             highlightMode: false,
             pinMode: false,
@@ -2284,6 +2346,7 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
             if (_enterDirect) initReader();
             startReadingTimer();
             window.addChapterField('chapterList');
+            initRatingSystem();
         }
 
         // =====================================================================
@@ -2422,7 +2485,7 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
             const fabAI = document.getElementById('btnFabAI');
             if (fabAI) fabAI.style.display = (name === 'reader') ? 'flex' : 'none';
             if (name !== 'reader') document.body.classList.remove('reader-immersive');
-            if (name === 'reader' || name === 'insights') { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); }
+            if (name === 'reader' || name === 'insights') { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); applyReaderFontFamily(window.APP_STATE.readerFontFamily); applyReadingMode(window.APP_STATE.readingMode); }
             if (name === 'library' || name === 'collection') { renderBooks(currentBooksToDisplay); }
             if (name === 'chart' && window.initChartBook) window.initChartBook();
             if (name === 'development' && window.renderDevelopment) window.renderDevelopment();
@@ -2511,7 +2574,10 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
             const style = b.coverUrl ? `background-image: url('${b.coverUrl}'); background-size: cover; background-position: center;` : '';
             const innerClass = b.coverUrl ? 'has-image' : '';
             const coverTextHtml = b.coverUrl ? '' : `<div class="book-cover-text">${b.title}</div><div class="book-cover-author">${b.author}</div>`;
-            return `<div class="book-card" onclick="openReader('${b.id}')">${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}<div class="book-cover ${b.coverUrl ? '' : b.cover}" style="${style}"><div class="book-cover-inner ${innerClass}">${coverTextHtml}</div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div><div class="book-title">${b.title}</div><div class="book-author-name"><span>${b.author}</span><span class="book-genre-label">${b.category}</span></div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span></div>`;
+            const avgRating = getBookAverageRating ? getBookAverageRating(b.id) : 0;
+            const ratingCount = getBookRatingCount ? getBookRatingCount(b.id) : 0;
+            const starsHtml = renderStarsHtml ? renderStarsHtml(avgRating, 11) : '';
+            return `<div class="book-card" onclick="openReader('${b.id}')">${b.isFavorite ? '<div class="fav-badge"><i data-lucide="heart" fill="#fff" style="width:12px; height:12px;"></i></div>' : ''}<div class="book-cover ${b.coverUrl ? '' : b.cover}" style="${style}"><div class="book-cover-inner ${innerClass}">${coverTextHtml}</div><div class="book-progress-mini"><div class="book-progress-mini-fill" style="width:${b.progress}%"></div></div></div><div class="book-title">${b.title}</div><div class="book-author-name"><span>${b.author}</span><span class="book-genre-label">${b.category}</span></div><span class="book-tag ${b.progress===0?'unread':''}">${b.progress===0?'Baru':b.progress+'% Selesai'}</span><div class="book-card-rating"><div class="stars-display">${starsHtml}<span class="avg-label">${avgRating > 0 ? '★ ' + avgRating.toFixed(1) + ' (' + ratingCount + ')' : '(0)'}</span></div><i data-lucide="message-circle" onclick="event.stopPropagation(); showBookDetailReview('${b.id}')" style="width:12px;cursor:pointer;margin-left:6px;"></i></div></div>`;
         }
 
         window.updateDynamicFilters = function(books) {
@@ -2646,7 +2712,7 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
             lucide.createIcons();
         }
 
-        function initReader() { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); }
+        function initReader() { applyReaderTheme(window.APP_STATE.readerTheme); applyReaderFontSize(window.APP_STATE.readerFontSize); applyReaderFontFamily(window.APP_STATE.readerFontFamily); applyReadingMode(window.APP_STATE.readingMode); }
         function applyReaderTheme(theme) { document.body.className = 'theme-' + theme; document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active')); const ad = document.querySelector(`.theme-dot.td-${theme}`); if(ad) ad.classList.add('active'); window.APP_STATE.readerTheme = theme; localStorage.setItem('folio-reader-theme', theme); }
         function applyReaderFontSize(size) {
             const rBody = document.getElementById('readerBody'); const iBody = document.getElementById('insightBody');
@@ -2659,6 +2725,46 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
         function closeSettings() { document.getElementById('settingsPopover')?.classList.remove('show'); window.APP_STATE.settingsOpen = false; }
         function setFontSize(size, btn) { applyReaderFontSize(size); window.showToast('Font: '+size); }
         function setTheme(theme, dot) { applyReaderTheme(theme); closeSettings(); window.showToast('Tema: '+theme); }
+
+        // === Font Family ===
+        const fontFamilies = {
+            sans: { family: "'Inter', system-ui, sans-serif", label: 'Sans' },
+            serif: { family: "'Fraunces', Georgia, serif", label: 'Serif' },
+            mono: { family: "'Courier New', 'JetBrains Mono', monospace", label: 'Mono' },
+            dyslexic: { family: "'OpenDyslexic', 'Comic Sans MS', sans-serif", label: 'Disleksia' }
+        };
+        function applyReaderFontFamily(family) {
+            const rBody = document.getElementById('readerBody');
+            const iBody = document.getElementById('insightBody');
+            const f = fontFamilies[family] || fontFamilies.sans;
+            if(rBody) rBody.style.fontFamily = f.family;
+            if(iBody) iBody.style.fontFamily = f.family;
+            document.querySelectorAll('.font-family-option').forEach(btn => btn.classList.toggle('active', btn.getAttribute('onclick')?.includes("'"+family+"'")));
+            window.APP_STATE.readerFontFamily = family;
+            localStorage.setItem('folio-reader-fontFamily', family);
+        }
+        function setFontFamily(family, btn) {
+            applyReaderFontFamily(family);
+            document.querySelectorAll('.font-family-option').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            window.showToast('Font: '+fontFamilies[family].label);
+        }
+
+        // === Reading Mode ===
+        function applyReadingMode(mode) {
+            document.body.classList.remove('reader-focus', 'reader-night');
+            if (mode === 'focus') document.body.classList.add('reader-focus');
+            else if (mode === 'night') document.body.classList.add('reader-night');
+            document.querySelectorAll('.reading-mode-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.querySelector(`.reading-mode-btn[onclick*="'${mode}'"]`);
+            if (btn) btn.classList.add('active');
+            window.APP_STATE.readingMode = mode;
+            localStorage.setItem('folio-reader-readingMode', mode);
+        }
+        function setReadingMode(mode, btn) {
+            applyReadingMode(mode);
+            window.showToast('Mode: '+mode.charAt(0).toUpperCase()+mode.slice(1));
+        }
 
         window.saveChapterNote = function(text) {
             if(!activeBook) return;
@@ -2789,6 +2895,133 @@ body.theme-dark .dev-cancel-btn { border-color:rgba(255,255,255,0.14); }
             if(activeBook) { activeBook.lastReadChapter = idx; activeBook.lastReadParagraph = 0; }
             window.scrollTo({ top: 0, behavior: 'auto' }); renderChapter(); renderTOC(); toggleTOC();
         };
+
+        // =====================================================================
+        // RATING & REVIEW SYSTEM (Feature 1)
+        // =====================================================================
+        function getBookRatings(bookId) {
+            try { return JSON.parse(localStorage.getItem('folio-ratings-' + bookId) || '[]'); } catch(e) { return []; }
+        }
+        function saveBookRating(bookId, rating, userName) {
+            if (rating < 1 || rating > 5) return;
+            const ratings = getBookRatings(bookId);
+            const existing = ratings.findIndex(r => r.user === userName);
+            if (existing >= 0) ratings[existing].rating = rating;
+            else ratings.push({ user: userName, rating: rating, date: Date.now() });
+            localStorage.setItem('folio-ratings-' + bookId, JSON.stringify(ratings));
+            if (window.firebaseSaveRating) window.firebaseSaveRating(bookId, rating, userName);
+            return ratings;
+        }
+        function getBookAverageRating(bookId) {
+            const ratings = getBookRatings(bookId);
+            if (ratings.length === 0) return 0;
+            const sum = ratings.reduce((a, r) => a + r.rating, 0);
+            return sum / ratings.length;
+        }
+        function getBookRatingCount(bookId) {
+            return getBookRatings(bookId).length;
+        }
+
+        // === Reviews ===
+        function getBookReviews(bookId) {
+            try { return JSON.parse(localStorage.getItem('folio-reviews-' + bookId) || '[]'); } catch(e) { return []; }
+        }
+        function saveBookReview(bookId, text, rating, userName) {
+            if (!text.trim()) return null;
+            const reviews = getBookReviews(bookId);
+            const review = { user: userName || 'Pembaca', text: text.trim(), rating: rating || 0, date: Date.now() };
+            reviews.unshift(review);
+            // Keep max 50 reviews
+            if (reviews.length > 50) reviews.length = 50;
+            localStorage.setItem('folio-reviews-' + bookId, JSON.stringify(reviews));
+            if (window.firebaseSaveReview) window.firebaseSaveReview(bookId, review);
+            return reviews;
+        }
+        function initRatingSystem() {
+            // Nothing to initialize - uses localStorage
+        }
+
+        // === Star Rating UI helpers ===
+        function renderStarsHtml(rating, size) {
+            const sz = size || 13;
+            let html = '';
+            for (let i = 1; i <= 5; i++) {
+                html += `<span class="star-icon" style="font-size:${sz}px;">${i <= rating ? '★' : '☆'}</span>`;
+            }
+            return html;
+        }
+        function renderInteractiveStars(bookId, currentRating) {
+            let html = '<div class="star-rating">';
+            for (let i = 1; i <= 5; i++) {
+                const active = i <= currentRating ? 'active' : '';
+                html += `<span class="star ${active}" data-value="${i}" onclick="clickStar('${bookId}', ${i}, this)">★</span>`;
+            }
+            html += '</div>';
+            return html;
+        }
+        function clickStar(bookId, rating, el) {
+            const userName = window.APP_STATE.userName || 'Pembaca';
+            saveBookRating(bookId, rating, userName);
+            // Update interactive stars UI
+            const container = el.closest('.star-rating');
+            if (container) {
+                container.querySelectorAll('.star').forEach(s => {
+                    const v = parseInt(s.dataset.value);
+                    s.classList.toggle('active', v <= rating);
+                });
+            }
+            // Update average display
+            const avgDisplay = document.getElementById('avgRating_' + bookId);
+            if (avgDisplay) {
+                const avg = getBookAverageRating(bookId);
+                const count = getBookRatingCount(bookId);
+                avgDisplay.innerHTML = renderStarsHtml(avg, 11) + ' <span class="avg-label">' + (avg > 0 ? avg.toFixed(1) : '-') + ' (' + count + ')</span>';
+            }
+            window.showToast('Rating disimpan!', '★');
+        }
+        function toggleReviewSection(bookId) {
+            const section = document.getElementById('reviewSection_' + bookId);
+            if (section) section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
+        function submitReview(bookId) {
+            const textarea = document.getElementById('reviewInput_' + bookId);
+            if (!textarea) return;
+            const text = textarea.value.trim();
+            if (!text) { window.showToast('Tulis review terlebih dahulu.', '⚠️'); return; }
+            const ratingData = getBookRatings(bookId);
+            const userName = window.APP_STATE.userName || 'Pembaca';
+            const myRating = ratingData.find(r => r.user === userName);
+            saveBookReview(bookId, text, myRating ? myRating.rating : 0, userName);
+            textarea.value = '';
+            // Refresh review list
+            renderReviewsList(bookId, document.getElementById('reviewList_' + bookId));
+            window.showToast('Review berhasil disimpan!', '★');
+        }
+        function renderReviewsList(bookId, container) {
+            if (!container) return;
+            const reviews = getBookReviews(bookId);
+            if (reviews.length === 0) {
+                container.innerHTML = '<div class="review-empty">Belum ada review untuk buku ini. Jadilah yang pertama!</div>';
+                return;
+            }
+            container.innerHTML = reviews.slice(0, 10).map(r => {
+                const dateStr = new Date(r.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                return '<div class="review-item">' +
+                    '<div class="review-item-header">' +
+                    '<div class="review-item-rating">' + renderStarsHtml(r.rating, 13) + '</div>' +
+                    '<div><span class="review-item-author">' + escHtml(r.user) + '</span> <span class="review-item-date">' + dateStr + '</span></div>' +
+                    '</div>' +
+                    '<div class="review-item-text">' + escHtml(r.text) + '</div>' +
+                    '</div>';
+            }).join('');
+        }
+        function escHtml(s) {
+            if (!s) return '';
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+
+        // =====================================================================
         // Cache chapters in-memory agar tidak fetch ulang saat buka buku yang sama
         const _chaptersCache = {};
 
